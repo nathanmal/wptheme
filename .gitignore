@@ -1,14 +1,4 @@
-# folders and files to be ignored by git
-
-############
-## Bones
-############
-
-Bones.esproj/
-
-############
-## IDEs
-############
+## IDE files
 
 *.pydevproject
 .project
@@ -24,19 +14,16 @@ local.properties
 .cproject
 .buildpath
 nbproject/
+.sublimeproject
 
-############
-## OSes
-############
+## OS Files
 
 [Tt]humbs.db
 [Dd]esktop.ini
 *.DS_store
 .DS_store?
 
-############
-## Misc
-############
+## Misc Files
 
 bin/
 tmp/
@@ -59,3 +46,4 @@ temp/
 
 .sass-cache
 */vendor/*
+*/node_modules/*
