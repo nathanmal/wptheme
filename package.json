@@ -1,0 +1,31 @@
+{
+  "name": "wptheme",
+  "version": "0.1.0",
+  "description": "Bootstrap 4 based starter theme for Wordpress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "node-sass --source-comments assets/css/scss --output assets/css/",
+    "sass:watch": "nodemon -e scss -x \"npm run sass\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanmal/wptheme.git"
+  },
+  "keywords": [
+    "wordpress",
+    "theme",
+    "bootstrap",
+    "responsive"
+  ],
+  "author": "Nathan Malachowski",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/nathanmal/wptheme/issues"
+  },
+  "homepage": "https://github.com/nathanmal/wptheme#readme",
+  "devDependencies": {
+    "node-sass": "^4.7.2",
+    "nodemon": "^1.14.8"
+  }
+}
