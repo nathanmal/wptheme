@@ -1,0 +1,23 @@
+{
+  "name": "wptheme",
+  "homepage": "https://github.com/nathanmal/wptheme",
+  "authors": [
+    "Nathan Malachowski <nathanmal@gmail.com>"
+  ],
+  "description": "Base theme for Wordpress using Bootstrap 4",
+  "main": "",
+  "keywords": [
+    "Wordpress",
+    "Theme",
+    "Bootstrap"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
