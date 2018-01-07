@@ -4,14 +4,29 @@
 
 final class Theme
 {
+	/**
+	 * Theme singleton
+	 * @var null
+	 */
+	static $instance = NULL;
+
+	/**
+	 * Theme init
+	 * @var boolean
+	 */
 	static $initialized = FALSE;
 
+	/**
+	 * Theme config array
+	 * @var null
+	 */
+	static $config = NULL;
 
 
 	public static function instance()
 	{
 		if( empty(self::$instance) ){
-			self::$instance = new Theme
+			self::$instance = new Theme();
 		}
 	}
 
@@ -25,6 +40,10 @@ final class Theme
 		// Only allow init once
 		if( self::$initialized ) return;
 		
+		self::$config = include 'theme.config.php';
+
+		print_r(self::$config);
+
 
 		// Add filters
 		add_filter( 'the_generator', 'Theme::remove_generator' );
@@ -38,7 +57,7 @@ final class Theme
 		add_filter( 'body_class', 'Theme::add_body_class' );
 
 		// Add dependency classes
-		self::add_dependencies();
+		self::load_dependencies();
 		// Declare support 
 		self::declare_support();
 		// Clean up wp_head();
@@ -94,7 +113,7 @@ final class Theme
 	/**
 	 * Add dependency classes
 	 */
-	public static function add_dependencies()
+	public static function load_dependencies()
 	{
 		// For creating bootstrap style navs
 		require( 'vendor/wp-bootstrap-navwalker/wp-bootstrap-navwalker.php' );
@@ -332,8 +351,5 @@ final class Theme
 			}
 		} 
 	}
-
-
-
 
 }
