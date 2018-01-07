@@ -1,30 +1,30 @@
 /*
-Theme Name: {THEME_NAME}
-Theme URI: {THEME_URI}
-Author: {THEME_AUTHOR}
-Author URI: {THEME_AUTHOR_URI}
-GitHub Theme URI: {THEME_GIT_URI}
-Description: {THEME_DESCRIPTION}
-Version: {THEME_VERSION}
+Theme Name: WP Theme
+Theme URI: https://github.com/nathanmal/wptheme
+Author: Nathan Malachowski
+Author URI: https://github.com/nathanmal/
+GitHub Theme URI: https://github.com/nathanmal/wptheme
+Description: Bootstrap 4 based starter theme for Wordpress
+Version: 0.1.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: {THEME_DOMAIN}
-Tags: {THEME_TAGS}
+Text Domain: wptheme
+Tags: wordpress, theme, bootstrap, responsive
 
 
 This theme, like WordPress, is licensed under the GPL.
-UnderStrap is based on Underscores http://underscores.me/, (C) 2012-2016 Automattic, Inc.
 
 Resource Licenses:
 Font Awesome: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
-Bootstrap: http://getbootstrap.com | https://github.com/twbs/bootstrap/blob/master/LICENSE (Code licensed under MIT, documentation under CC BY 3.0.)
-Owl Carousel 2: http://www.owlcarousel.owlgraphic.com/ | https://github.com/smashingboxes/OwlCarousel2/blob/develop/LICENSE (Code licensed under MIT)
-and of course
+
+Bootstrap: 
+http://getbootstrap.com | https://github.com/twbs/bootstrap/blob/master/LICENSE 
+(Code licensed under MIT, documentation under CC BY 3.0.)
+
 jQuery: https://jquery.org | (Code licensed under MIT)
+
 */
 
 /*
 This file is just used to identify the theme in WordPress.
-
-
 */
