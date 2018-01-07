@@ -17,6 +17,9 @@ define('THEME_URI', get_template_directory_uri());
 // Path to theme library folder
 define('THEME_LIB', THEME_DIR . '/library');
 
+// Environment we're using development|staging|production
+define('THEME_ENV', 'development');
+
 // load the main theme class
 require_once('library/theme.php');
 
