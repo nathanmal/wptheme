@@ -45,5 +45,7 @@ temp/
 *.scssc
 
 .sass-cache
-*/vendor/*
-*/node_modules/*
+
+assets/vendor/*
+library/vendor/*
+node_modules/*
