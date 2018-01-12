@@ -20,6 +20,9 @@ define('THEME_LIB', THEME_DIR . '/library');
 // Environment we're using development|staging|production
 define('THEME_ENV', 'development');
 
+// Theme text domain name
+define('THEME_DOMAIN', 'wptheme');
+
 // load the main theme class
 require_once('library/theme.php');
 

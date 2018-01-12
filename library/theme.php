@@ -175,9 +175,9 @@ final class Theme
 		// registering wp3+ menus
 		register_nav_menus(
 			array(
-				'main-menu'   => __( 'Main Menu', WP_THEME_DOMAIN ),    // main nav in header
-				'mobile-menu' => __( 'Mobile Menu', WP_THEME_DOMAIN ),  // mobile nav in header
-				'footer-menu' => __( 'Footer Menu', WP_THEME_DOMAIN ) 	// secondary nav in footer
+				'main-menu'   => __( 'Main Menu', THEME_DOMAIN ),    // main nav in header
+				'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),  // mobile nav in header
+				'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ) 	// secondary nav in footer
 			)
 		);
 
