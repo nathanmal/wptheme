@@ -19,5 +19,11 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "bootstrap": "4.0"
+  },
+  "resolutions": {
+    "bootstrap": "4.0"
+  }
 }
