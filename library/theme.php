@@ -321,22 +321,6 @@ final class Theme
 
 				wp_enqueue_style($name, $source, $dep, $ver, $med );
 			}
-
-
-			// Load Bootstrap
-			wp_enqueue_script('bootstrap', WP_THEME_VENDOR . 'bootstrap/dist/bootstrap.min.js', array('jquery'),'3.3.7', TRUE);
-			wp_enqueue_style('bootstrap', WP_THEME_VENDOR . 'bootstrap/dist/css/bootstrap.min.css', array(),'3.3.7','all');
-			wp_enqueue_style('bootstrap-theme', WP_THEME_VENDOR . 'bootstrap/dist/css/bootstrap-theme.min.css', array(),'3.3.7','all');
-
-
-			// Load fonts
-			wp_enqueue_style('font-leaguegothic', WP_THEME_ASSETS . 'fonts/leaguegothic/stylesheet.css');
-
-			// Load Theme Scripts & Styles
-			wp_enqueue_style( 'theme', WP_THEME_ASSETS . 'css/theme.css', array(), '', 'all' );
-			wp_enqueue_script( 'theme', WP_THEME_ASSETS . 'js/theme.js', array(), '', TRUE );
-
-
 		}
 
 	}

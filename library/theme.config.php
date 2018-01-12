@@ -25,11 +25,9 @@ return array(
 
 		'theme' => array(
 			'source'  => THEME_URI .'/assets/js/theme.js',
-			'version' => '0.1.0',
+			'version' => THEME_VERSION,
 			'footer'  => TRUE
 		)
-
-
 	),
 
 	// Stylesheets to be loaded in the theme
@@ -37,6 +35,11 @@ return array(
 		'bootstrap' => array(
 			'source'  => THEME_URI . '/assets/vendor/bootstrap/dist/css/bootstrap.min.css',
 			'version' => '4.0.0',
+		),
+
+		'theme' => array(
+			'source' => THEME_URI . '/assets/css/theme.css',
+			'version'=> THEME_VERSION
 		)
 	),
 
