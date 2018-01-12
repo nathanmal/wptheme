@@ -1,0 +1,13 @@
+@import 'base/variables';
+@import 'base/colors';
+@import 'base/spacing';
+@import 'base/fonts';
+@import 'base/typography';
+
+body { 
+	background-color:#000;
+}
+
+.main {
+	border:1px solid $color-white;
+}
