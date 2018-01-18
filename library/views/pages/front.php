@@ -1,2 +1,1 @@
-[FRONT PAGE TEMPLATE]
-Edit me at /library/views/pages/front.php
+<?php template_header('Front'); // Replace this ?>
