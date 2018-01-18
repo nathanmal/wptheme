@@ -12,21 +12,20 @@ return array(
 		'jquery' => array(
 			'source' => THEME_URI . '/assets/vendor/jquery/dist/jquery.min.js',
 			'version' => '3.2.1',
-			'footer' => TRUE
+			'footer' => TRUE,
 		),
-
 
 		'bootstrap' => array(
 			'source'       => THEME_URI .'/assets/vendor/bootstrap/dist/js/bootstrap.bundle.js',
 			'dependencies' => array('jquery'),
 			'version'      => '4.0.0',
-			'footer'       => TRUE
+			'footer'       => TRUE,
 		),
 
-		'theme' => array(
-			'source'  => THEME_URI .'/assets/js/theme.js',
+		'main' => array(
+			'source'  => THEME_URI .'/assets/js/main.js',
 			'version' => THEME_VERSION,
-			'footer'  => TRUE
+			'footer'  => TRUE,
 		)
 	),
 
@@ -37,16 +36,27 @@ return array(
 			'version' => '4.0.0',
 		),
 
+		'fontawesome' => array(
+			'source' => THEME_URI . '/assets/vendor/font-awesome/css/font-awesome.min.css',
+			'version' => '4.7.0',
+		),
+
+		'main' => array(
+			'source' => THEME_URI . '/assets/css/main.css',
+			'version'=> THEME_VERSION,
+		),
+
+
 		'theme' => array(
 			'source' => THEME_URI . '/assets/css/theme.css',
-			'version'=> THEME_VERSION
+			'version'=> THEME_VERSION,
 		)
 	),
 
 	// Theme menus
-	'menus' => array(
-		'main' => array(
+	// All you need is array( array( array('<location>' => '<menu label>'), ... )
+	'menus' => array(),
 
-		)
-	)
+	// Enable Shortcodes found in /library/shortcodes
+	'shortcodes' => array('lorem_ipsum'),
 );

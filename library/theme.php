@@ -23,6 +23,9 @@ final class Theme
 	private static $config = NULL;
 
 
+	private static $template = '';
+
+
 	public static function instance()
 	{
 		if( empty(self::$instance) ){
@@ -61,10 +64,15 @@ final class Theme
 		// Add slug className to body
 		add_filter( 'body_class', 'Theme::add_body_class' );
 
+		// Register nav menus
+		self::register_menus();
 		// Declare support 
 		self::declare_support();
 		// Clean up wp_head();
 		self::cleanup_head();
+		// Custom shortcodes
+		self::add_shortcodes();
+
 		// Enqueue scripts & styles
   		add_action( 'wp_enqueue_scripts', 'Theme::wp_enqueue', 110 );
 
@@ -261,26 +269,39 @@ final class Theme
 		return $classes;
 	}	
 
-
-	public static function menu($name='')
+	/**
+	 * Output menu by name
+	 * @param  string $name   [description]
+	 * @param  array  $config Allow function to override default menu array
+	 * @return [type]         [description]
+	 */
+	public static function menu($name='', $config = array())
 	{
 
-		$config = array(
-			'menu'            => __( 'Main Menu', 'wptheme' ),  		// nav name
-			'theme_location'  => 'main-nav',                 			// where it's located in the theme
-			'container'       => '',                           			// remove nav container
-			'container_class' => '',  									// class of container
-			'menu_class'      => 'navbar-nav mr-auto',               	// adding custom nav class
-			'before'          => '',                                 	// before the menu
-			'after'           => '',                                  	// after the menu
-			'link_before'     => '',                            		// before each link
-			'link_after'      => '',                             		// after each link
-			'depth'           => 0,                                   	// limit the depth of the nav
-			'fallback_cb'     => 'wp_bootstrap_navwalker::fallback',	// fallback function
+		$label = ucfirst($name) . ' Menu';
+		$location = $name . '-menu';
+
+		if( ! has_nav_menu($location) ) {
+			echo "[Could not locate menu $location]";
+			return;
+		};
+
+		$default = array(
+			'menu'            => __( $label, THEME_DOMAIN ),  		 // nav name
+			'theme_location'  => $location,                 		 // where it's located in the theme
+			'container'       => '',                           		 // remove nav container
+			'container_class' => '',  								 // class of container
+			'menu_class'      => '',               					 // adding custom nav class
+			'before'          => '',                                 // before the menu
+			'after'           => '',                                 // after the menu
+			'link_before'     => '',                            	 // before each link
+			'link_after'      => '',                             	 // after each link
+			'depth'           => 0,                                  // limit the depth of the nav
+			'fallback_cb'     => 'wp_bootstrap_navwalker::fallback', // fallback function
     		'walker'          => new wp_bootstrap_navwalker()                             		
 		);
 
-		wp_nav_menu($config);
+		wp_nav_menu(wp_parse_args($config,$default));
 
 	}
 
@@ -310,6 +331,17 @@ final class Theme
 				wp_enqueue_script($name, $source, $dep, $ver, $footer);
 			}
 
+			// Load template-specific script if it exists
+			if( ! empty(self::$template) ){
+
+				$file = '/assets/js/' . self::$template . '.js';
+				if( is_file( THEME_DIR . $file ) ) {
+					$name = self::$template . '-script';
+					$source = THEME_URI . $file;
+					wp_enqueue_script($name, $source, array(), NULL, TRUE);
+				}
+			}
+
 			$styles = Theme::config('styles');
 
 			foreach($styles as $name => $style)
@@ -321,6 +353,28 @@ final class Theme
 
 				wp_enqueue_style($name, $source, $dep, $ver, $med );
 			}
+
+			
+
+		}
+
+
+
+	}
+
+	/**
+	 * Register nav menus
+	 * @return [type] [description]
+	 */
+	public static function register_menus()
+	{
+		$menus = self::config('menus');
+
+		if( empty($menus) ) return;
+
+		foreach($menus as $menu => $label)
+		{
+			register_nav_menu($menu, __($label, THEME_DOMAIN) );
 		}
 
 	}
@@ -350,53 +404,69 @@ final class Theme
 
 	}
 
-
+	/**
+	 * Output the header
+	 * @return [type] [description]
+	 */
 	public static function header()
 	{
 		Theme::view('header');
 	}
 
-
+	/**
+	 * Output the footer
+	 * @return [type] [description]
+	 */
 	public static function footer()
 	{
 		Theme::view('footer');
 	}
 
-
+	/**
+	 * Load the template using similar WP style heirarchy
+	 * 
+	 * @return [type] [description]
+	 */
 	public static function getTemplate()
 	{
 		$id 	= get_the_ID();
 		$slug 	= get_page_template_slug($id);
+
 		$type   = get_post_type($id);
-		$arch   = 'archive-' . $type;
-		$sing   = 'single-' . $type;
+		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
+		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
 		$template = 'index';
 
-		if( empty($id) OR is_404() ) {
+		if( is_404() ) {
 			$template = '404';
-		} else if( is_front_page() && wptheme_template_exists('front') ) {
-			$template = 'front';
-		} else if( is_home() && wptheme_template_exists('home') ) {
-			$template = 'home';
-		} else if( is_page() && wptheme_template_exists('page-'.$slug) ) {
-			$template = 'page-'.$slug;
-		} else if( is_page() && wptheme_template_exists('page') ) {
-			$template = 'page';
-		} else if( is_post_type_archive($type) && wptheme_template_exists($arch) ) {
-			$template = $arch; 
-		} else if( is_archive() && wptheme_template_exists('archive') ) {
-			$template = 'archive';
-		} else if( is_single() && wptheme_template_exists($sing) ) {
-			$template = $sing;
-		} else if( is_single() && wptheme_template_exists('single') ) {
-			$template = 'single';
-		} else if( is_search() && wptheme_template_exists('search') ) {
-			$template = 'search';
+		} else if( is_front_page() && Theme::view_exists('pages/front') ) {
+			$template = 'pages/front';
+		} else if( is_home() && Theme::template_exists('pages/home') ) {
+			$template = 'pages/home';
+		} else if( ! empty($slug) && is_page() && Theme::view_exists('pages/'.$slug) ) {
+			$template = 'pages/'.$slug;
+		} else if( is_page() && Theme::template_exists('page') ) {
+			$template = 'templates/page';
+		} else if( $type && ! is_post_type_archive($type) && Theme::view_exists('archive/'.$type) ) {
+			$template = 'archive/'.$type; 
+		} else if( is_archive() && Theme::template_exists('archive') ) {
+			$template = 'templates/archive';
+		} else if( $type && is_single() && Theme::view_exists('single/'.$type) ) {
+			$template = 'single/'.$type;
+		} else if( is_single() && Theme::template_exists('single') ) {
+			$template = 'templates/single';
+		} else if( is_search() && Theme::template_exists('search') ) {
+			$template = 'templates/search';
 		}
 
+		// Set for later
+		self::$template = $template;
+
+		// This is where the rubber meets the road
+		// Output header, page and footer
 		get_header();
-		wptheme_load_template($template);
+		Theme::view($template);
 		get_footer();
 
 	}
@@ -410,26 +480,83 @@ final class Theme
 	 */
 	public static function view( $path, $data = array(), $repeat = 1 )
 	{
-
+		// Append extension if needed
 		if( substr($path, -4) != '.php' ) $path .= '.php';
 
-		if( ! empty($data) && is_array($data) )
-		{
-			// If non-empty array, extract variables for the view
-			extract($data, EXTR_SKIP);
-		}
-
+		// If non-empty array, extract variables for the view
+		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
+		
+		// Set absolute path
 		$path = self::dir( 'library/views/' . $path );
 
+		// Warn if missing
 		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
 
-		if( $repeat >= 1  ) {
-			for( $i = 1; $i <= $repeat; $i++ ){
-				$loop_total = $repeat;
-				$loop_count = $i;
-				include($path);
-			}
+		// Include with repeat
+		for( $i = 1; $i <= $repeat; $i++ ){
+			$loop_total = $repeat;
+			$loop_count = $i;
+			include($path);
 		}
 	}
 
+	/**
+	 * Include a partial
+	 * Just shorthand for the view function
+	 * @param  [type]  $path   [description]
+	 * @param  array   $data   [description]
+	 * @param  integer $repeat [description]
+	 * @return [type]          [description]
+	 */
+	public static function partial( $path, $data = array(), $repeat = 1 )
+	{
+		Theme::view('partials/' . $path, $data, $repeat);
+	}
+
+	/**
+	 * Load a page template
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	public static function template($name)
+	{
+		Theme::view( 'templates/' . $name . '.php' );
+	}
+
+	/**
+	 * Check if view file exists
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	public static function view_exists($name)
+	{
+		return is_file(THEME_DIR . '/library/views/' . $name . '.php');
+	}
+
+	/**
+	 * Checks if a template exists
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	public static function template_exists($name)
+	{  
+		return Theme::view_exists('templates/'.$name);
+	}
+
+	/**
+	 * Add shortcodes specified in config
+	 */
+	public static function add_shortcodes()
+	{
+		$shortcodes = self::config('shortcodes');
+
+		foreach($shortcodes as $shortcode)
+		{
+			$file = THEME_DIR . '/library/shortcodes/' . $shortcode . '.php';
+
+			if( is_file($file) ) {
+				include($file);
+			}
+		}
+	}
 }
