@@ -1,2 +1,1 @@
-[SINGLE POST TEMPLATE]
-Edit me at /library/views/templates/single.php
+<?php template_header('Single'); // Replace this ?>

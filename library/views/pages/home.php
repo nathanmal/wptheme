@@ -1,2 +1,1 @@
-[HOME PAGE TEMPLATE]
-Edit me at /library/views/pages/home.php
+<?php template_header('Home'); // Replace this ?>

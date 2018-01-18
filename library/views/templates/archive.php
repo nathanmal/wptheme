@@ -1,2 +1,1 @@
-[ARCHIVE TEMPLATE]
-Edit me at /library/views/templates/archive.php
+<?php template_header('Archive'); // Replace this ?>
