@@ -320,17 +320,6 @@ final class Theme
 				wp_enqueue_script($name, $source, $dep, $ver, $footer);
 			}
 
-			// Load template-specific script if it exists
-			if( ! empty(self::$template) ){
-
-				$file = '/assets/js/' . self::$template . '.js';
-				if( is_file( THEME_DIR . $file ) ) {
-					$name = self::$template . '-script';
-					$source = THEME_URI . $file;
-					wp_enqueue_script($name, $source, array(), NULL, TRUE);
-				}
-			}
-
 			$styles = Theme::config('styles');
 
 			foreach($styles as $name => $style)
@@ -343,8 +332,28 @@ final class Theme
 				wp_enqueue_style($name, $source, $dep, $ver, $med );
 			}
 
-			
 
+			// Load template-specific scripts and styles if they exist
+			$template = self::getTemplate();
+
+			if( ! empty($template) ){
+
+				$script = '/assets/js/' . $template . '.js';
+
+				if( is_file( THEME_DIR . $script ) ) {
+					$name = $template . '-script';
+					$source = THEME_URI . $script;
+					wp_enqueue_script($name, $source, array(), NULL, TRUE);
+				}
+
+				$css = '/assets/css/' . $template . '.css';
+
+				if( is_file( THEME_DIR . $css ) ) {
+					$name = $template . '-css';
+					$source = THEME_URI . $css;
+					wp_enqueue_style($name, $source);
+				}
+			}
 		}
 
 
