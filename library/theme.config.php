@@ -55,8 +55,13 @@ return array(
 
 	// Theme menus
 	// All you need is array( array( array('<location>' => '<menu label>'), ... )
-	'menus' => array(),
+	'menus' => array(
+		'main-menu'   => __( 'Main Menu', THEME_DOMAIN ),    	// main nav 
+		'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),  	// mobile nav 
+		'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ) 		// footer nave
+	),
 
 	// Enable Shortcodes found in /library/shortcodes
 	'shortcodes' => array('lorem_ipsum'),
+
 );

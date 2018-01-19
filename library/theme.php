@@ -180,23 +180,13 @@ final class Theme
 		// wp menus
 		add_theme_support( 'menus' );
 
-		// registering wp3+ menus
-		register_nav_menus(
-			array(
-				'main-menu'   => __( 'Main Menu', THEME_DOMAIN ),    // main nav in header
-				'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),  // mobile nav in header
-				'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ) 	// secondary nav in footer
-			)
-		);
-
 		// Enable support for HTML5 markup.
-		
 		$html5 = array(
 			'comment-list',
 			'search-form',
 			'comment-form'
 		);
-
+		
 		add_theme_support( 'html5', $html5 );
 
 		// adding post format support
