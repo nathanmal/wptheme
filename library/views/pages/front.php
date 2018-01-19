@@ -1,1 +1,0 @@
-<?php template_header('Front'); // Replace this ?>

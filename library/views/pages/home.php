@@ -1,1 +1,0 @@
-<?php template_header('Home'); // Replace this ?>
