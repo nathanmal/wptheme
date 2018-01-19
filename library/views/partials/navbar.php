@@ -1,7 +1,9 @@
-<header class="header" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+<header class="header" role="banner">
 
-	<nav class="navbar navbar-expand-lg" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+
 		<div class="container-fluid">
+
 		<a class="navbar-brand" href="<?=get_site_url()?>/">
 			<?php bloginfo('name'); ?>
 		</a>
@@ -12,13 +14,11 @@
 		
 		<div class="collapse navbar-collapse">
 			<?php 
-			Theme::menu('main');
+			Theme::menu('main', array('menu_class'=>'navbar-nav ml-auto'));
 			?>
 		</div>
 		
-		
 		</div>
 	</nav>
-
 
 </header>

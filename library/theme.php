@@ -271,6 +271,7 @@ final class Theme
 	{
 
 		$label = ucfirst($name) . ' Menu';
+		
 		$location = $name . '-menu';
 
 		if( ! has_nav_menu($location) ) {
@@ -279,18 +280,14 @@ final class Theme
 		};
 
 		$default = array(
-			'menu'            => __( $label, THEME_DOMAIN ),  		 // nav name
-			'theme_location'  => $location,                 		 // where it's located in the theme
-			'container'       => '',                           		 // remove nav container
-			'container_class' => '',  								 // class of container
-			'menu_class'      => '',               					 // adding custom nav class
-			'before'          => '',                                 // before the menu
-			'after'           => '',                                 // after the menu
-			'link_before'     => '',                            	 // before each link
-			'link_after'      => '',                             	 // after each link
-			'depth'           => 0,                                  // limit the depth of the nav
-			'fallback_cb'     => 'wp_bootstrap_navwalker::fallback', // fallback function
-    		'walker'          => new wp_bootstrap_navwalker()                             		
+			'menu'            => __( $label, THEME_DOMAIN ), 
+			'theme_location'  => $location,              
+			'container'       => '',                           		
+			'container_class' => '',  								 
+			'menu_class'      => 'navbar-nav',               					
+			'depth'           => 0,
+			'fallback_cb'     => 'WP_Bootstrap_Navwalker::fallback',
+    		'walker'          => new WP_Bootstrap_Navwalker()                             		
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
