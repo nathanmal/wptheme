@@ -261,6 +261,8 @@ final class Theme
 	{
 		global $post;
 
+		$classes[] = str_replace('/', '-', self::getTemplate());
+
 		if ( isset( $post ) ) 
 		{
 			$classes[] = $post->post_type . '-' . $post->post_name;
@@ -427,7 +429,7 @@ final class Theme
 	 * 
 	 * @return [type] [description]
 	 */
-	public static function getTemplate()
+	public static function render()
 	{
 		$id 	= get_the_ID();
 		$slug 	= get_page_template_slug($id);
@@ -469,6 +471,14 @@ final class Theme
 		Theme::view($template);
 		get_footer();
 
+	}
+
+	/**
+	 * Get the current template
+	 * @return [type] [description]
+	 */
+	public static function getTemplate(){
+		return self::$template;
 	}
 
 	/**
