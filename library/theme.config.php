@@ -44,12 +44,6 @@ return array(
 		'main' => array(
 			'source' => THEME_URI . '/assets/css/main.css',
 			'version'=> THEME_VERSION,
-		),
-
-
-		'theme' => array(
-			'source' => THEME_URI . '/assets/css/theme.css',
-			'version'=> THEME_VERSION,
 		)
 	),
 
