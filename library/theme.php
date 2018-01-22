@@ -320,6 +320,14 @@ final class Theme
 				wp_enqueue_script($name, $source, $dep, $ver, $footer);
 			}
 
+			// Load fonts first so stylesheets can use em
+			$fonts = Theme::config('fonts');
+
+			foreach($fonts as $font => $source){
+				wp_enqueue_style('font-'.$font, $source);
+			}
+
+
 			$styles = Theme::config('styles');
 
 			foreach($styles as $name => $style)
