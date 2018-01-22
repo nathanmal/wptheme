@@ -47,6 +47,9 @@ return array(
 		)
 	),
 
+	// Specify fonts as 'fontname' => 'font stylesheet URL'
+	'fonts' => array(),
+
 	// Theme menus
 	// All you need is array( array( array('<location>' => '<menu label>'), ... )
 	'menus' => array(
