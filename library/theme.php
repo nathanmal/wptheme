@@ -442,7 +442,7 @@ final class Theme
 		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
-		$template = 'index';
+		$template = 'templates/index';
 
 		if( is_404() ) {
 			$template = '404';
