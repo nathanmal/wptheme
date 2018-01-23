@@ -48,7 +48,10 @@ return array(
 	),
 
 	// Specify fonts as 'fontname' => 'font stylesheet URL'
-	'fonts' => array(),
+	'fonts' => array(
+		'abril' => 'https://fonts.googleapis.com/css?family=Abril+Fatface',
+		'opensans' => 'https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800',
+	),
 
 	// Theme menus
 	// All you need is array( array( array('<location>' => '<menu label>'), ... )
@@ -58,7 +61,23 @@ return array(
 		'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ) 		// footer nave
 	),
 
-	// Enable Shortcodes found in /library/shortcodes
+	// Theme sidebars
+	'sidebars' => array(
+		array(
+			'id' => 'main',
+			'name' => __( 'Main Sidebar', THEME_DOMAIN ),
+			'description' => __( 'The main sidebar.', THEME_DOMAIN ),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget' => '</div>',
+			'before_title' => '<h4 class="widgettitle">',
+			'after_title' => '</h4>',
+		)
+	),
+
+	// Enable custom widgets found in /library/widgets/
+	'widgets' => array('intro','links'),
+
+	// Enable Shortcodes found in /library/shortcodes/
 	'shortcodes' => array('lorem_ipsum'),
 
 );

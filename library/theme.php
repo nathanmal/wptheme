@@ -63,9 +63,13 @@ final class Theme
 		add_filter( 'script_loader_src', 'Theme::remove_asset_version', 9999 );
 		// Add slug className to body
 		add_filter( 'body_class', 'Theme::add_body_class' );
+		// Register Widgets
+		add_action('widgets_init', 'Theme::register_widgets');
 
 		// Register nav menus
 		self::register_menus();
+		// Register sidebars
+		self::register_sidebars();
 		// Declare support 
 		self::declare_support();
 		// Clean up wp_head();
@@ -369,7 +373,7 @@ final class Theme
 	}
 
 	/**
-	 * Register nav menus
+	 * Register menus defined in theme.config.php
 	 * @return [type] [description]
 	 */
 	public static function register_menus()
@@ -381,6 +385,46 @@ final class Theme
 		foreach($menus as $menu => $label)
 		{
 			register_nav_menu($menu, __($label, THEME_DOMAIN) );
+		}
+
+	}
+
+	/**
+	 * Register sidebars defined in theme.config.php
+	 * @return [type] [description]
+	 */
+	public static function register_sidebars()
+	{
+		$sidebars = self::config('sidebars');
+
+		foreach($sidebars as $sidebar)
+		{
+			register_sidebar($sidebar);
+		}
+	}
+
+	/**
+	 * Register widgets defined in theme.config.php
+	 * @return [type] [description]
+	 */
+	public static function register_widgets()
+	{
+		$widgets = self::config('widgets');
+
+		if( empty($widgets) ) return;
+
+		// If we have widgets, include the theme base widget class
+		include THEME_DIR . '/library/classes/theme_widget.php';
+
+		foreach($widgets as $widget) {
+
+			$widget_file  = THEME_DIR . '/library/widgets/' . $widget . '.php';
+			$widget_class = ucfirst($widget) . '_Widget';
+
+			if( is_file($widget_file) ) {
+				include $widget_file;
+				register_widget($widget_class);
+			}
 		}
 
 	}
