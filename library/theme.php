@@ -488,22 +488,28 @@ final class Theme
 
 		$template = 'templates/index';
 
+		// Check for missing
 		if( is_404() ) {
-			$template = '404';
+			$template = 'templates/404';
+		// Front or home page
 		} else if( is_front_page() && Theme::view_exists('pages/front') ) {
 			$template = 'pages/front';
 		} else if( is_home() && Theme::template_exists('pages/home') ) {
 			$template = 'pages/home';
-		} else if( ! empty($slug) && is_page() && Theme::view_exists('pages/'.$slug) ) {
+		// Page custom slugs and types
+		} else if( is_page() && ! empty($slug) && Theme::view_exists('pages/'.$slug) ) {
 			$template = 'pages/'.$slug;
+		} else if( is_page() && ! empty($type) && Theme::view_exists('pages/'.$type) ) {
+			$template = 'pages/'.$type;
+		} else if( is_post_type_archive($type) && ! empty($type) && ! Theme::view_exists('archive/'.$type) ) {
+			$template = 'archive/'.$type; 
+		} else if( is_single() && ! empty($type) && Theme::view_exists('single/'.$type) ) {
+			$template = 'single/'.$type;
+		// Generaic types
 		} else if( is_page() && Theme::template_exists('page') ) {
 			$template = 'templates/page';
-		} else if( $type && ! is_post_type_archive($type) && Theme::view_exists('archive/'.$type) ) {
-			$template = 'archive/'.$type; 
 		} else if( is_archive() && Theme::template_exists('archive') ) {
 			$template = 'templates/archive';
-		} else if( $type && is_single() && Theme::view_exists('single/'.$type) ) {
-			$template = 'single/'.$type;
 		} else if( is_single() && Theme::template_exists('single') ) {
 			$template = 'templates/single';
 		} else if( is_search() && Theme::template_exists('search') ) {
