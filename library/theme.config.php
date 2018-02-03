@@ -80,4 +80,7 @@ return array(
 	// Enable Shortcodes found in /library/shortcodes/
 	'shortcodes' => array('lorem_ipsum'),
 
+	// Google Analytics code to use with this site/theme
+	'ga' => '',
+
 );
