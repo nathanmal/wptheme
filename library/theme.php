@@ -163,7 +163,10 @@ final class Theme
 		// Look thru entries
 		foreach(self::$entries as $entry)
 		{
-			$file = THEME_DIR . "/$entry/$path.php";
+			$file = THEME_DIR . "/$entry/$path";
+
+			// Append extension if needed
+			if( substr($file, -4) != '.php' ) $file .= '.php';
 
 			if( is_file($file) ) 
 			{
@@ -705,9 +708,6 @@ final class Theme
 	 */
 	public static function view( $path, $data = array(), $repeat = 1 )
 	{
-		// Append extension if needed
-		if( substr($path, -4) != '.php' ) $path .= '.php';
-
 		// If non-empty array, extract variables for the view
 		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
 		
