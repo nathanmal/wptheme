@@ -1,7 +1,10 @@
 <?php 
 
+namespace Theme;
 
-class Theme_Widget extends WP_Widget
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+class Widget extends WP_Widget
 {
 
     public $id = '';
