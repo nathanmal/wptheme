@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html <?php language_attributes(); ?> class="no-js">
-<head>
-	<?php Theme::header(); ?>
-</head>
-<body <?php body_class(); ?> itemscope itemtype="http://schema.org/WebPage">
-
+<?php
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) exit;
+// Output theme header - theme/views/header.php
+Theme::header();
