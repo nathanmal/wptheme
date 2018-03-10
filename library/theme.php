@@ -709,7 +709,7 @@ final class Theme
 		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
 
 		// Append extension if needed
-		if( substr($file, -4) != '.php' ) $file .= '.php';
+		if( substr($path, -4) != '.php' ) $path .= '.php';
 		
 		// Set absolute path
 		$path = self::path( 'views/' . $path );
