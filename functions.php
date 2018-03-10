@@ -26,6 +26,9 @@ define('THEME_DOMAIN', 'wptheme');
 // Theme version
 define('THEME_VERSION', '0.1.0');
 
+// load helpers
+require_once('library/helpers.php');
+
 // load the main theme class
 require_once('library/theme.php');
 
