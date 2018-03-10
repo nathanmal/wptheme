@@ -165,9 +165,6 @@ final class Theme
 		{
 			$file = THEME_DIR . "/$entry/$path";
 
-			// Append extension if needed
-			if( substr($file, -4) != '.php' ) $file .= '.php';
-
 			if( is_file($file) ) 
 			{
 				// Store for later
@@ -710,6 +707,9 @@ final class Theme
 	{
 		// If non-empty array, extract variables for the view
 		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
+
+		// Append extension if needed
+		if( substr($file, -4) != '.php' ) $file .= '.php';
 		
 		// Set absolute path
 		$path = self::path( 'views/' . $path );
