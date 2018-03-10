@@ -1,7 +1,5 @@
-<?php 
-
-namespace Theme;
-
+<?php
+// Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Widget extends WP_Widget

@@ -1,6 +1,4 @@
 <?php
-namespace Theme;
-
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 final class Theme
@@ -389,7 +387,7 @@ final class Theme
 			'menu_class'      => 'navbar-nav',               					
 			'depth'           => 0,
 			'fallback_cb'     => 'WP_Bootstrap_Navwalker::fallback',
-    		'walker'          => new \Theme\Navwalker()                             		
+    		'walker'          => new Navwalker()                             		
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
@@ -448,7 +446,7 @@ final class Theme
 						$config = array('source'=>THEME_URI . $path);
 
 						if( $asset == 'js' ){
-							Theme::enqueue_script($name, $config)
+							Theme::enqueue_script($name, $config);
 						} else if( $asset == 'css' ) {
 							Theme::enqueue_style($name, $config);
 						}

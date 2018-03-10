@@ -1,7 +1,5 @@
 <?php
-
-namespace Theme;
-
+// Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Navwalker
