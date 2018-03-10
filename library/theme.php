@@ -1,6 +1,7 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+namespace Theme;
 
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 final class Theme
 {
@@ -22,15 +23,66 @@ final class Theme
 	 */
 	private static $config = NULL;
 
-
+	/**
+	 * Template view file being used
+	 * @var string
+	 */
 	private static $template = '';
 
+	/**
+	 * Path entries, where to look when calling Theme::path()
+	 * @var array
+	 */
+	private static $entries = array(
+		'theme',	
+		'library', 
+	);
 
+	/**
+	 * Holds paths
+	 * @var array
+	 */
+	private static $paths = array();
+
+	/**
+	 * Get the singleton instance 
+	 * @return [type] [description]
+	 */
 	public static function instance()
 	{
 		if( empty(self::$instance) ){
 			self::$instance = new Theme();
 		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * PSR-4 Plugin autoloader
+	 * Used with spl_autoload_register
+	 * @see    http://php.net/manual/en/function.spl-autoload-register.php
+	 * @param  string $class Class name
+	 */
+	public static function autoload($class)
+	{	
+		$prefix = 'Theme\\';
+
+		$len    = strlen($prefix);
+		
+		$base   = THEME_DIR . 'library/';
+
+		// Only if namespace is within the current plugin
+		if( 0 !== strpos($class, $prefix) ) return;
+		
+		$path = strtolower(substr($class,$len));
+
+		$file =  $base . str_replace('\\','/',$path) . '.php';
+
+		if( is_file($file) ) 
+		{	
+			require $file;
+		}
+
 	}
 
 
@@ -43,16 +95,9 @@ final class Theme
 		// Only allow init once
 		if( self::$initialized ) return;
 
-		// Load config file
-		self::$config = include 'theme.config.php';
-
-		// Include bootstrap navwalker for front side templates
-		if( ! is_admin() ){
-			require_once 'classes/wp-bootstrap-navwalker.php';
-		}
-
-		include('helpers.php');
-
+		// Load config 
+		self::load_config();
+		
 		// Add filters
 		add_filter( 'the_generator', 'Theme::remove_generator' );
 		// Hide descriptive login errors
@@ -76,16 +121,69 @@ final class Theme
 		self::cleanup_head();
 		// Custom shortcodes
 		self::add_shortcodes();
+		// Custom Post Types
+		self::register_post_types();
 
 		// Enqueue scripts & styles
-  		add_action( 'wp_enqueue_scripts', 'Theme::wp_enqueue', 110 );
-
+  		add_action( 'wp_enqueue_scripts', 'Theme::enqueue', 110 );
 
   		// Mark initialized
 		self::$initialized = TRUE;
 	}
 
+	/**
+	 * Load configuration, allowing /theme config to override /library config
+	 * @return [type] [description]
+	 */
+	private static function load_config()
+	{
+		// Merge theme and core config arrays
+		$theme = THEME_DIR . '/theme/theme.config.php';
+		$core  = THEME_DIR . '/library/theme.config.php';
 
+		// optional
+		$tconf = is_file($theme) ? include $theme : array();
+
+		// required
+		if( ! is_file($core) ) wp_die("Theme core configuration file missing");
+
+		$cconf = include($core);
+
+		self::$config = wp_parse_args($tconf,$cconf);
+	}
+
+	/**
+	 * Resolve path to allow /theme files to override /library files
+	 * @param  [type] $path [description]
+	 * @return [type]       [description]
+	 */
+	public static function path($path)
+	{
+		// Return if cached
+		if( isset(self::$paths[$path]) ) return self::$paths[$path];
+		
+		// Look thru entries
+		foreach(self::$entries as $entry)
+		{
+			$file = THEME_DIR . "/$entry/$path.php";
+
+			if( is_file($file) ) 
+			{
+				// Store for later
+				self::$paths[$path] = $file;
+				return $file;
+			}
+		}
+
+        // Nothing found
+        return FALSE; 
+	}
+
+	/**
+	 * Get theme config item
+	 * @param  [type] $item [description]
+	 * @return [type]       [description]
+	 */
 	public static function config($item=NULL)
 	{
 		if( empty($item) ) return self::$config;
@@ -291,7 +389,7 @@ final class Theme
 			'menu_class'      => 'navbar-nav',               					
 			'depth'           => 0,
 			'fallback_cb'     => 'WP_Bootstrap_Navwalker::fallback',
-    		'walker'          => new WP_Bootstrap_Navwalker()                             		
+    		'walker'          => new \Theme\Navwalker()                             		
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
@@ -302,7 +400,7 @@ final class Theme
 	 * Enqueue theme scripts and styles
 	 * @return [type] [description]
 	 */
-	public static function wp_enqueue()
+	public static function enqueue()
 	{
 
 		if( ! is_admin() ) 
@@ -311,37 +409,28 @@ final class Theme
 			wp_deregister_script('jquery');
 			wp_deregister_script('jquery-ui-core');
 
-
+			// Load scripts
 			$scripts = Theme::config('scripts');
 
 			foreach($scripts as $name => $script)
 			{	
-				$source = $script['source'];
-				$dep    = isset($script['dependencies']) ? $script['dependencies'] : array();
-				$ver    = isset($script['version']) ? $script['version'] : FALSE;
-				$footer = isset($script['footer']) ? (bool) $script['footer'] : FALSE;
-
-				wp_enqueue_script($name, $source, $dep, $ver, $footer);
+				Theme::enqueue_script($name, $script);
 			}
 
 			// Load fonts first so stylesheets can use em
 			$fonts = Theme::config('fonts');
 
-			foreach($fonts as $font => $source){
-				wp_enqueue_style('font-'.$font, $source);
+			foreach($fonts as $font => $source)
+			{
+				Theme::enqueue_font($font, $source);
 			}
 
-
+			// Load stylesheets
 			$styles = Theme::config('styles');
 
 			foreach($styles as $name => $style)
 			{
-				$source = $style['source'];
-				$dep    = isset($style['dependencies']) ? $style['dependencies'] : array();
-				$ver    = isset($style['version']) ? $style['version'] : FALSE;
-				$med    = isset($style['media']) ? $style['media'] : 'all';
-
-				wp_enqueue_style($name, $source, $dep, $ver, $med );
+				Theme::enqueue_style($name, $style);
 			}
 
 
@@ -350,26 +439,73 @@ final class Theme
 
 			if( ! empty($template) ){
 
-				$script = '/assets/js/' . $template . '.js';
+				foreach( array('js','css') as $asset )
+				{
+					$path = '/theme/assets/' . $asset . '/' . $template . '.' . $asset;
 
-				if( is_file( THEME_DIR . $script ) ) {
-					$name = $template . '-script';
-					$source = THEME_URI . $script;
-					wp_enqueue_script($name, $source, array(), NULL, TRUE);
+					if( is_file( THEME_DIR . $path ) ) {
+						$name = $asset . '-' . $name;
+						$config = array('source'=>THEME_URI . $path);
+
+						if( $asset == 'js' ){
+							Theme::enqueue_script($name, $config)
+						} else if( $asset == 'css' ) {
+							Theme::enqueue_style($name, $config);
+						}
+					}
 				}
 
-				$css = '/assets/css/' . $template . '.css';
-
-				if( is_file( THEME_DIR . $css ) ) {
-					$name = $template . '-css';
-					$source = THEME_URI . $css;
-					wp_enqueue_style($name, $source);
-				}
 			}
 		}
+	}
 
+	/**
+	 * Enqueue a script
+	 * @param  [type] $name   [description]
+	 * @param  [type] $config [description]
+	 * @return [type]         [description]
+	 */
+	public static function enqueue_script($name, $config)
+	{	
+		$src = element($config, 'source', '');
 
+		if( empty($src) ) return FALSE;
 
+		$dep = element($config, 'dependencies', array());
+		$ver = element($config, 'version', NULL);
+		$ftr = element($config, 'footer', TRUE);
+
+		wp_enqueue_script($name, $src, $dep, $ver, $ftr);
+	}
+
+	/**
+	 * Enqueue a font
+	 * @param  [type] $name [description]
+	 * @param  [type] $uri  [description]
+	 * @return [type]       [description]
+	 */
+	public static function enqueue_font($name, $uri)
+	{
+		wp_enqueue_style('font-'.$name, $uri);
+	}
+
+	/**
+	 * Enqueue a stylesheet
+	 * @param  [type] $name   [description]
+	 * @param  [type] $config [description]
+	 * @return [type]         [description]
+	 */
+	public static function enqueue_style($name, $config)
+	{
+		$src = element($config, 'source', '');
+
+		if( empty($src) ) return FALSE;
+
+		$dep = element($config, 'dependencies', array());
+		$ver = element($config, 'version', NULL);
+		$med = element($config, 'media', 'screen');
+
+		wp_enqueue_style( $name, $src, $dep, $ver, $med );
 	}
 
 	/**
@@ -480,43 +616,59 @@ final class Theme
 	public static function render()
 	{
 		$id 	= get_the_ID();
-		$slug 	= get_page_template_slug($id);
-
 		$type   = get_post_type($id);
 		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
 		$template = 'templates/index';
-
 		// Check for missing
 		if( is_404() ) {
 			$template = 'templates/404';
-		// Front or home page
+		// Front page
 		} else if( is_front_page() && Theme::view_exists('pages/front') ) {
 			$template = 'pages/front';
+		// Home page
 		} else if( is_home() && Theme::template_exists('pages/home') ) {
 			$template = 'pages/home';
-		// Page custom slugs and types
-		} else if( is_page() && ! empty($slug) && Theme::view_exists('pages/'.$slug) ) {
-			$template = 'pages/'.$slug;
-		} else if( is_page() && ! empty($type) && Theme::view_exists('pages/'.$type) ) {
-			$template = 'pages/'.$type;
-		} else if( is_post_type_archive($type) && ! empty($type) && ! Theme::view_exists('archive/'.$type) ) {
-			$template = 'archive/'.$type; 
-		} else if( is_single() && ! empty($type) && Theme::view_exists('single/'.$type) ) {
-			$template = 'single/'.$type;
-		// Generaic types
-		} else if( is_page() && Theme::template_exists('page') ) {
-			$template = 'templates/page';
-		} else if( is_archive() && Theme::template_exists('archive') ) {
-			$template = 'templates/archive';
-		} else if( is_single() && Theme::template_exists('single') ) {
-			$template = 'templates/single';
+		// Search Page
 		} else if( is_search() && Theme::template_exists('search') ) {
 			$template = 'templates/search';
+		// Custom pages by slug or post_type
+		} else if( is_page() ) {
+
+			$slug = Theme::get_page_slug($id);
+
+			if( $slug && Theme::view_exists('pages/'.$slug) ){
+				$template = 'pages/'.$slug;
+			} 
+			else if( ! empty($type) && Theme::view_exists('pages/'.$type) ) {
+				$template = 'pages/'.$type;
+			}
+			else if( Theme::template_exists('page') ) {
+				$template = 'templates/page';
+			}
+			
+		// Single Posts	by type or template				
+		} else if( is_single() ) {
+
+			if( ! empty($type) && Theme::view_exists('single/'.$type) ) {
+				$template = 'single/'.$type;
+			} else if( Theme::template_exists('single') ) {
+				$template = 'templates/single';
+			}
+
+		// Archives
+		} else if( is_archive() ) {
+
+			if( ! empty($type) && is_post_type_archive($type) 
+				&& ! Theme::view_exists('archive/'.$type) ){
+				$template = 'archive/'.$type; 
+			} else if ( Theme::view_exists('templates/archive') ){
+				$template = 'templates/archive';
+			}
 		}
 
-		// Set for later
+		// Set the template
 		self::$template = $template;
 
 		// This is where the rubber meets the road
@@ -533,6 +685,17 @@ final class Theme
 	 */
 	public static function getTemplate(){
 		return self::$template;
+	}
+
+	/**
+	 * Get slug of a page
+	 * @param  int $post_id ID of post
+	 * @return string|false FALSE if post is not a page
+	 */
+	public static function get_page_slug($post_id)
+	{
+		$post = get_post($post_id);
+		return $post->post_type === 'page' ? $post->post_name : FALSE;
 	}
 
 	/**
@@ -622,5 +785,10 @@ final class Theme
 				include($file);
 			}
 		}
+	}
+
+	public static function register_post_types()
+	{
+
 	}
 }
