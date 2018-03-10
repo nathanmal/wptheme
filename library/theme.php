@@ -672,7 +672,7 @@ final class Theme
 		// This is where the rubber meets the road
 		// Output header, page and footer
 		get_header();
-		Theme::view($template);
+		self::view($template);
 		get_footer();
 
 	}
@@ -712,7 +712,7 @@ final class Theme
 		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
 		
 		// Set absolute path
-		$path = self::dir( 'library/views/' . $path );
+		$path = self::path( 'views/' . $path );
 
 		// Warn if missing
 		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
