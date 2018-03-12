@@ -178,6 +178,39 @@ final class Theme
 	}
 
 	/**
+	 * Get the URL of an asset
+	 * @param  [type] $path [description]
+	 * @return [type]       [description]
+	 */
+	public static function asset($path)
+	{
+		if( empty($path) ) return FALSE;
+
+		$path = 'assets/' . $path;
+
+		// Return if cached
+		if( isset(self::$paths[$path]) ) return self::$paths[$path];
+
+		// Look thru entries
+		foreach(self::$entries as $entry)
+		{
+			$file = THEME_DIR . "/$entry/$path";
+
+			if( is_file($file) ) 
+			{
+				$uri = THEME_URI . "/$entry/$path";
+				// Store for later
+				self::$paths[$path] = $uri;
+				
+				return $uri;
+			}
+		}
+
+		return FALSE;
+	}
+
+
+	/**
 	 * Get theme config item
 	 * @param  [type] $item [description]
 	 * @return [type]       [description]
@@ -695,6 +728,8 @@ final class Theme
 		$post = get_post($post_id);
 		return $post->post_type === 'page' ? $post->post_name : FALSE;
 	}
+
+
 
 	/**
 	 * Include a view from the views directory
