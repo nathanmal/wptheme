@@ -578,7 +578,7 @@ final class Theme
 		if( empty($widgets) ) return;
 
 		// If we have widgets, include the theme base widget class
-		include THEME_DIR . '/library/classes/theme_widget.php';
+		include THEME_DIR . '/library/classes/widget.php';
 
 		foreach($widgets as $widget) {
 
