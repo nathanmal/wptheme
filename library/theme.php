@@ -28,15 +28,6 @@ final class Theme
 	private static $template = '';
 
 	/**
-	 * Path entries, where to look when calling Theme::path()
-	 * @var array
-	 */
-	private static $entries = array(
-		'theme',	
-		'library', 
-	);
-
-	/**
 	 * Holds paths
 	 * @var array
 	 */
@@ -136,7 +127,7 @@ final class Theme
 	private static function load_config()
 	{
 		// Merge theme and core config arrays
-		$theme = THEME_DIR . '/theme/theme.config.php';
+		$theme = THEME_DIR . '/theme.config.php';
 		$core  = THEME_DIR . '/library/theme.config.php';
 
 		// theme config optional
@@ -157,21 +148,24 @@ final class Theme
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
 		
-		// Look thru entries
-		foreach(self::$entries as $entry)
-		{
-			$file = THEME_DIR . "/$entry/$path";
+		$theme = THEME_DIR . $path;
+		$core  = THEME_DIR . '/library/' . $path;
 
-			if( is_file($file) ) 
-			{
-				// Store for later
-				self::$paths[$path] = $file;
-				return $file;
-			}
+		// Check theme directory first
+		if( is_file( $theme ) )
+		{
+			self::$paths[$path] = $theme;
+			return $theme;
 		}
 
-        // Nothing found
-        return FALSE; 
+		// Check library
+		if( is_file( $core ) )
+		{
+			self::$paths[$path] = $core;
+			return $core;
+		}
+
+		return FALSE;
 	}
 
 	/**
@@ -183,24 +177,18 @@ final class Theme
 	{
 		if( empty($path) ) return FALSE;
 
-		$path = 'assets/' . $path;
+		$path = '/assets/' . $path;
 
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
 
-		// Look thru entries
-		foreach(self::$entries as $entry)
-		{
-			$file = THEME_DIR . "/$entry/$path";
+		$file = THEME_DIR . $path;
 
-			if( is_file($file) ) 
-			{
-				$uri = THEME_URI . "/$entry/$path";
-				// Store for later
-				self::$paths[$path] = $uri;
-				
-				return $uri;
-			}
+		if( is_file($file) ) {
+
+			$uri - THEME_URI . $path;
+			self::$paths[$path] = $uri;
+			return $uri;
 		}
 
 		return FALSE;
@@ -794,7 +782,7 @@ final class Theme
 		$file = 'views/'.$name.'.php';
 		// verify path
 		$path = self::path('views/'.$name.'.php');
-		
+
 		return ! empty($path);
 	}
 
