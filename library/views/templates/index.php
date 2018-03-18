@@ -9,13 +9,11 @@
 		<?php 
 
 		if ( have_posts() ) 
+		{
 			// BEGIN LOOP
-			while ( have_posts() ) : the_post(); ?>
-
-				<?php
+			while ( have_posts() ) : the_post();
 				$format = get_post_format() || 'post';
 				Theme::view('formats/'.$format);
-
 			endwhile;
 
 		} else {
