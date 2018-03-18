@@ -139,15 +139,12 @@ final class Theme
 		$theme = THEME_DIR . '/theme/theme.config.php';
 		$core  = THEME_DIR . '/library/theme.config.php';
 
-		// optional
+		// theme config optional
 		$tconf = is_file($theme) ? include $theme : array();
-
-		// required
-		if( ! is_file($core) ) wp_die("Theme core configuration file missing");
-
-		$cconf = include($core);
-
-		self::$config = wp_parse_args($tconf,$cconf);
+		// core config required
+		$cconf = require($core);
+		// merge
+		self::$config = array_merge_recursive($cconf,$tconf);
 	}
 
 	/**
@@ -652,15 +649,18 @@ final class Theme
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
 		$template = 'templates/index';
+
+		//echo Theme::template_exists('front') ? 'YES' : 'NO';
 		// Check for missing
 		if( is_404() ) {
 			$template = 'templates/404';
 		// Front page
-		} else if( is_front_page() && Theme::view_exists('pages/front') ) {
-			$template = 'pages/front';
+		} else if( is_front_page() && Theme::template_exists('front') ) {
+			//echo 'FRONT';
+			$template = 'templates/front';
 		// Home page
-		} else if( is_home() && Theme::template_exists('pages/home') ) {
-			$template = 'pages/home';
+		} else if( is_home() && Theme::template_exists('home') ) {
+			$template = 'templates/home';
 		// Search Page
 		} else if( is_search() && Theme::template_exists('search') ) {
 			$template = 'templates/search';
@@ -694,7 +694,7 @@ final class Theme
 			if( ! empty($type) && is_post_type_archive($type) 
 				&& ! Theme::view_exists('archive/'.$type) ){
 				$template = 'archive/'.$type; 
-			} else if ( Theme::view_exists('templates/archive') ){
+			} else if ( Theme::template_exists('archive') ){
 				$template = 'templates/archive';
 			}
 		}
@@ -789,8 +789,13 @@ final class Theme
 	 * @return [type]       [description]
 	 */
 	public static function view_exists($name)
-	{
-		return is_file(THEME_DIR . '/library/views/' . $name . '.php');
+	{	
+		// prep path
+		$file = 'views/'.$name.'.php';
+		// verify path
+		$path = self::path('views/'.$name.'.php');
+		
+		return ! empty($path);
 	}
 
 	/**
