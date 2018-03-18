@@ -25,20 +25,26 @@ return array(
 	'scripts' => array(
 		// This replaces built in WP jQuery with 3.2.1 and should always be first
 		'jquery' => array(
-			'source' => THEME_URI . '/library/assets/vendor/jquery/dist/jquery.min.js',
+			'source' => 'vendor/jquery/dist/jquery.min.js',
 			'version' => '3.2.1',
 			'footer' => TRUE,
 		),
 
+		'easing' => array(
+			'source' => 'vendor/jquery-easing/jquery.easing.min.js',
+			'version' => '1.3',
+			'footer' => TRUE,
+		),
+
 		'bootstrap' => array(
-			'source'       => THEME_URI .'/library/assets/vendor/bootstrap/dist/js/bootstrap.bundle.js',
+			'source'       => 'vendor/bootstrap/dist/js/bootstrap.bundle.js',
 			'dependencies' => array('jquery'),
 			'version'      => '4.0.0',
 			'footer'       => TRUE,
 		),
 
 		'main' => array(
-			'source'  => THEME_URI .'/theme/assets/js/main.js',
+			'source'  => 'js/main.js',
 			'version' => THEME_VERSION,
 			'footer'  => TRUE,
 		)
@@ -62,17 +68,17 @@ return array(
 	 */
 	'styles' => array(
 		'bootstrap' => array(
-			'source'  => THEME_URI . '/library/assets/vendor/bootstrap/dist/css/bootstrap.min.css',
+			'source'  => 'vendor/bootstrap/dist/css/bootstrap.min.css',
 			'version' => '4.0.0',
 		),
 
 		'fontawesome' => array(
-			'source' => THEME_URI . '/library/assets/vendor/font-awesome/css/font-awesome.min.css',
+			'source' => 'vendor/font-awesome/css/font-awesome.min.css',
 			'version' => '4.7.0',
 		),
 
 		'main' => array(
-			'source' => THEME_URI . '/theme/assets/css/theme.css',
+			'source' => 'css/main.css',
 			'version'=> THEME_VERSION,
 		)
 	),
@@ -139,12 +145,12 @@ return array(
 	/**
 	 * Enable Widgets
 	 */
-	'widgets' => array('intro','links'),
+	'widgets' => array(),
 
 	/**
 	 * Enable shortcodes
 	 */
-	'shortcodes' => array('lorem_ipsum'),
+	'shortcodes' => array(),
 
 	/**
 	 * Google analytics account id UA-XXXXXX-X
