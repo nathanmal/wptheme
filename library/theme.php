@@ -177,7 +177,7 @@ final class Theme
 	{
 		if( empty($path) ) return FALSE;
 
-		$path = '/assets/' . $path;
+		$path = '/assets/' . ltrim($path,'/');
 
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
@@ -186,7 +186,7 @@ final class Theme
 
 		if( is_file($file) ) {
 
-			$uri - THEME_URI . $path;
+			$uri = THEME_URI . $path;
 			self::$paths[$path] = $uri;
 			return $uri;
 		}
@@ -459,23 +459,18 @@ final class Theme
 
 			if( ! empty($template) ){
 
-				foreach( array('js','css') as $asset )
+				if( $js = Theme::asset('js/' . $template . '.js') )
 				{
-					$path = '/theme/assets/' . $asset . '/' . $template . '.' . $asset;
+					Theme::enqueue_script('template', array('source'=>$js) );
+				}
 
-					if( is_file( THEME_DIR . $path ) ) {
-						$name = $asset . '-' . $name;
-						$config = array('source'=>THEME_URI . $path);
-
-						if( $asset == 'js' ){
-							Theme::enqueue_script($name, $config);
-						} else if( $asset == 'css' ) {
-							Theme::enqueue_style($name, $config);
-						}
-					}
+				if( $css = Theme::asset('css/' . $template . '.css') )
+				{
+					Theme::enqueue_style('template', array('source'=>$css) );
 				}
 
 			}
+
 		}
 	}
 
