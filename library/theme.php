@@ -482,7 +482,10 @@ final class Theme
 	 */
 	public static function enqueue_script($name, $config)
 	{	
+		// Must be set
 		$src = element($config, 'source', '');
+		// IF not absolute find path
+		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
 
 		if( empty($src) ) return FALSE;
 
@@ -501,7 +504,7 @@ final class Theme
 	 */
 	public static function enqueue_font($name, $uri)
 	{
-		wp_enqueue_style('font-'.$name, $uri);
+		wp_enqueue_style('font-'.$name, array('source'=>$uri) );
 	}
 
 	/**
@@ -513,6 +516,8 @@ final class Theme
 	public static function enqueue_style($name, $config)
 	{
 		$src = element($config, 'source', '');
+		// IF not absolute find path
+		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
 
 		if( empty($src) ) return FALSE;
 
