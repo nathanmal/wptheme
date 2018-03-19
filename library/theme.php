@@ -148,8 +148,8 @@ final class Theme
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
 		
-		$theme = THEME_DIR . $path;
-		$core  = THEME_DIR . '/library/' . $path;
+		$theme = THEME_DIR . '/'. ltrim($path,'/');
+		$core  = THEME_DIR . '/library/' . ltrim($path,'/');
 
 		// Check theme directory first
 		if( is_file( $theme ) )
@@ -396,6 +396,10 @@ final class Theme
 			echo "[Could not locate menu $location]";
 			return;
 		};
+
+		if( ! class_exists('Navwalker') ) {
+			include THEME_DIR . '/library/classes/navwalker.php';
+		}
 
 		$default = array(
 			'menu'            => __( $label, THEME_DOMAIN ), 
@@ -781,7 +785,7 @@ final class Theme
 		// prep path
 		$file = 'views/'.$name.'.php';
 		// verify path
-		$path = self::path('views/'.$name.'.php');
+		$path = self::path($file);
 
 		return ! empty($path);
 	}
@@ -816,5 +820,18 @@ final class Theme
 	public static function register_post_types()
 	{
 
+	}
+
+	/**
+	 * Debugging
+	 * @param  [type] $msg [description]
+	 * @return [type]      [description]
+	 */
+	public static function debug($msg)
+	{
+		if( WP_DEBUG ) {
+			if( is_array($msg) or is_object($msg) ) pre($msg);
+			if( is_string($msg) ) echo $msg;
+		}
 	}
 }

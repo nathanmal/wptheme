@@ -2,7 +2,7 @@
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Navwalker
+class Navwalker extends Walker_Nav_Menu
 {
 
         /**
