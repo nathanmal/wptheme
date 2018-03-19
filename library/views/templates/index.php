@@ -12,7 +12,10 @@
 		{
 			// BEGIN LOOP
 			while ( have_posts() ) : the_post();
-				$format = get_post_format() || 'post';
+				$format = get_post_format();
+
+				if( empty($format) ) $format = 'post';
+
 				Theme::view('formats/'.$format);
 			endwhile;
 
