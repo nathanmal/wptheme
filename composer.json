@@ -2,7 +2,7 @@
     "config": {
         "vendor-dir": "library/vendor"
     },
+    "repositories": [],
     "require": {
-        "wp-bootstrap/wp-bootstrap-navwalker": "^2.0"
     }
 }
