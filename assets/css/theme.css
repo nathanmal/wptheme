@@ -1,0 +1,57 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+/** GLOBAL SASS VARIABLES */
+/** GLOBAL COLORS */
+/** GLOBAL FONTS & TYPOGRAPHY */
+/** GLOBAL STYLES GO HERE */
+/* line 3, assets/scss/theme/_global.scss */
+html, body {
+  height: 100vh; }
+
+/* line 7, assets/scss/theme/_global.scss */
+.container-fluid.no-padding {
+  margin: 0; }
+
+/* line 1, assets/scss/theme/_banner.scss */
+.banner {
+  min-height: 50vh;
+  position: relative;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover; }
+  /* line 10, assets/scss/theme/_banner.scss */
+  .banner .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 11; }
+  /* line 14, assets/scss/theme/_banner.scss */
+  .banner .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5); }
+
+/** GLOBAL PAGE STYLES GO HERE */
+/**
+ * Custom styles for widgets
+ */
