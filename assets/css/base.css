@@ -20,3 +20,7 @@
     opacity: 0; } }
 
 /* Easing Functions, example - transition: opacity 500ms $ease-cubic; */
+/* Set root font size */
+/* line 7, assets/scss/base.scss */
+html {
+  font-size: 16px; }
