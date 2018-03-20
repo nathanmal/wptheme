@@ -448,9 +448,9 @@ final class Theme
 			// Load stylesheets
 			$styles = Theme::config('styles');
 
-			foreach($styles as $name => $style)
+			foreach($styles as $name => $config)
 			{
-				Theme::enqueue_style($name, $style);
+				Theme::enqueue_style($name, $config);
 			}
 
 
@@ -504,7 +504,7 @@ final class Theme
 	 */
 	public static function enqueue_font($name, $uri)
 	{
-		wp_enqueue_style('font-'.$name, array('source'=>$uri) );
+		wp_enqueue_style('font-'.$name, $uri );
 	}
 
 	/**
@@ -587,30 +587,6 @@ final class Theme
 
 
 	/**
-	 * Display enqueue files
-	 * @category utility
-	 * @return [type] [description]
-	 */
-	public static function display_enqueue() 
-	{
-	    global $wp_scripts, $wp_styles;
-	   	
-	   	echo '<h3>Scripts</h3>';
-	    foreach( $wp_scripts->queue as $script )
-	    {	
-	    	echo $script . '<br/>';
-	    }
-
-	    echo '<h3>Styles</h3>';
-
-	    foreach( $wp_styles->queue as $style )
-	    {
-	    	echo $style . '<br/>';
-	    }
-
-	}
-
-	/**
 	 * Output the header
 	 * @return [type] [description]
 	 */
@@ -690,6 +666,7 @@ final class Theme
 				$template = 'templates/archive';
 			}
 		}
+
 
 		// Set the template
 		self::$template = $template;
@@ -819,6 +796,30 @@ final class Theme
 
 	public static function register_post_types()
 	{
+
+	}
+
+	/**
+	 * Display enqueue files
+	 * @category utility
+	 * @return [type] [description]
+	 */
+	public static function debug_enqueue() 
+	{
+	    global $wp_scripts, $wp_styles;
+	   	
+	   	echo '<h3>Scripts</h3>';
+	    foreach( $wp_scripts->queue as $script )
+	    {	
+	    	echo $script . '<br/>';
+	    }
+
+	    echo '<h3>Styles</h3>';
+
+	    foreach( $wp_styles->queue as $style )
+	    {
+	    	echo $style . '<br/>';
+	    }
 
 	}
 

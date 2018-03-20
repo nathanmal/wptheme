@@ -43,9 +43,14 @@ return array(
 			'footer'       => TRUE,
 		),
 
-		'main' => array(
-			'source'  => 'js/main.js',
+		'base' => array(
+			'source'  => 'js/base.js',
 			'version' => THEME_VERSION,
+			'footer'  => TRUE,
+		),
+
+		'theme' => array(
+			'source'  => 'js/theme.js',
 			'footer'  => TRUE,
 		)
 	),
@@ -78,7 +83,7 @@ return array(
 		),
 
 		'main' => array(
-			'source' => 'css/main.css',
+			'source' => 'css/theme.css',
 			'version'=> THEME_VERSION,
 		)
 	),
