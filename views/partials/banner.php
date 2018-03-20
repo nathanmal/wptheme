@@ -5,10 +5,14 @@ $id  = get_the_ID();
 $img = get_the_post_thumbnail_url($id,'full');
 // Set to default image if empty
 if( empty($img) ) $img = Theme::asset('images/banners/default.jpg');
-
 ?>
-
-<div class="banner" role="banner" style="background-image:url('<?=$img?>');">
-    <div class="content">asdfaadsfs</div>
+<!-- Begin page banner -->
+<div class="banner" role="banner">
+    <!-- Content Layer -->
+    <div class="content"></div>
+    <!-- Image Overlay Layer -->
     <div class="overlay"></div>
+    <!-- Image Layer -->
+    <div class="image" style="background-image:url('<?=$img?>');"></div>
 </div>
+<!-- End page banner -->

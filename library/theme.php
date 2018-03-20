@@ -482,11 +482,13 @@ final class Theme
 	 */
 	public static function enqueue_script($name, $config)
 	{	
+		// Allow passing src as string
+		$config = is_string($config) ? array('source'=>$config) : $config;
 		// Must be set
 		$src = element($config, 'source', '');
-		// IF not absolute find path
+		// IF not absolute URI find path
 		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
-
+		// Bad Panda
 		if( empty($src) ) return FALSE;
 
 		$dep = element($config, 'dependencies', array());
@@ -515,10 +517,13 @@ final class Theme
 	 */
 	public static function enqueue_style($name, $config)
 	{
+		// Allow passing src as string
+		$config = is_string($config) ? array('source'=>$config) : $config;
+		// Make sure this is there
 		$src = element($config, 'source', '');
-		// IF not absolute find path
+		// IF not absolute URI find path
 		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
-
+		// Bad Panda
 		if( empty($src) ) return FALSE;
 
 		$dep = element($config, 'dependencies', array());
@@ -739,6 +744,11 @@ final class Theme
 	 */
 	public static function partial( $path, $data = array(), $repeat = 1 )
 	{
+
+		/*if( $css = Theme::asset('css/partials/' . $path . '.css') ) {
+			Theme::enqueue_style('partial-'.$path, $css);
+		}*/
+
 		Theme::view('partials/' . $path, $data, $repeat);
 	}
 
