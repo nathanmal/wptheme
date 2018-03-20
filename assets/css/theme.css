@@ -1,3 +1,10 @@
+/* Vars */
+/* Parent element must have position:relative for this to work */
+/* Basic Colors */
+/* Named Colors */
+/* Brand Colors */
+/* Font definitions */
+/* Named Keyframes */
 @keyframes fadeIn {
   0% {
     opacity: 0; }
@@ -10,6 +17,7 @@
   100% {
     opacity: 0; } }
 
+/* Easing Functions, example - transition: opacity 500ms $ease-cubic; */
 /** GLOBAL SASS VARIABLES */
 /** GLOBAL COLORS */
 /** GLOBAL FONTS & TYPOGRAPHY */
