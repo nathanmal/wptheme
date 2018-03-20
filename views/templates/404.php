@@ -1,0 +1,1 @@
+<?php template_header('404'); // Replace this ?>

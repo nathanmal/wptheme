@@ -1,0 +1,1 @@
+<?php template_header('Single'); // Replace this ?>
