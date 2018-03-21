@@ -30,7 +30,7 @@ return array(
 			'footer' => TRUE,
 		),
 
-		'easing' => array(
+		'jquery-easing' => array(
 			'source' => 'vendor/jquery-easing/jquery.easing.min.js',
 			'version' => '1.3',
 			'footer' => TRUE,
