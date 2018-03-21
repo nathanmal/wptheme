@@ -49,3 +49,4 @@ temp/
 assets/vendor/*
 library/vendor/*
 node_modules/*
+assets/css/theme.css
