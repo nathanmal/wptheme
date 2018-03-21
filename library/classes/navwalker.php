@@ -17,8 +17,18 @@ class Navwalker extends Walker_Nav_Menu
          * @param array $args (default: array()) Arguments.
          * @return void
          */
-        public function start_lvl( &$output, $depth = 0, $args = array() ) {
+        public function start_lvl( &$output, $depth = 0, $args = array() ) 
+        {
+               $indent = str_repeat( "\t", $depth );
+                // find all links with an id in the output.
+                preg_match_all( '/(<a.*?id=\"|\')(.*?)\"|\'.*?>/im', $output, $matches );
+                // with pointer at end of array check if we got an ID match.
+                if ( end( $matches[2] ) ) {
+                        // build a string to use as aria-labelledby.
+                        $labledby = 'aria-labelledby="' . end( $matches[2] ) . '"';
+                }
 
+                $output .= "\n$indent<ul role=\"menu\" class=\" dropdown-menu\" " . $labledby . ">\n";
         }
 
 
@@ -37,6 +47,64 @@ class Navwalker extends Walker_Nav_Menu
          * @return void
          */
         public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+
+                $indent   = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+                $classes  = isset($item->classes) ? $item->classes : array();
+                $dropdown = $args->has_children;
+                $current  = in_array('current-menu-item', $classes, TRUE);
+
+                $menuID   = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args );
+
+                $classes[] = $menuID;
+                $classes[] = 'nav-item';
+
+                if( $dropdown ) $classes[] = 'dropdown';
+                if( $current ) $classes[] = 'current';
+                
+                $scope = 'itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement';
+
+                // Opening Tag
+                $item_open = '<li ' . $scope  . ' id="' . $menuID . '" class="' . implode(' ', $classes) .'">';
+                
+                $atts = array();
+
+                $atts['title']  = isset($item->attr_title) ? $item->attr_title : strip_tags($item->title);
+                $atts['target'] = isset($item->target) ? $item->target : '';
+                $atts['rel']    = isset($item->rel) ? $item->rel : '';
+
+                if( $dropdown && 0 === $depth && $args->depth > 1 )
+                {
+                        $atts['href']           = '#';
+                        $atts['data-toggle']    = 'dropdown';
+                        $atts['aria-haspopup']  = 'true';
+                        $atts['aria-expanded']  = 'false';
+                        $atts['class']          = 'dropdown-toggle nav-link';
+                        $atts['id']             = 'menu-item-dropdown-' . $item->ID;
+                }
+                else
+                {       
+                        $atts['href']  = ! empty( $item->url ) ? $item->url : '';
+                        $atts['class'] = $depth > 0 ? 'dropdown-item' : 'nav-link';
+                }
+
+                $atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args );
+
+                $attributes = '';
+
+                foreach ( $atts as $attr => $value ) {
+                        if ( ! empty( $value ) ) {
+                                $value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+                                $attributes .= ' ' . $attr . '="' . $value . '"';
+                        }
+                }
+
+                $item_title = apply_filters( 'the_title', $item->title, $item->ID );
+                $item_link  = $args->link_before . '<a' . $attributes . '>' . $item_title . $args->link_after . '</a>';
+                
+                // Build full output
+                $item_output = $args->before . $item_open . $item_link . $args->after;
+
+                $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
 
         }
 
@@ -63,7 +131,13 @@ class Navwalker extends Walker_Nav_Menu
          * @return null Null on failure with no changes to parameters.
          */
         public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
-
+                if ( ! $element ) {
+                                return; }
+                        $id_field = $this->db_fields['id'];
+                        // Display this element.
+                        if ( is_object( $args[0] ) ) {
+                                $args[0]->has_children = ! empty( $children_elements[ $element->$id_field ] ); }
+                        parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
         }
 
 
@@ -78,7 +152,47 @@ class Navwalker extends Walker_Nav_Menu
          * @param array $args passed from the wp_nav_menu function.
          */
         public static function fallback( $args ) {
+                if ( current_user_can( 'edit_theme_options' ) ) {
 
+                                /* Get Arguments. */
+                                $container = $args['container'];
+                                $container_id = $args['container_id'];
+                                $container_class = $args['container_class'];
+                                $menu_class = $args['menu_class'];
+                                $menu_id = $args['menu_id'];
+
+                                // initialize var to store fallback html.
+                                $fallback_output = '';
+
+                                if ( $container ) {
+                                        $fallback_output = '<' . esc_attr( $container );
+                                        if ( $container_id ) {
+                                                $fallback_output = ' id="' . esc_attr( $container_id ) . '"';
+                                        }
+                                        if ( $container_class ) {
+                                                $fallback_output = ' class="' . sanitize_html_class( $container_class ) . '"';
+                                        }
+                                        $fallback_output = '>';
+                                }
+                                $fallback_output = '<ul';
+                                if ( $menu_id ) {
+                                        $fallback_output = ' id="' . esc_attr( $menu_id ) . '"'; }
+                                if ( $menu_class ) {
+                                        $fallback_output = ' class="' . esc_attr( $menu_class ) . '"'; }
+                                $fallback_output = '>';
+                                $fallback_output = '<li><a href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '" title="">' . esc_attr( 'Add a menu', '' ) . '</a></li>';
+                                $fallback_output = '</ul>';
+                                if ( $container ) {
+                                        $fallback_output = '</' . esc_attr( $container ) . '>';
+                                }
+
+                                // if $args has 'echo' key and it's true echo, otherwise return.
+                                if ( array_key_exists( 'echo', $args ) && $args['echo'] ) {
+                                        echo $fallback_output; // WPCS: XSS OK.
+                                } else {
+                                        return $fallback_output;
+                                }
+                        } // End if().
         }
 
 
