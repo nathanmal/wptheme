@@ -621,15 +621,14 @@ final class Theme
 		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
+		// Default
 		$template = 'templates/index';
 
-		//echo Theme::template_exists('front') ? 'YES' : 'NO';
 		// Check for missing
 		if( is_404() ) {
 			$template = 'templates/404';
 		// Front page
 		} else if( is_front_page() && Theme::template_exists('front') ) {
-			//echo 'FRONT';
 			$template = 'templates/front';
 		// Home page
 		} else if( is_home() && Theme::template_exists('home') ) {
@@ -665,7 +664,7 @@ final class Theme
 		} else if( is_archive() ) {
 
 			if( ! empty($type) && is_post_type_archive($type) 
-				&& ! Theme::view_exists('archive/'.$type) ){
+				&& Theme::view_exists('archive/'.$type) ){
 				$template = 'archive/'.$type; 
 			} else if ( Theme::template_exists('archive') ){
 				$template = 'templates/archive';
