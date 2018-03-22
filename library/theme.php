@@ -506,6 +506,11 @@ final class Theme
 	 */
 	public static function enqueue_font($name, $uri)
 	{
+		// IF not absolute URI find path
+		if( 0 !== strpos($uri, 'http') ) $uri = Theme::asset($uri);
+
+		if( empty($uri) ) return;
+		
 		wp_enqueue_style('font-'.$name, $uri );
 	}
 
