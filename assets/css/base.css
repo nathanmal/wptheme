@@ -19,6 +19,12 @@
   100% {
     opacity: 0; } }
 
+@keyframes rotate {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
 /* Easing Functions, example - transition: opacity 500ms $ease-cubic; */
 /* Set root font size */
 /* line 7, assets/scss/base.scss */
