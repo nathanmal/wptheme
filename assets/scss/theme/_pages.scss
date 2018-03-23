@@ -1,1 +1,26 @@
 /** GLOBAL PAGE STYLES GO HERE */
+
+#page {
+  background: rgba(black, 0.7);
+  color:$color-white;
+  h1, h2, h3, h4, h5, h6 {
+    color:$color-yellow;
+    letter-spacing: 1px;
+  }
+
+  a {
+    color:$color-white;
+    transition:color 250ms ease-out;
+    &:hover {
+      color:$color-pink;
+    }
+  }
+}
+
+body.page-home .banner .image {
+  background-position: top center;
+}
+
+body.page-home .banner .overlay {
+  background:rgba($color-black, 0.2);
+}

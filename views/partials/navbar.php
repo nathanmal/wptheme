@@ -1,6 +1,6 @@
 <header class="header" role="banner">
 
-	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+	<nav class="navbar navbar-expand-lg fixed-top" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
 
 		<div class="container-fluid">
 
@@ -14,7 +14,7 @@
 		
 		<div class="collapse navbar-collapse">
 			<?php 
-			Theme::menu('main', array('menu_class'=>'navbar-nav ml-auto'));
+			Theme::menu('main', array('menu_class'=>'navbar-nav mx-auto'));
 			?>
 		</div>
 		
