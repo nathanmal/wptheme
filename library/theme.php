@@ -406,10 +406,10 @@ final class Theme
 			'theme_location'  => $location,              
 			'container'       => '',                           		
 			'container_class' => '',  								 
-			'menu_class'      => 'navbar-nav',               					
+			'menu_class'      => '',               					
 			'depth'           => 0,
-			'fallback_cb'     => 'WP_Bootstrap_Navwalker::fallback',
-    		'walker'          => new Navwalker()                             		
+			'fallback_cb'     => 'Navwalker::fallback',
+    		'walker'        => new Navwalker()                             		
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
