@@ -14,7 +14,7 @@
 		
 		<div class="collapse navbar-collapse">
 			<?php 
-			Theme::menu('main', array('menu_class'=>'navbar-nav ml-auto'));
+				Theme::menu('main', array('menu_class'=>'navbar-nav mx-auto'));
 			?>
 		</div>
 		
