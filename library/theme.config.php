@@ -78,8 +78,8 @@ return array(
 		),
 
 		'fontawesome' => array(
-			'source' => 'vendor/font-awesome/css/font-awesome.min.css',
-			'version' => '4.7.0',
+			'source' => 'vendor/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
+      'version' => '5.0.9',
 		),
 
 		'main' => array(
