@@ -9,9 +9,9 @@
 /**
  * Echo empty template header
  */
-if ( ! function_exists('template_header') ){
+if ( ! function_exists('template_placeholder') ){
 
-    function template_header( $name = '' ){
+    function template_placeholder( $name = '' ){
 
         $template = Theme::getTemplate();
         echo '<style>body { margin:0 }</style>';

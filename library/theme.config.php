@@ -23,32 +23,26 @@ return array(
 	 * 	
 	 */
 	'scripts' => array(
-		// This replaces built in WP jQuery with 3.2.1 and should always be first
+		// Replace built-in WP jQuery with 3.2.1
 		'jquery' => array(
 			'source' => 'vendor/jquery/dist/jquery.min.js',
 			'version' => '3.2.1',
 			'footer' => TRUE,
 		),
-
+		// Easing functions for jQuery
 		'jquery-easing' => array(
 			'source' => 'vendor/jquery-easing/jquery.easing.min.js',
 			'version' => '1.3',
 			'footer' => TRUE,
 		),
-
+		// Bootstrap JS
 		'bootstrap' => array(
 			'source'       => 'vendor/bootstrap/dist/js/bootstrap.bundle.js',
 			'dependencies' => array('jquery'),
 			'version'      => '4.0.0',
 			'footer'       => TRUE,
 		),
-
-		'base' => array(
-			'source'  => 'js/base.js',
-			'version' => THEME_VERSION,
-			'footer'  => TRUE,
-		),
-
+		// Main Theme File
 		'theme' => array(
 			'source'  => 'js/theme.js',
 			'footer'  => TRUE,
@@ -72,17 +66,18 @@ return array(
 	 *
 	 */
 	'styles' => array(
+		// Bootstrap 4 CSS
 		'bootstrap' => array(
 			'source'  => 'vendor/bootstrap/dist/css/bootstrap.min.css',
 			'version' => '4.0.0',
 		),
-
+		// Font Awesome 5
 		'fontawesome' => array(
 			'source' => 'vendor/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
       'version' => '5.0.9',
 		),
-
-		'main' => array(
+		// Main theme stylesheet
+		'theme' => array(
 			'source' => 'css/theme.css',
 			'version'=> THEME_VERSION,
 		)

@@ -1,2 +1,1 @@
-[Post-format: Post]
-Edit at /views/formats/post.php
+<?php template_header('Post Format'); // Replace this ?>

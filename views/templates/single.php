@@ -1,1 +1,1 @@
-<?php template_header('Single'); // Replace this ?>
+<?php template_placeholder('Single'); // Replace this ?>

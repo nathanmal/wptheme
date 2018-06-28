@@ -1,1 +1,1 @@
-<?php template_header('Archive'); // Replace this ?>
+<?php template_placeholder('Archive'); // Replace this ?>

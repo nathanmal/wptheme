@@ -1,1 +1,1 @@
-<?php template_header('404'); // Replace this ?>
+<?php template_placeholder('404'); // Replace this ?>

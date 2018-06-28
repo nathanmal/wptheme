@@ -1,4 +1,4 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; 
+<?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal!'); 
 /*
 Author: Nathan Malachowski
 URL: http://ntheorydesign.com

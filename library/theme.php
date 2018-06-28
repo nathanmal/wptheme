@@ -748,11 +748,6 @@ final class Theme
 	 */
 	public static function partial( $path, $data = array(), $repeat = 1 )
 	{
-
-		/*if( $css = Theme::asset('css/partials/' . $path . '.css') ) {
-			Theme::enqueue_style('partial-'.$path, $css);
-		}*/
-
 		Theme::view('partials/' . $path, $data, $repeat);
 	}
 
