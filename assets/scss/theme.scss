@@ -1,8 +1,11 @@
-@import 'base.scss';
+/**
+ * Main Theme.css File
+ */
 @import 'theme/vars';
+@import 'theme/mixins';
 @import 'theme/colors';
 @import 'theme/typography';
 @import 'theme/global';
-@import 'theme/banner';
 @import 'theme/pages';
 @import 'theme/widgets';
+@import 'theme/partials';
