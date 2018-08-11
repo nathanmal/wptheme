@@ -32,6 +32,9 @@ require_once('library/helpers.php');
 // load the main theme class
 require_once('library/theme.php');
 
+// load theme custom functions
+require_once('theme.functions.php');
+
 // Hook into WP theme activation
 add_action( 'after_switch_theme', 'Theme::activate' );
 
