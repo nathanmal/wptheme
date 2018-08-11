@@ -35,6 +35,9 @@ require_once('library/theme.php');
 // load theme custom functions
 require_once('theme.functions.php');
 
+// load admin custom functions
+if( is_admin() ) require_once('admin.functions.php');
+
 // Hook into WP theme activation
 add_action( 'after_switch_theme', 'Theme::activate' );
 
