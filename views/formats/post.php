@@ -1,1 +1,1 @@
-<?php template_header('Post Format'); // Replace this ?>
+<?php template_placeholder('Post Format'); // Replace this ?>
