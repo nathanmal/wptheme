@@ -127,7 +127,7 @@ final class Theme
 	private static function load_config()
 	{
 		// Merge theme and core config arrays
-		$theme = THEME_DIR . '/theme.config.php';
+		$theme = THEME_DIR . '/config/theme.config.php';
 		$core  = THEME_DIR . '/library/theme.config.php';
 
 		// theme config optional

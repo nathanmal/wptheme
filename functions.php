@@ -33,10 +33,10 @@ require_once('library/helpers.php');
 require_once('library/theme.php');
 
 // load theme custom functions
-require_once('theme.functions.php');
+require_once('config/theme.functions.php');
 
 // load admin custom functions
-if( is_admin() ) require_once('admin.functions.php');
+if( is_admin() ) require_once('config/admin.functions.php');
 
 // Hook into WP theme activation
 add_action( 'after_switch_theme', 'Theme::activate' );

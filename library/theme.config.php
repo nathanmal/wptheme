@@ -23,28 +23,14 @@ return array(
 	 * 	
 	 */
 	'scripts' => array(
-		// Replace built-in WP jQuery with 3.2.1
+		// jQuery
 		'jquery' => array(
-			'source' => 'vendor/jquery/dist/jquery.min.js',
-			'version' => '3.2.1',
-			'footer' => TRUE,
-		),
-		// Easing functions for jQuery
-		'jquery-easing' => array(
-			'source' => 'vendor/jquery-easing/jquery.easing.min.js',
-			'version' => '1.3',
-			'footer' => TRUE,
-		),
-		// Bootstrap JS
-		'bootstrap' => array(
-			'source'       => 'vendor/bootstrap/dist/js/bootstrap.bundle.js',
-			'dependencies' => array('jquery'),
-			'version'      => '4.0.0',
-			'footer'       => TRUE,
+			'source'  => 'dist/jquery.js',
+			'footer'  => TRUE,
 		),
 		// Main Theme File
 		'theme' => array(
-			'source'  => 'js/theme.js',
+			'source'  => 'dist/theme.js',
 			'footer'  => TRUE,
 		)
 	),
@@ -78,8 +64,8 @@ return array(
 		),
 		// Main theme stylesheet
 		'theme' => array(
-			'source' => 'css/theme.css',
-			'version'=> THEME_VERSION,
+			'source' => 'dist/theme.css',
+			'version'=> time(),
 		)
 	),
 

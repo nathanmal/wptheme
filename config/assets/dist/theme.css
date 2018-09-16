@@ -1,0 +1,57 @@
+/**
+ * Main Theme.css File
+ */
+/* base.css vars */
+/* theme.css vars */
+/* base.css mixins */
+/* Mixin:layer() Parent element must have position:relative for this to work */
+/* theme.css mixins */
+/* base.css colors */
+/* theme.css colors */
+/* base.css typography */
+/* theme.css typography */
+/* theme.css global */
+/* theme.css pages */
+/* theme.css widgets */
+/* theme.css partials */
+/* theme.css partials - banner */
+.banner {
+  width: 100%;
+  height: 50vh;
+  position: relative; }
+  .banner .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 11;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover; }
+  .banner .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 12;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: background-color 300ms ease-out; }
+  .banner .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 13;
+    display: flex; }
+
+/* theme.css partials - navbar */
+
