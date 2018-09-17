@@ -23,11 +23,6 @@ return array(
 	 * 	
 	 */
 	'scripts' => array(
-		// jQuery
-		'jquery' => array(
-			'source'  => 'dist/jquery.js',
-			'footer'  => TRUE,
-		),
 		// Main Theme File
 		'theme' => array(
 			'source'  => 'dist/theme.js',
@@ -54,12 +49,12 @@ return array(
 	'styles' => array(
 		// Bootstrap 4 CSS
 		'bootstrap' => array(
-			'source'  => 'vendor/bootstrap/dist/css/bootstrap.min.css',
-			'version' => '4.0.0',
+			'source'  => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
+			'version' => '4.1.3',
 		),
 		// Font Awesome 5
 		'fontawesome' => array(
-			'source' => 'vendor/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
+			'source' => 'dist/fontawesome.css',
       'version' => '5.0.9',
 		),
 		// Main theme stylesheet
