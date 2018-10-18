@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal!'); 
 /*
 Author: Nathan Malachowski
-URL: http://ntheorydesign.com
+URL: http://ntheory.design
 
 This is where you can drop your custom functions or
 just edit things like thumbnail sizes, header images,
@@ -26,6 +26,9 @@ define('THEME_DOMAIN', 'wptheme');
 // Theme version
 define('THEME_VERSION', '0.1.0');
 
+// Theme debugging
+define('THEME_DEBUG', TRUE);
+
 // load helpers
 require_once('library/helpers.php');
 
@@ -34,6 +37,9 @@ require_once('library/theme.php');
 
 // load theme custom functions
 require_once('config/theme.functions.php');
+
+// Theme autoloader
+spl_autoload_register( array('Theme','autoload') );
 
 // load admin custom functions
 if( is_admin() ) require_once('config/admin.functions.php');
