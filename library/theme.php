@@ -84,6 +84,13 @@ final class Theme
 		// Only allow init once
 		if( self::$initialized ) return;
 
+		// Show all errors if debugging
+		if( THEME_DEBUG )
+		{
+			error_reporting(E_ALL);
+			ini_set('display_errors', 1);
+		}
+
 		// Load config 
 		self::load_config();
 		
@@ -422,18 +429,19 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
-
 		if( ! is_admin() ) 
 		{
-			// Replace built-in jQuery with v3
-			wp_deregister_script('jquery');
-			wp_deregister_script('jquery-ui-core');
-
 			// Load scripts
 			$scripts = Theme::config('scripts');
 
 			foreach($scripts as $name => $script)
 			{	
+				if( $name == 'jquery' )
+				{
+					// Replace built-in jQuery with this version
+					wp_deregister_script('jquery');
+				}
+
 				Theme::enqueue_script($name, $script);
 			}
 
