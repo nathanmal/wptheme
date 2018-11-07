@@ -49,7 +49,7 @@ return array(
 	'styles' => array(
 		// Bootstrap 4 CSS
 		'bootstrap' => array(
-			'source'  => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
+			'source'  => 'dist/bootstrap.css',
 			'version' => '4.1.3',
 		),
 		// Font Awesome 5
