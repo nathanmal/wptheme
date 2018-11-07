@@ -54,25 +54,19 @@ final class Theme
 	 */
 	public static function autoload($class)
 	{	
-		$prefix = 'Theme\\';
+		$base   = THEME_DIR . '/library/classes/';
 
-		$len    = strlen($prefix);
-		
-		$base   = THEME_DIR . 'library/';
+		$file = strtolower($class);
 
-		// Only if namespace is within the current plugin
-		if( 0 !== strpos($class, $prefix) ) return;
-		
-		$path = strtolower(substr($class,$len));
+		$path =  $base . str_replace('\\','/',$file) . '.php';
 
-		$file =  $base . str_replace('\\','/',$path) . '.php';
-
-		if( is_file($file) ) 
+		if( is_file($path) ) 
 		{	
-			require $file;
+			require $path;
 		}
 
 	}
+
 
 
 	/**
@@ -83,13 +77,6 @@ final class Theme
 	{
 		// Only allow init once
 		if( self::$initialized ) return;
-
-		// Show all errors if debugging
-		if( THEME_DEBUG )
-		{
-			error_reporting(E_ALL);
-			ini_set('display_errors', 1);
-		}
 
 		// Load config 
 		self::load_config();
@@ -104,8 +91,11 @@ final class Theme
 		add_filter( 'script_loader_src', 'Theme::remove_asset_version', 9999 );
 		// Add slug className to body
 		add_filter( 'body_class', 'Theme::add_body_class' );
+
+		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
+
 		// Register Widgets
-		add_action('widgets_init', 'Theme::register_widgets');
+		add_action( 'widgets_init', 'Theme::register_widgets');
 
 		// Register nav menus
 		self::register_menus();
@@ -119,9 +109,11 @@ final class Theme
 		self::add_shortcodes();
 		// Custom Post Types
 		self::register_post_types();
+		// Hide admin bar from non-admins and redirect them to homepage
+		self::restrict_admin();
 
 		// Enqueue scripts & styles
-  		add_action( 'wp_enqueue_scripts', 'Theme::enqueue', 110 );
+  	add_action( 'wp_enqueue_scripts', 'Theme::enqueue', 110 );
 
   		// Mark initialized
 		self::$initialized = TRUE;
@@ -429,28 +421,27 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
+
 		if( ! is_admin() ) 
 		{
+			// Replace built-in jQuery with v3
+			wp_deregister_script('jquery');
+			wp_deregister_script('jquery-ui-core');
+
 			// Load scripts
 			$scripts = Theme::config('scripts');
 
 			foreach($scripts as $name => $script)
 			{	
-				if( $name == 'jquery' )
-				{
-					// Replace built-in jQuery with this version
-					wp_deregister_script('jquery');
-				}
-
 				Theme::enqueue_script($name, $script);
 			}
 
 			// Load fonts first so stylesheets can use em
 			$fonts = Theme::config('fonts');
 
-			foreach($fonts as $font => $source)
+			foreach($fonts as $font => $uri)
 			{
-				Theme::enqueue_font($font, $source);
+				Theme::enqueue_font($font, $uri);
 			}
 
 			// Load stylesheets
@@ -460,7 +451,6 @@ final class Theme
 			{
 				Theme::enqueue_style($name, $config);
 			}
-
 
 			// Load template-specific scripts and styles if they exist
 			$template = self::getTemplate();
@@ -604,6 +594,39 @@ final class Theme
 	}
 
 
+	public static function page_templates( $templates, $theme, $post, $post_type )
+	{
+		$dir = THEME_DIR . '/views/templates/';
+
+		$files = scandir($dir);
+
+		foreach($files as $file)
+		{	
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+
+			$path = $dir . $file;
+
+			if( strpos($file, '.') === 0 OR $ext !== 'php' OR ! is_file($path) ) continue;
+
+			if ( ! preg_match( '|Template Name:(.*)$|mi', file_get_contents( $path ), $header ) ) 
+			{
+				continue;
+			}
+
+			$file = 'views/templates/' . $file;
+
+			$templates[$file] = _cleanup_header_comment( $header[1] );
+
+		}
+
+		if( isset($templates['library/theme.php']) )
+		{
+			unset($templates['library/theme.php']);
+		}
+
+		return $templates;
+	}
+
 	/**
 	 * Output the header
 	 * @return [type] [description]
@@ -635,20 +658,20 @@ final class Theme
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
 
 		// Default
-		$template = 'templates/index';
+		$template = 'index';
 
 		// Check for missing
 		if( is_404() ) {
-			$template = 'templates/404';
+			$template = '404';
 		// Front page
-		} else if( is_front_page() && Theme::template_exists('front') ) {
-			$template = 'templates/front';
+		} else if( is_front_page() && Theme::view_exists('front') ) {
+			$template = 'front';
 		// Home page
-		} else if( is_home() && Theme::template_exists('home') ) {
-			$template = 'templates/home';
+		} else if( is_home() && Theme::view_exists('home') ) {
+			$template = 'home';
 		// Search Page
-		} else if( is_search() && Theme::template_exists('search') ) {
-			$template = 'templates/search';
+		} else if( is_search() && Theme::view_exists('search') ) {
+			$template = 'search';
 		// Custom pages by slug or post_type
 		} else if( is_page() ) {
 
@@ -660,8 +683,8 @@ final class Theme
 			else if( ! empty($type) && Theme::view_exists('pages/'.$type) ) {
 				$template = 'pages/'.$type;
 			}
-			else if( Theme::template_exists('page') ) {
-				$template = 'templates/page';
+			else if( Theme::view_exists('page') ) {
+				$template = 'page';
 			}
 			
 		// Single Posts	by type or template				
@@ -670,7 +693,7 @@ final class Theme
 			if( ! empty($type) && Theme::view_exists('single/'.$type) ) {
 				$template = 'single/'.$type;
 			} else if( Theme::template_exists('single') ) {
-				$template = 'templates/single';
+				$template = 'single';
 			}
 
 		// Archives
@@ -680,7 +703,7 @@ final class Theme
 				&& Theme::view_exists('archive/'.$type) ){
 				$template = 'archive/'.$type; 
 			} else if ( Theme::template_exists('archive') ){
-				$template = 'templates/archive';
+				$template = 'archive';
 			}
 		}
 
@@ -688,10 +711,13 @@ final class Theme
 		// Set the template
 		self::$template = $template;
 
+		// Get the page content first, this allows it to load things into wp_head
+		$body = self::view($template, array(), 1, TRUE);
+
 		// This is where the rubber meets the road
 		// Output header, page and footer
 		get_header();
-		self::view($template);
+		echo $body;
 		get_footer();
 
 	}
@@ -724,7 +750,7 @@ final class Theme
 	 * @param  integer $repeat multiplier, how many times to include the view, to create loops
 	 * @return [type]          [description]
 	 */
-	public static function view( $path, $data = array(), $repeat = 1 )
+	public static function view( $path, $data = array(), $repeat = 1, $return = FALSE )
 	{
 		// If non-empty array, extract variables for the view
 		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
@@ -738,12 +764,24 @@ final class Theme
 		// Warn if missing
 		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
 
+		if( $return ) {
+			ob_start();
+		}
+
 		// Include with repeat
 		for( $i = 1; $i <= $repeat; $i++ ){
 			$loop_total = $repeat;
 			$loop_count = $i;
 			include($path);
 		}
+
+		if( $return )
+		{
+			$output = ob_get_contents();
+			ob_end_clean();
+			return $output;
+		}
+
 	}
 
 	/**
@@ -809,6 +847,28 @@ final class Theme
 				include($file);
 			}
 		}
+	}
+
+	/**
+	 * Hide admin bar from logged in users
+	 * @return [type] [description]
+	 */
+	public static function restrict_admin()
+	{	
+		if( ! current_user_can('administrator') )
+		{
+			 if( is_admin() ) 
+			 { 
+			 		if( defined('DOING_AJAX') && DOING_AJAX ) return;
+
+			 		wp_redirect(site_url('home'));
+			 }
+			 else 
+			 {
+			 	 show_admin_bar(false);
+			 }
+		}
+	
 	}
 
 	public static function register_post_types()
