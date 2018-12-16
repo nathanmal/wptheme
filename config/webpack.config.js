@@ -5,16 +5,17 @@ const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const CleanWebpackPlugin      = require('clean-webpack-plugin');
 const UglifyJsPlugin          = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const loader                  = require('./wploader'); 
 
+// Webpack config
 module.exports = (env, argv) => {
 
   const production = argv.mode === 'production';
 
-  return {
+  const config = {
     // Project entry point(s)
     entry: { 
-      theme: './assets/src/js/theme.js',
-      fontawesome: './assets/src/vendor/fontawesome.js' 
+      theme: './assets/src/js/theme.js'
     },
 
     // Output directory
@@ -31,48 +32,30 @@ module.exports = (env, argv) => {
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          use: {
-            loader: "babel-loader"
-          }
+          loader: loader('babel')
         },
-        // Check first for url:() paths in SASS
+        // CSS url:() paths
         {
           test: /\.(png|jpg|gif)$/,
-          loader: "url-loader",
+          loader: loader('url'),
         }, 
 
-        // SASS, CSS..
+        // SASS
         {
           test: /\.[s]?css$/,
           use: [
-            'style-loader',
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: { 
-                importLoaders: 2
-              }
-            },
-            {
-              loader : 'sass-loader',
-            },
-            { 
-              loader : 'postcss-loader',
-              options: {
-                config : { 
-                  path : path.resolve( __dirname, 'postcss.config.js' )
-                  //plugins : [ require('autoprefixer')()] ,
-                }
-              }
-            },
-           
+            loader('style'),
+            loader('extract'),
+            loader('css'),
+            loader('sass'),
+            loader('postcss'),
           ]
         },
         // Font files
         {
            test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
            use: [{
-             loader: 'file-loader',
+             loader: loader('file'),
              options: {
                name: '[name].[ext]',
                outputPath: 'fonts/',    // where the fonts will go
@@ -82,30 +65,30 @@ module.exports = (env, argv) => {
          },
       ]
     },
-    // Minification
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          cache: true,
-          parallel: true,
-          // sourceMap: true // set to true if you want JS source maps
-        }),
-        new OptimizeCSSAssetsPlugin({})
-      ]
-    },
 
     // Plugins
     plugins: [
+      // clean distro
       new CleanWebpackPlugin('dist', {}),
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-      }),
-      new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery'
-      })
+      // css file name
+      new MiniCssExtractPlugin({ filename: '[name].css' }),
+      // external jquery
+      new webpack.ProvidePlugin({  $: 'jquery', jQuery: 'jquery' })
     ]
     
   }
+
+  // Add optimization in production
+  if( production ){
+    config.optimization = {
+      minimizer: [
+        new UglifyJsPlugin({ cache: true, parallel: true, sourceMap: true }),
+        new OptimizeCSSAssetsPlugin({})
+      ]
+    }
+  }
+
+  // return webpack config object
+  return config;
 
 }
