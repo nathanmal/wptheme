@@ -1,1 +1,0 @@
-<?php template_placeholder('Single'); // Replace this ?>
