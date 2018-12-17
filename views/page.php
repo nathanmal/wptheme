@@ -6,12 +6,8 @@
     <?php Theme::partial('dropmenu'); ?>
   </header>
 
-
-  
-
-
   <!-- Main Page Content -->
-  <main id="page" class="clear-navbar container no-padding" role="main">
+  <main id="page" class="clear-navbar container no-padding sidebar-right" role="main">
     
     <!-- Sidebar -->
     <aside>
@@ -19,11 +15,11 @@
     </aside>
     <!-- Main Article -->
     <article>
-      <header></header>
+      <!-- <header></header> -->
       <section id="content">
         <?php Theme::content(); ?>
       </section>
-      <footer></footer>
+      <!-- <footer></footer> -->
     </article>
 
     <!-- End Main Article -->
