@@ -10324,6 +10324,18 @@ a.text-dark:focus, a.text-dark:hover {
 /* base.css typography */
 /* Navbar */
 /* Note: Parent element must have position set for this to work */
+/**
+ * Mixin shortcuts for specifying responsive styles
+ *
+ * .element {
+ *   background:red;
+ *
+ *   @include mobile() {
+ *      background:blue;
+ *   }
+ * }
+ * @return {[type]} [description]
+ */
 /* Base Vars */
 /* Breakpoints */
 /* Colors */
@@ -10336,11 +10348,15 @@ html, body {
   width: 100%;
   height: 100vh; }
 
+/**
+ * #frame overtakes page viewport
+ */
 body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
+/** Bootstrap addition */
 .container.no-padding, .container-fluid.no-padding {
   padding-left: 0;
   padding-right: 0; }
@@ -10357,11 +10373,15 @@ html, body {
   width: 100%;
   height: 100vh; }
 
+/**
+ * #frame overtakes page viewport
+ */
 body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
+/** Bootstrap addition */
 .container.no-padding, .container-fluid.no-padding {
   padding-left: 0;
   padding-right: 0; }
@@ -10370,37 +10390,61 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  overflow-y: auto;
-  /* Base Vars */
-  /* Breakpoints */
-  /* Colors */
-  /* Sizes */
-  /* Spaces */
-  /* Fonts */
-  /* base.css typography */
-  /* Navbar */ }
+  overflow-y: auto; }
   #frame #header {
     position: relative;
     z-index: 1020;
     height: 100px;
-    background: none; }
+    background: none;
+    /* Base Vars */
+    /* Breakpoints */
+    /* Colors */
+    /* Sizes */
+    /* Spaces */
+    /* Fonts */
+    /* base.css typography */
+    /* Navbar */ }
     #frame #header.header-fixed {
       position: fixed;
       left: 0;
       right: 0;
       z-index: 1040;
       height: 100px; }
+    #frame #header #drop-menu {
+      display: none; }
+    #frame #header nav.navbar {
+      top: 0;
+      background-color: #eeeeee;
+      height: 100px;
+      padding: 0 2rem; }
+      #frame #header nav.navbar a {
+        color: #333333; }
+      #frame #header nav.navbar.navbar-hidden {
+        top: -100px; }
+      #frame #header nav.navbar.navbar-bg-transparent {
+        background-color: transparent; }
+      #frame #header nav.navbar.navbar-bg-light {
+        background-color: #eeeeee; }
+      #frame #header nav.navbar.navbar-bg-dark {
+        background-color: #333333; }
+      #frame #header nav.navbar.navbar-text-light .navbar-brand, #frame #header nav.navbar.navbar-text-light .navbar-brand a, #frame #header nav.navbar.navbar-text-light .navbar-text, #frame #header nav.navbar.navbar-text-light ul.navbar-nav li.nav-item a.nav-link {
+        color: #EEEEEE; }
   #frame main#page {
     width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: flex-end;
-    align-items: flex-start; }
-    #frame main#page.reverse {
+    align-items: flex-start;
+    background: #EEEEEE; }
+    #frame main#page.sidebar-right {
       flex-direction: row-reverse; }
+    #frame main#page.page-left {
+      margin: 0 auto 0 0; }
+    #frame main#page.page-right {
+      margin: 0 0 0 auto; }
     @media only screen and (max-width: 768px) {
       #frame main#page {
-        flex-direction: column-reverse; } }
+        flex-direction: column-reverse !important; } }
     #frame main#page > aside {
       /* Base Vars */
       /* Breakpoints */
@@ -10414,7 +10458,6 @@ body {
         position: relative;
         width: 100%;
         padding: 1rem;
-        background-color: #EEEEEE;
         min-height: 100%;
         box-sizing: border-box; }
         @media only screen and (max-width: 768px) {
@@ -10422,7 +10465,9 @@ body {
             width: 100%; } }
         #frame main#page > aside #sidebar .widget {
           box-sizing: border-box;
-          padding: 1rem; }
+          padding: 1rem;
+          margin: 1rem;
+          background: #d5d5d5; }
           #frame main#page > aside #sidebar .widget h4 {
             font-size: 1rem; }
           #frame main#page > aside #sidebar .widget ul {
@@ -10460,12 +10505,17 @@ main#page {
   min-height: 100vh;
   display: flex;
   justify-content: flex-end;
-  align-items: flex-start; }
-  main#page.reverse {
+  align-items: flex-start;
+  background: #EEEEEE; }
+  main#page.sidebar-right {
     flex-direction: row-reverse; }
+  main#page.page-left {
+    margin: 0 auto 0 0; }
+  main#page.page-right {
+    margin: 0 0 0 auto; }
   @media only screen and (max-width: 768px) {
     main#page {
-      flex-direction: column-reverse; } }
+      flex-direction: column-reverse !important; } }
   main#page > aside {
     /* Base Vars */
     /* Breakpoints */
@@ -10479,7 +10529,6 @@ main#page {
       position: relative;
       width: 100%;
       padding: 1rem;
-      background-color: #EEEEEE;
       min-height: 100%;
       box-sizing: border-box; }
       @media only screen and (max-width: 768px) {
@@ -10487,7 +10536,9 @@ main#page {
           width: 100%; } }
       main#page > aside #sidebar .widget {
         box-sizing: border-box;
-        padding: 1rem; }
+        padding: 1rem;
+        margin: 1rem;
+        background: #d5d5d5; }
         main#page > aside #sidebar .widget h4 {
           font-size: 1rem; }
         main#page > aside #sidebar .widget ul {
@@ -10537,6 +10588,12 @@ section#response-code {
 /* Fonts */
 /* base.css typography */
 /* Navbar */
+input:-webkit-autofill {
+  animation-name: onAutoFillStart; }
+
+input:not(:-webkit-autofill) {
+  animation-name: onAutoFillCancel; }
+
 .banner {
   width: 100%;
   height: 300px;
@@ -10593,13 +10650,13 @@ section#response-code {
 /* Fonts */
 /* base.css typography */
 /* Navbar */
-#drop-menu {
-  display: none; }
-
 nav.navbar {
   top: 0;
   background-color: #eeeeee;
-  height: 100px; }
+  height: 100px;
+  padding: 0 2rem; }
+  nav.navbar a {
+    color: #333333; }
   nav.navbar.navbar-hidden {
     top: -100px; }
   nav.navbar.navbar-bg-transparent {
@@ -10610,12 +10667,6 @@ nav.navbar {
     background-color: #333333; }
   nav.navbar.navbar-text-light .navbar-brand, nav.navbar.navbar-text-light .navbar-brand a, nav.navbar.navbar-text-light .navbar-text, nav.navbar.navbar-text-light ul.navbar-nav li.nav-item a.nav-link {
     color: #EEEEEE; }
-  nav.navbar ul.navbar-nav {
-    background: none; }
-    nav.navbar ul.navbar-nav li.nav-item {
-      color: black; }
-      nav.navbar ul.navbar-nav li.nav-item a.nav-link {
-        color: #333333; }
 
 /* theme.css widgets */
 

@@ -12,7 +12,18 @@
     z-index:($layer);
 }
 
-
+/**
+ * Mixin shortcuts for specifying responsive styles
+ *
+ * .element {
+ *   background:red;
+ *
+ *   @include mobile() {
+ *      background:blue;
+ *   }
+ * }
+ * @return {[type]} [description]
+ */
 @mixin mobile() {
   @media only screen and ( max-width: $break-mobile ) { @content; }
 }

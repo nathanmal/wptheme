@@ -6,12 +6,17 @@ html, body
   height:100vh;
 }
 
+/**
+ * #frame overtakes page viewport
+ */
 body {
   overflow:hidden;
+  // Apply font smoothing
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/** Bootstrap addition */
 .container, .container-fluid
 {
   &.no-padding {

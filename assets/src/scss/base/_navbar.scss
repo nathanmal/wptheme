@@ -1,7 +1,4 @@
 @import 'vars';
-@import 'dropmenu';
-
-
 
 nav.navbar 
 {
@@ -10,6 +7,12 @@ nav.navbar
   background-color: rgba($navbar-color, $navbar-opacity);
 
   height:$navbar-height;
+
+  padding:0 2rem;
+
+  a {
+    color:$color-dark;
+  }
 
   &.navbar-hidden 
   {
@@ -37,23 +40,8 @@ nav.navbar
       color: $color-light;
     }
   }
+ 
   
-  div.navbar-brand {
-  }
-
-  ul.navbar-nav 
-  {
-    background:none;
-
-    li.nav-item {
-
-      color:black;
-
-      a.nav-link {
-        color:$color-dark;
-      }
-    }
-  }
 
 }
 
