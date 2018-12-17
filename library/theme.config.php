@@ -25,7 +25,7 @@ return array(
 	'scripts' => array(
 		// Main Theme File
 		'theme' => array(
-			'source'  => 'dist/theme.js',
+			'source'  => '/dist/theme.js',
 			'footer'  => TRUE,
 		)
 	),
@@ -90,7 +90,7 @@ return array(
 	 *
 	 */
 	'menus' => array(
-		'main-menu'   => __( 'Main Menu', THEME_DOMAIN ),    	// main nav 
+		'main-menu'   => __( 'Main Menu',   THEME_DOMAIN ),   // main nav 
 		'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),  	// mobile nav 
 		'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ) 		// footer nave
 	),
@@ -112,6 +112,7 @@ return array(
 	 *	)
 	 */
 	'sidebars' => array(
+
 		array(
 			'id' => 'main',
 			'name' => __( 'Main Sidebar', THEME_DOMAIN ),
@@ -124,18 +125,14 @@ return array(
 	),
 
 	/**
-	 * Enable Widgets
+	 * Enabled Widgets
 	 */
 	'widgets' => array(),
 
 	/**
-	 * Enable shortcodes
+	 * Enabled Shortcodes
 	 */
 	'shortcodes' => array(),
 
-	/**
-	 * Google analytics account id UA-XXXXXX-X
-	 */
-	'ga' => '',
 
 );

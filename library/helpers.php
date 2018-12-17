@@ -44,7 +44,7 @@ if( ! function_exists('pre') )
  */
 if( ! function_exists('element') )
 {
-    function element(&$array, $key, $default=NULL)
+    function element( &$array, $key, $default=NULL )
     {
         return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
     }
@@ -62,5 +62,66 @@ if( ! function_exists('get_post_slug') )
     {
         $post = get_post($post_id);
         return $post ? $post->post_name : FALSE;
+    }
+}
+
+
+
+if( ! function_exists('classes') )
+{
+    function classes( $classes )
+    {
+        return is_array($classes) ? implode(' ', $classes) : $classes;
+    }
+}
+
+
+if( ! function_exists('html_video') )
+{
+    function html_video( $src, $config = array() )
+    {
+        $video = '<video src="' . $src .'" ';
+
+        if( isset($config['class']) ) $video .= 'class="'  . classes($config['class']) . '" ';
+
+        foreach( array('width','height','poster') as $attr )
+        {
+            if( isset($config[$attr]) ) $video .= $attr.='="'.$config[$attr].'" ';
+        }
+
+        foreach( array('autoplay','muted','loop','preload','controls') as $attr )
+        {
+            if( isset($config[$attr]) OR in_array($attr, $config) ) $video .= $attr .' ';
+        }   
+
+        $video .= '>';
+
+        if( isset($config['src']) && is_array($config['src']) )
+        {
+            foreach($config['src'] as $src)
+            {
+                $video .= '<source src="' . $src['src'].'" type="' . $src['type'] .'">';
+            }
+        }
+
+        // Show message in case of lack of html5 support
+        $video .= element($config, 'support', 'Your browser does not support the video tag');
+
+        $video .= '</video>';
+
+        return $video;
+
+    }
+}
+
+/**
+ * array_contains
+ * Checks if $str is either a value or a key
+ */
+if( ! function_exists('array_contains') )
+{
+    function array_contains( &$array, $str )
+    {
+        return is_string($str) && ( isset($array[$str]) OR in_array($str, $array) ); 
     }
 }

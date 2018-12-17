@@ -1,6 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Core theme object
+ */
 final class Theme
 {
 	/**
@@ -34,7 +37,19 @@ final class Theme
 	private static $paths = array();
 
 	/**
-	 * Get the singleton instance 
+	 * Auto render header
+	 * @var boolean
+	 */
+	private static $header = TRUE;
+
+	/**
+	 * Auto render footer
+	 * @var boolean
+	 */
+	private static $footer = TRUE;
+
+	/**
+	 * Get the theme instance 
 	 * @return [type] [description]
 	 */
 	public static function instance()
@@ -67,8 +82,6 @@ final class Theme
 
 	}
 
-
-
 	/**
 	 * Initialization
 	 * @return [type] [description]
@@ -91,12 +104,15 @@ final class Theme
 		add_filter( 'script_loader_src', 'Theme::remove_asset_version', 9999 );
 		// Add slug className to body
 		add_filter( 'body_class', 'Theme::add_body_class' );
-
+		// Manage theme template directory
 		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
-
 		// Register Widgets
 		add_action( 'widgets_init', 'Theme::register_widgets');
+		// Register Theme template directory
+		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
 
+		// Custom Post Types
+		self::post_types();
 		// Register nav menus
 		self::register_menus();
 		// Register sidebars
@@ -107,8 +123,7 @@ final class Theme
 		self::cleanup_head();
 		// Custom shortcodes
 		self::add_shortcodes();
-		// Custom Post Types
-		self::register_post_types();
+		
 		// Hide admin bar from non-admins and redirect them to homepage
 		self::restrict_admin();
 
@@ -172,22 +187,23 @@ final class Theme
 	 * @param  [type] $path [description]
 	 * @return [type]       [description]
 	 */
-	public static function asset($path)
+	public static function asset( $path )
 	{
+		// No bueno
 		if( empty($path) ) return FALSE;
 
-		$path = '/assets/' . ltrim($path,'/');
+		$path = strpos($path, 'assets/') === 0 ? $path : 'assets/' . ltrim($path, '/');
 
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
 
-		$file = THEME_DIR . $path;
+		// Check if file exists
+		if( is_file( THEME_DIR . '/' . $path ) ) 
+		{
+			// Cache the path
+			self::$paths[$path] = THEME_URI . '/' . $path;
 
-		if( is_file($file) ) {
-
-			$uri = THEME_URI . $path;
-			self::$paths[$path] = $uri;
-			return $uri;
+			return self::$paths[$path];
 		}
 
 		return FALSE;
@@ -384,7 +400,7 @@ final class Theme
 	 * @param  array  $config Allow function to override default menu array
 	 * @return [type]         [description]
 	 */
-	public static function menu($name='', $config = array())
+	public static function menu( $name='', $config = array() )
 	{
 
 		$label = ucfirst($name) . ' Menu';
@@ -413,6 +429,73 @@ final class Theme
 
 		wp_nav_menu(wp_parse_args($config,$default));
 
+	}
+
+	/**
+	 * Render sidebar
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	public static function sidebar( $name = NULL )
+	{
+		get_sidebar( $name );
+	}
+
+
+	/**
+	 * Render post/page content
+	 * @param  string $view          [description]
+	 * @param  string $post_template [description]
+	 * @return [type]                [description]
+	 */
+	public static function content( $view = '', $post_template = '' )
+	{
+		if ( have_posts() ) 
+		{
+			while ( have_posts() ) : the_post();
+
+				// Check post format
+				$format = get_post_format();
+				// If not used, default with post
+				if( empty($format) ) $format = 'post';
+
+				// post format wrapper
+				echo '<div class="post-format post-format-' . $format . '">';
+				// Include format view
+				Theme::view( 'formats/' . $format );
+				// close wrapper
+				echo '</div>';
+
+			endwhile;
+
+		} else {
+			// Show missing content message if there are no posts
+			Theme::partial('missing'); 
+		}
+	}
+
+	/**
+	 * Render a page section
+	 * @param  [type] $id      [description]
+	 * @param  [type] $content [description]
+	 * @param  array  $config  [description]
+	 * @return [type]          [description]
+	 */
+	public static function section( $id, $content, $config = array() )
+	{
+		$class = element( $config, 'class', '' );
+
+		$container = array_contains( $config, 'wide' ) ? 'container-fluid' : 'container';
+
+		echo '<section id="' . $id . '" class="'.classes($class).'">';
+
+		echo '<div class="'.$container.'">';
+
+		echo $content;
+
+		echo '</div>';
+
+		echo '</section>';
 	}
 
 	/**
@@ -472,29 +555,42 @@ final class Theme
 		}
 	}
 
+
 	/**
 	 * Enqueue a script
 	 * @param  [type] $name   [description]
 	 * @param  [type] $config [description]
 	 * @return [type]         [description]
 	 */
-	public static function enqueue_script($name, $config)
+	public static function enqueue_script( $name, $config = array() )
 	{	
-		// Allow passing src as string
-		$config = is_string($config) ? array('source'=>$config) : $config;
-		// Must be set
-		$src = element($config, 'source', '');
-		// IF not absolute URI find path
-		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
-		// Bad Panda
-		if( empty($src) ) return FALSE;
 
-		$dep = element($config, 'dependencies', array());
-		$ver = element($config, 'version', NULL);
-		$ftr = element($config, 'footer', TRUE);
+		//echo 'ENQUEUE SCRIPT: ' . $name;
+		//pre($config);
+		//echo '<hr/>';
 
-		wp_enqueue_script($name, $src, $dep, $ver, $ftr);
+		// Get the soruce. If config is a string then it's passed in that way
+		$source = is_array($config) ? element($config, 'source', '') : $config;
+
+		// Check for asset path
+		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
+
+		// var_dump($source);
+
+		// Missing
+		if( empty($source) ) return FALSE;
+
+		// Get enqueue params
+		$dependencies = element( $config, 'dependencies', array() );
+		$version      = element( $config, 'version', NULL );
+		$footer       = element( $config, 'footer', TRUE );
+
+		// echo 'VALID';
+		// Enqueue the script
+		wp_enqueue_script($name, $src, $dependencies, $version, $footer);
 	}
+
+
 
 	/**
 	 * Enqueue a font
@@ -502,15 +598,19 @@ final class Theme
 	 * @param  [type] $uri  [description]
 	 * @return [type]       [description]
 	 */
-	public static function enqueue_font($name, $uri)
+	public static function enqueue_font( $name, $source )
 	{
-		// IF not absolute URI find path
-		if( 0 !== strpos($uri, 'http') ) $uri = Theme::asset($uri);
+		// Check for asset path
+		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
 
-		if( empty($uri) ) return;
-		
-		wp_enqueue_style('font-'.$name, $uri );
+		// Missing
+		if( empty($source) ) return;
+
+		// Enqueue as style
+		wp_enqueue_style( 'font-'.$name, $source );
 	}
+
+
 
 	/**
 	 * Enqueue a stylesheet
@@ -518,23 +618,36 @@ final class Theme
 	 * @param  [type] $config [description]
 	 * @return [type]         [description]
 	 */
-	public static function enqueue_style($name, $config)
+	public static function enqueue_style( $name, $config = array() )
 	{
-		// Allow passing src as string
-		$config = is_string($config) ? array('source'=>$config) : $config;
-		// Make sure this is there
-		$src = element($config, 'source', '');
-		// IF not absolute URI find path
-		if( 0 !== strpos($src, 'http') ) $src = Theme::asset($src);
-		// Bad Panda
-		if( empty($src) ) return FALSE;
+		// Get the soruce. If config is a string then it's passed in that way
+		$source = is_array($config) ? element($config, 'source', '') : $config;
+	
+		// Check for asset path
+		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
 
-		$dep = element($config, 'dependencies', array());
-		$ver = element($config, 'version', NULL);
-		$med = element($config, 'media', 'screen');
+		// Missing
+		if( empty($source) ) return FALSE;
 
-		wp_enqueue_style( $name, $src, $dep, $ver, $med );
+		// Get enqueue params
+		$dependencies = element( $config, 'dependencies', array() );
+		$version      = element( $config, 'version', NULL );
+		$media        = element( $config, 'media', 'screen' );
+
+		// Enqueue the style
+		wp_enqueue_style( $name, $source, $dependencies, $version, $media );
 	}
+
+
+	/**
+	 * Register custom post types
+	 * @return [type] [description]
+	 */
+	public static function post_types()
+	{
+
+	}
+
 
 	/**
 	 * Register menus defined in theme.config.php
@@ -593,18 +706,34 @@ final class Theme
 
 	}
 
-
+	/**
+	 * Load theme templates
+	 * 
+	 * Wordpress has a hard time with this because it's default depth search is
+	 * only 1 directory, so we gotta do it manually here
+	 *
+	 * Hook: theme_page_templates
+	 * @see https://developer.wordpress.org/reference/hooks/theme_page_templates/
+	 * 
+	 * @param  [type] $templates [description]
+	 * @param  [type] $theme     [description]
+	 * @param  [type] $post      [description]
+	 * @param  [type] $post_type [description]
+	 * @return [type]            [description]
+	 */
 	public static function page_templates( $templates, $theme, $post, $post_type )
 	{
-		$dir = THEME_DIR . '/views/templates/';
+		$directory 	= THEME_DIR . '/views/templates/';
 
-		$files = scandir($dir);
+		$files 			= scandir( $directory );
 
 		foreach($files as $file)
 		{	
-			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$ext  = pathinfo($file, PATHINFO_EXTENSION);
 
 			$path = $dir . $file;
+
+			echo $file.'<br/>';
 
 			if( strpos($file, '.') === 0 OR $ext !== 'php' OR ! is_file($path) ) continue;
 
@@ -613,16 +742,14 @@ final class Theme
 				continue;
 			}
 
-			$file = 'views/templates/' . $file;
+			$template = 'views/templates/' . $file;
 
-			$templates[$file] = _cleanup_header_comment( $header[1] );
+			$templates[$template] = _cleanup_header_comment( $header[1] );
 
 		}
 
-		if( isset($templates['library/theme.php']) )
-		{
-			unset($templates['library/theme.php']);
-		}
+		/* Remove this file, since it cataches the preg above */
+	  if( isset($templates['library/theme.php']) ) unset($templates['library/theme.php']);
 
 		return $templates;
 	}
@@ -634,6 +761,8 @@ final class Theme
 	public static function header()
 	{
 		Theme::view('header');
+		// Don't allow this to be called again
+		Theme::$header = FALSE;
 	}
 
 	/**
@@ -643,6 +772,8 @@ final class Theme
 	public static function footer()
 	{
 		Theme::view('footer');
+		// Don't allow this to be called again
+		Theme::$footer = FALSE;
 	}
 
 	/**
@@ -716,9 +847,9 @@ final class Theme
 
 		// This is where the rubber meets the road
 		// Output header, page and footer
-		get_header();
+		self::$header && get_header();
 		echo $body;
-		get_footer();
+		self::$footer && get_footer();
 
 	}
 
@@ -793,7 +924,9 @@ final class Theme
 	 * @return [type]          [description]
 	 */
 	public static function partial( $path, $data = array(), $repeat = 1 )
-	{
+	{	
+		// pre($data);
+
 		Theme::view('partials/' . $path, $data, $repeat);
 	}
 
@@ -868,12 +1001,6 @@ final class Theme
 			 	 show_admin_bar(false);
 			 }
 		}
-	
-	}
-
-	public static function register_post_types()
-	{
-
 	}
 
 	/**
