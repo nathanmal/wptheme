@@ -1,19 +1,31 @@
-<header class="header">
-	<!-- Page Navbar -->
-	<nav class="navbar navbar-expand-lg fixed-top hide" role="navigation">
-		<div class="container-fluid">
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		       <span class="navbar-toggler-icon"></span>
-		  </button>
-			
-			<div class="collapse navbar-collapse">
-				<?php Theme::menu('main', array('menu_class'=>'navbar-nav mx-auto')); ?>
-			</div>
+<?php 
+
+
+$class .= array_contains($data, 'fixed') ? ' fixed-top' : '';
+$class .= array_contains($data, 'hidden') ? ' navbar-hidden' : '';
+$class .= array_contains($data, 'light') ? ' navbar-light' : '';
+$class .= array_contains($data, 'text-light') ? ' navbar-text-light' : '';
+$class .= array_contains($data, 'transparent') ? ' navbar-bg-transparent' : '';
+
+$container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
+
+?>
+
+<!-- Navbar -->
+<nav class="navbar navbar-default navbar-expand-md <?=$class?>" role="navigation">
+	<div class="<?=$container?>">
+    
+    <div class="navbar-brand">
+      <a href="<?= bloginfo('url') ?>"><?= bloginfo('title') ?></a>
+    </div>
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+	       <span class="navbar-toggler-icon"></span>
+	  </button>
+		
+		<div id="navbarCollapse" class="collapse navbar-collapse">
+			<?php Theme::menu('main', array('menu_class'=>'nav navbar-nav ml-auto')); ?>
 		</div>
-	</nav>
-	<!-- Pull-down Menu -->
-	<div id="drop-menu">
-			<?php Theme::menu('main', array('menu_class'=>'nav'));?>
-			<a href="#" class="close"><i class="fas fa-times-circle"></i></a>
+    
 	</div>
-</header>
+</nav>

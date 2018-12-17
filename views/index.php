@@ -1,29 +1,31 @@
-<?php Theme::partial('navbar'); ?>
+<!-- Viewport Frame -->
+<div id="frame">
+	<!-- Main navigation -->
+	<header id="header" class="header header-fixed" role="navigation">
+		<?php Theme::partial('navbar', array('fixed') ); ?>
+		<?php Theme::partial('dropmenu'); ?>
+	</header>
 
-<main id="main" role="main" itemscope itemprop="mainContentOfPage" itemtype="http://schema.org/Webpage">
-	<div class="container-fluid no-padding" tabindex="-1">
-		<div class="row">
-			<!-- Begin Loop -->
-			<?php 
+	<!-- Main Page Content -->
+	<main id="page" class="clear-navbar container no-padding" role="main">
 
-			if ( have_posts() ) 
-			{
-				while ( have_posts() ) : the_post();
-					// Check post format
-					$format = get_post_format();
-					// If not used, default with post
-					if( empty($format) ) $format = 'post';
-					// Include format view
-					Theme::view('formats/'.$format);
-				endwhile;
+		<!-- Sidebar -->
+		<aside>
+			<?php Theme::sidebar(); ?>
+		</aside>
+		<!-- Main Article -->
+		<article>
+			<header></header>
+			<section id="content">
+				<?php Theme::content(); ?>
+			</section>
+			<footer></footer>
+		</article>
 
-			} else {
-				// Show missing content message if there are no posts
-				Theme::partial('missing'); 
-			}
-
-			?>	
-			<!-- End Loop -->
-		</div>
-	</div>
-</main>
+		<!-- End Main Article -->
+	</main>
+	<!-- End Main Page Content -->
+	
+	<?= get_footer() ?>
+</div>
+<!-- End Viewport Frame -->
