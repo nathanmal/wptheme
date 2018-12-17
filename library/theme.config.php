@@ -47,16 +47,6 @@ return array(
 	 *
 	 */
 	'styles' => array(
-		// Bootstrap 4 CSS
-		'bootstrap' => array(
-			'source'  => 'dist/bootstrap.css',
-			'version' => '4.1.3',
-		),
-		// Font Awesome 5
-		'fontawesome' => array(
-			'source' => 'dist/fontawesome.css',
-      'version' => '5.0.9',
-		),
 		// Main theme stylesheet
 		'theme' => array(
 			'source' => 'dist/theme.css',

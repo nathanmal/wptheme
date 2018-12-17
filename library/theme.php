@@ -396,6 +396,7 @@ final class Theme
 
 	/**
 	 * Output menu by name
+	 * @see 	 https://developer.wordpress.org/reference/functions/wp_nav_menu/ 
 	 * @param  string $name   [description]
 	 * @param  array  $config Allow function to override default menu array
 	 * @return [type]         [description]
