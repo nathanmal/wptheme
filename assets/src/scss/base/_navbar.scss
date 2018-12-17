@@ -1,0 +1,60 @@
+@import 'vars';
+@import 'dropmenu';
+
+
+
+nav.navbar 
+{
+  top:0;
+
+  background-color: rgba($navbar-color, $navbar-opacity);
+
+  height:$navbar-height;
+
+  &.navbar-hidden 
+  {
+    top:-$navbar-height;
+  }
+
+  &.navbar-bg-transparent
+  {
+    background-color:transparent;
+  }
+
+  &.navbar-bg-light 
+  {
+    background-color: rgba($color-light, $navbar-opacity);
+  }
+
+  &.navbar-bg-dark
+  {
+    background-color: rgba($color-dark, $navbar-opacity);
+  }
+
+  &.navbar-text-light 
+  {
+    .navbar-brand,.navbar-brand a,.navbar-text,ul.navbar-nav li.nav-item a.nav-link {
+      color: $color-light;
+    }
+  }
+  
+  div.navbar-brand {
+  }
+
+  ul.navbar-nav 
+  {
+    background:none;
+
+    li.nav-item {
+
+      color:black;
+
+      a.nav-link {
+        color:$color-dark;
+      }
+    }
+  }
+
+}
+
+

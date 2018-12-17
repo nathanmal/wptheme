@@ -1,0 +1,19 @@
+@import 'vars';
+
+#header 
+{
+  position:relative;
+  z-index:1020;
+  height:100px;
+  background:none;
+
+  &.header-fixed 
+  {
+    position:fixed;
+    left:0;
+    right:0;
+    z-index:1040;
+    height:$navbar-height;
+  
+  }
+}

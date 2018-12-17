@@ -1,0 +1,14 @@
+#content 
+{
+  padding:1rem 2rem;
+  min-height:100%;
+  border:1px solid red;
+}
+
+
+.post 
+{
+  .post-header, .post-content, .post-footer {
+    padding:1rem 2rem;
+  }
+}

@@ -1,5 +1,6 @@
-/* base.css mixins */
-/* Mixin:layer() Parent element must have position:relative for this to work */
+@import 'vars';
+
+/* Note: Parent element must have position set for this to work */
 @mixin layer( $layer:1 ) {
     position:absolute;
     top:0;
@@ -8,5 +9,22 @@
     bottom:0;
     height:100%;
     width:100%;
-    z-index:($layer+1);
+    z-index:($layer);
+}
+
+
+@mixin mobile() {
+  @media only screen and ( max-width: $break-mobile ) { @content; }
+}
+
+@mixin tablet() {
+  @media only screen and ( min-width: $break-mobile + 1) and ( max-width: $break-tablet - 1 ) { @content; }
+}
+
+@mixin desktop() {
+  @media only screen and ( min-width: $break-desktop + 1 ) and ( max-width: $break-desktop-large - 1 ) { @content; }
+}
+
+@mixin desktopLarge(){
+  @media only screen and ( min-width: $break-desktop-large ) { @content; }
 }

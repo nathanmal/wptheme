@@ -1,0 +1,57 @@
+main#page 
+{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  &.reverse 
+  {
+    flex-direction: row-reverse;
+  }
+  
+  @include mobile() {
+    flex-direction: column-reverse;
+  }
+  
+  & > aside {
+    // Sidebar
+    @import 'sidebar';
+
+    @include mobile() 
+    {
+      width:100%;
+    }
+  }
+
+  & > article {
+    
+    width:100%;
+    min-height:100%;
+    flex:1;
+
+
+    & > header 
+    {
+      background-color:$color-light;
+    }
+
+    & > section#content
+    {
+      background-color:$color-light;
+      @import 'content';
+    }
+
+    & > footer 
+    {
+      background-color:$color-light;
+    }
+
+  }
+  
+  &.clear-navbar 
+  {
+    padding-top:$navbar-height;
+  }
+}

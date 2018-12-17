@@ -1,2 +1,65 @@
-/* base.css vars */
-$root-font-size: 16px !default;
+/* Base Vars */
+
+
+/* Breakpoints */
+$break-mobile:        768px                           !default;
+$break-tablet:        992px                           !default;
+$break-desktop:       1200px                          !default;
+$break-large:         1440px                          !default;  
+
+/* Colors */
+$color-black:         #000000                         !default;
+$color-gray:          #888899                         !default;
+$color-white:         #FFFFFF                         !default;
+// named
+$color-primary:       #F49DDA                         !default;
+$color-secondary:     #9AFD13                         !default;
+$color-light:         #EEEEEE                         !default;
+$color-dark:          #333333                         !default;
+$color-info:          #f303f2                         !default;
+$color-success:       #f393f2                         !default;
+$color-error:         #FF4444                         !default;
+$color-alert:         #FFCC44                         !default;
+// brand
+$color-brand:         $color-primary                  !default;
+$color-brand-alt:     $color-secondary                !default;
+
+/* Sizes */
+$size-sm:             0.25rem                         !default;
+$size-md:             0.5rem                          !default;
+$size-lg:             1rem                            !default;
+$size-xl:             1.5rem                          !default;
+$size-xx:             2.25rem                         !default;
+/* Spaces */
+$space-sm:            $size-sm                        !default;
+$space-md:            $size-md                        !default;
+$space-lg:            $size-lg                        !default;
+$space-xl:            $size-xl                        !default;
+$space-xx:            $size-xx                        !default;
+
+/* Fonts */
+/* base.css typography */
+$font-root-size:      16px                            !default;
+// families
+$font-header:         'Arial', sans-serif             !default;
+$font-body:           'Arial', sans-serif             !default;
+$font-header-alt:     $font-header                    !default;
+$font-body-alt:       $font-body                      !default;
+$font-mono:           'Monaco', Courier, monospace    !default;
+// sizes
+$font-size-xs:        0.625rem                        !default;
+$font-size-sm:        0.875rem                        !default;
+$font-size:           1rem                            !default;
+$font-size-md:        1.25rem                         !default;
+$font-size-lg:        1.75rem                         !default;
+$font-size-xl:        2.5rem                          !default;
+$font-size-xxl:       3.75rem                         !default;
+
+/* Navbar */
+$navbar-height:       100px                           !default;
+$navbar-opacity:      1                               !default;
+$navbar-color:        $color-light                    !default;
+
+
+
+@import '../theme/vars';
