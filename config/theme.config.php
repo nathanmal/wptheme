@@ -99,11 +99,13 @@ return array(
   /**
    * Enable shortcodes
    */
-  'shortcodes' => array(),
+  'shortcodes' => array('lipsum'),
 
   /**
    * Google analytics account id UA-XXXXXX-X
    */
   'ga' => '',
+
+
 
 );
