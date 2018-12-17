@@ -12,9 +12,7 @@
     <!-- Ping Back -->
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
     <!-- Provide baseURL for javascript -->
-    <script type="text/javascript">
-    	window.baseURL = '<?php echo site_url();?>';
-    </script>
+    <script type="text/javascript"> window.baseURL = '<?php echo site_url();?>'; </script>
     <!-- Begin wp_head -->
     <?php wp_head() ?>
     <!-- End wp_head -->

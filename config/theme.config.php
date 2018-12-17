@@ -15,15 +15,14 @@ return array(
    * example:
    *
    *  'myscript' => array(
-   *    'source' => absolute/url/to/source.js,
+   *    'source' => relative/to/assets/source.js,
    *    'dependencies' => array('of','dependencies'),
    *    'version' => '0.2.1',
    *    'footer' => TRUE/FALSE whether to load in footer of page
    *  )
    *  
    */
-  'scripts' => array(
-  ),
+  'scripts' => array(),
 
   /**
    * CSS StyleSheets to be pre-loaded into the theme
@@ -41,8 +40,7 @@ return array(
    *  )
    *
    */
-  'styles' => array(
-  ),
+  'styles' => array(),
 
   /**
    * Theme font files
@@ -68,6 +66,7 @@ return array(
    *  'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),   // mobile nav 
    *  'footer-menu' => __( 'Footer Menu', THEME_DOMAIN )    // footer nave
    *
+   * @see    https://developer.wordpress.org/reference/functions/wp_nav_menu/ 
    */
   'menus' => array(
   ),
@@ -79,17 +78,18 @@ return array(
    * default:
    *
    *  array(
-   *    'id' => 'main',
-   *    'name' => __( 'Main Sidebar', THEME_DOMAIN ),
-   *    'description' => __( 'The main sidebar.', THEME_DOMAIN ),
+   *    'id'            => 'main',
+   *    'name'          => __( 'Main Sidebar', THEME_DOMAIN ),
+   *    'description'   => __( 'The main sidebar.', THEME_DOMAIN ),
    *    'before_widget' => '<div id="%1$s" class="widget %2$s">',
-   *    'after_widget' => '</div>',
-   *    'before_title' => '<h4 class="widgettitle">',
-   *    'after_title' => '</h4>',
+   *    'after_widget'  => '</div>',
+   *    'before_title'  => '<h4 class="widgettitle">',
+   *    'after_title'   => '</h4>',
    *  )
+   *
+   * @see https://codex.wordpress.org/Function_Reference/register_sidebar 
    */
-  'sidebars' => array(
-  ),
+  'sidebars' => array(),
 
   /**
    * Enable Widgets
@@ -100,12 +100,5 @@ return array(
    * Enable shortcodes
    */
   'shortcodes' => array('lipsum'),
-
-  /**
-   * Google analytics account id UA-XXXXXX-X
-   */
-  'ga' => '',
-
-
 
 );
