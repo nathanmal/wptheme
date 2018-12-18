@@ -1,5 +1,6 @@
 <?php 
 
+$class = 'navbar navbar-default navbar-expand-md';
 
 $class .= array_contains($data, 'fixed') ? ' fixed-top' : '';
 $class .= array_contains($data, 'hidden') ? ' navbar-hidden' : '';
@@ -12,7 +13,7 @@ $container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
 ?>
 
 <!-- Navbar -->
-<nav class="navbar navbar-default navbar-expand-md <?=$class?>" role="navigation">
+<nav class="<?=$class?>" role="navigation">
 	<div class="<?=$container?>">
     
     <div class="navbar-brand">
