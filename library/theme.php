@@ -588,7 +588,7 @@ final class Theme
 
 		// echo 'VALID';
 		// Enqueue the script
-		wp_enqueue_script($name, $src, $dependencies, $version, $footer);
+		wp_enqueue_script($name, $source, $dependencies, $version, $footer);
 	}
 
 
@@ -608,7 +608,7 @@ final class Theme
 		if( empty($source) ) return;
 
 		// Enqueue as style
-		wp_enqueue_style( 'font-'.$name, $source );
+		wp_enqueue_style( 'font-' . $name, $source );
 	}
 
 
