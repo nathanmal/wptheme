@@ -1,0 +1,65 @@
+/**
+ * Theme variable overrides
+ *
+ * This is where you can override all the base theme variables such as spacing, colors etc.
+ * 
+ */
+
+/* Breakpoints */
+$break-mobile:        768px;
+$break-tablet:        992px;
+$break-desktop:       1200px;
+$break-large:         1440px;  
+
+/* Colors */
+$color-black:         #000000;
+$color-gray:          #888899;
+$color-white:         #FFFFFF;
+// named
+$color-primary:       #F49DDA;
+$color-secondary:     #9AFD13;
+$color-light:         #EEEEEE;
+$color-dark:          #333333;
+$color-info:          #f303f2;
+$color-success:       #f393f2;
+$color-error:         #FF4444;
+$color-alert:         #FFCC44;
+// brand
+$color-brand:         $color-primary;
+$color-brand-alt:     $color-secondary;
+
+/* Sizes */
+$size-sm:             0.25rem;
+$size-md:             0.5rem;
+$size-lg:             1rem;
+$size-xl:             1.5rem;
+$size-xx:             2.25rem;
+/* Spaces */
+$space-sm:            $size-sm;
+$space-md:            $size-md;
+$space-lg:            $size-lg;
+$space-xl:            $size-xl;
+$space-xx:            $size-xx;
+
+/* Fonts */
+/* base.css typography */
+$font-root-size:      16px;
+// families
+$font-header:         'Arial', sans-serif;
+$font-body:           'Arial', sans-serif;
+$font-header-alt:     $font-header;
+$font-body-alt:       $font-body;
+$font-mono:           'Monaco', Courier, monospace;
+// sizes
+$font-size-xs:        0.625rem;
+$font-size-sm:        0.875rem;
+$font-size:           1rem;
+$font-size-md:        1.25rem;
+$font-size-lg:        1.75rem;
+$font-size-xl:        2.5rem;
+$font-size-xxl:       3.75rem;
+
+/* Navbar */
+$navbar-height:       100px;
+$navbar-opacity:      1;
+$navbar-color:        $color-light;
