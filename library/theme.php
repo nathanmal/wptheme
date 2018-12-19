@@ -1004,6 +1004,15 @@ final class Theme
 		}
 	}
 
+
+
+	public static function setting( $name )
+	{
+		$value = get_theme_mod( $name, NULL );
+
+		return $value;
+	}
+
 	/**
 	 * Display enqueue files
 	 * @category utility
