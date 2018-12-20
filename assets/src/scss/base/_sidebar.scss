@@ -7,9 +7,8 @@
   padding:1rem;
   
   min-height:100%;
-  box-sizing: border-box;
-  // background-color:darken($color-light,10%);
-  // background-color:none;
+  box-sizing:border-box;
+  background-color:$sidebar-bg-color;
 
   @include mobile()
   {
@@ -21,7 +20,7 @@
     box-sizing: border-box;
     padding:1rem;
     margin:1rem;
-    background:darken($color-light,10%);
+    background:$sidebar-widget-bg-color;
 
     h4 {
       font-size:1rem;

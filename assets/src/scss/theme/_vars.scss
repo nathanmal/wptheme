@@ -1,3 +1,7 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
 /**
  * Theme variable overrides
  *
@@ -12,19 +16,22 @@ $break-desktop:       1200px;
 $break-large:         1440px;  
 
 /* Colors */
+// Basic Colors
 $color-black:         #000000;
 $color-gray:          #888899;
 $color-white:         #FFFFFF;
-// named
-$color-primary:       #F49DDA;
+
+// Bootstrap Overrides
+$color-primary:       $primary;
 $color-secondary:     #9AFD13;
 $color-light:         #EEEEEE;
 $color-dark:          #333333;
 $color-info:          #f303f2;
 $color-success:       #f393f2;
-$color-error:         #FF4444;
-$color-alert:         #FFCC44;
-// brand
+$color-danger:        #FF4444;
+$color-warning:       #FFCC44;
+
+// Brand Colors
 $color-brand:         $color-primary;
 $color-brand-alt:     $color-secondary;
 
@@ -63,3 +70,15 @@ $font-size-xxl:       3.75rem;
 $navbar-height:       100px;
 $navbar-opacity:      1;
 $navbar-color:        $color-light;
+
+/* Page */
+$page-bg-color:       $color-light;
+
+/* Article */
+$article-header-bg-color:   $color-light;
+$article-content-bg-color:  $color-light;
+$article-footer-bg-color:   $color-light;
+
+/* Sidebar */
+$sidebar-bg-color:          $color-light;
+$sidebar-widget-bg-color:   $color-light;

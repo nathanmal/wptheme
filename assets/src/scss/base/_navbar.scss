@@ -19,17 +19,17 @@ nav.navbar
     top:-$navbar-height;
   }
 
-  &.navbar-bg-transparent
+  &.navbar-transparent
   {
     background-color:transparent;
   }
 
-  &.navbar-bg-light 
+  &.navbar-light 
   {
     background-color: rgba($color-light, $navbar-opacity);
   }
 
-  &.navbar-bg-dark
+  &.navbar-dark
   {
     background-color: rgba($color-dark, $navbar-opacity);
   }

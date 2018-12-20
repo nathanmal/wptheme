@@ -5,7 +5,7 @@ main#page
   display:flex;
   justify-content: flex-end;
   align-items: flex-start;
-  background:$color-light;
+  background:$page-bg-color;
 
   &.sidebar-right 
   {
@@ -45,18 +45,18 @@ main#page
 
     & > header 
     {
-      background-color:$color-light;
+      background-color:$article-header-bg-color;
     }
 
     & > section#content
     {
-      background-color:$color-light;
+      background-color:$article-content-bg-color;
       @import 'content';
     }
 
     & > footer 
     {
-      background-color:$color-light;
+      background-color:$article-footer-bg-color;
     }
 
   }

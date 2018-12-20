@@ -1,3 +1,6 @@
+// @import 'node_modules/bootstrap/scss/functions';
+// @import 'node_modules/bootstrap/scss/variables';
+// @import 'node_modules/bootstrap/scss/mixins';
 /* Base Vars */
 
 
@@ -12,14 +15,15 @@ $color-black:         #000000                         !default;
 $color-gray:          #888899                         !default;
 $color-white:         #FFFFFF                         !default;
 // named
-$color-primary:       #F49DDA                         !default;
+$color-primary:       $blue                           !default;
 $color-secondary:     #9AFD13                         !default;
 $color-light:         #EEEEEE                         !default;
-$color-dark:          #333333                         !default;
+$color-dark:          #F3C                            !default;
 $color-info:          #f303f2                         !default;
 $color-success:       #f393f2                         !default;
-$color-error:         #FF4444                         !default;
-$color-alert:         #FFCC44                         !default;
+$color-danger:        #FF4444                         !default;
+$color-warning:       #FFCC44                         !default;
+
 // brand
 $color-brand:         $color-primary                  !default;
 $color-brand-alt:     $color-secondary                !default;
@@ -61,5 +65,32 @@ $navbar-opacity:      1                               !default;
 $navbar-color:        $color-light                    !default;
 
 
+$page-bg-color:       $color-light !default;
+
+$article-header-bg-color: $color-light !default;
+$article-content-bg-color: $color-light !default;
+$article-footer-bg-color: $color-light !default;
+
+$sidebar-bg-color: $color-light !default;
+$sidebar-widget-bg-color: $color-light !default;
+
 
 @import '../theme/vars';
+
+/* $theme-colors: (
+  "primary":    $color-primary,
+  "secondary":  $color-secondary,
+  "success":    $color-success,
+  "info":       $color-info,
+  "warning":    $color-warning,
+  "danger":     $color-danger,
+  "light":      $color-light,
+  "dark":       $color-dark 
+);
+
+@import 'node_modules/bootstrap/scss/buttons';
+@import 'node_modules/bootstrap/scss/card';
+@import 'node_modules/bootstrap/scss/alert';
+@import 'node_modules/bootstrap/scss/badge';
+@import 'node_modules/bootstrap/scss/progress';
+@import 'node_modules/bootstrap/scss/navbar'; */
