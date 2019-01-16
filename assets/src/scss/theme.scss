@@ -5,10 +5,17 @@
 
 @import 'theme/vars';
 @import 'theme/mixins';
+@import 'theme/animation';
 @import 'theme/global';
-@import 'theme/frame';
+@import 'theme/header';
+@import 'theme/navbar';
+@import 'theme/dropmenu';
+@import 'theme/banner';
+@import 'theme/footer';
+@import 'theme/templates';
+@import 'theme/page';
 @import 'theme/pages';
-@import 'theme/404';
+@import 'theme/content';
 @import 'theme/forms';
 @import 'theme/partials';
 @import 'theme/widgets';

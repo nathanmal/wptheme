@@ -5,7 +5,7 @@ const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const CleanWebpackPlugin      = require('clean-webpack-plugin');
 const UglifyJsPlugin          = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const loader                  = require('./wploader'); 
+const loader                  = require('./loader'); 
 
 // Webpack config
 module.exports = (env, argv) => {
@@ -15,7 +15,10 @@ module.exports = (env, argv) => {
   const config = {
     // Project entry point(s)
     entry: { 
-      theme: './assets/src/js/theme.js'
+      // Main theme file
+      theme: './assets/src/js/theme.js',
+      // Bootstrap theme
+      bootstrap: './assets/src/js/bootstrap.js'
     },
 
     // Output directory
@@ -37,7 +40,12 @@ module.exports = (env, argv) => {
         // CSS url:() paths
         {
           test: /\.(png|jpg|gif)$/,
-          loader: loader('url'),
+          loader: loader('file'),
+          options: {
+            name(file) {
+              return production ? 'images/[hash].[ext]' : 'images/[name].[ext]'
+            },
+          },
         }, 
 
         // SASS
@@ -57,9 +65,7 @@ module.exports = (env, argv) => {
            use: [{
              loader: loader('file'),
              options: {
-               name: '[name].[ext]',
-               outputPath: 'fonts/',    // where the fonts will go
-               // publicPath: 'fonts/'     // override the default path
+               name: 'fonts/[name].[ext]',
              }
            }]
          },

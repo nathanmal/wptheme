@@ -1,7 +1,13 @@
+/**
+ * Loader file
+ *
+ * helps clean up webpack config file
+ * 
+ * @type {[type]}
+ */
 const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 
-// Put all loader config here
 module.exports = type => {
   switch(type){
 
@@ -27,6 +33,10 @@ module.exports = type => {
     case 'extract':
       return MiniCssExtractPlugin.loader;
       break;
+
+  /*  case 'file':
+      return { loader: 'file-loader' };
+      break;*/
 
     default: 
       return type + '-loader';

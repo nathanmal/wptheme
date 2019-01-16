@@ -1,5 +1,3 @@
-@import 'vars';
-
 html, body 
 {
   width:100%;
@@ -9,9 +7,10 @@ html, body
 /**
  * #frame overtakes page viewport
  */
-body {
-  overflow:hidden;
-  // Apply font smoothing
+body 
+{
+  // Apply font aliasing
+  font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

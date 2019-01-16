@@ -19,19 +19,6 @@
   to      { transform: rotate(-360deg); }
 }
 
-// Allows Detecting Autofill for styling
-// @see https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
-@keyframes onAutoFillStart {  
-  from    {/**/}  
-  to      {/**/}
-}
-
-@keyframes onAutoFillCancel {  
-  from    {/**/}  
-  to      {/**/}
-}
-
-
 
 $ease-cubic:      cubic-bezier(0.645, 0.045, 0.355, 1);
 $ease-in-cubic:   cubic-bezier(0.55, 0.055, 0.675, 0.19);

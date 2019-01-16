@@ -51,7 +51,6 @@ main#page
     & > section#content
     {
       background-color:$article-content-bg-color;
-      @import 'content';
     }
 
     & > footer 

@@ -1,15 +1,14 @@
-@import 'vars';
-
-/* Note: Parent element must have position set for this to work */
-@mixin layer( $layer:1 ) {
+@mixin layer( $layer: null ) {
+    
+    // Parent must have position set
     position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    height:100%;
-    width:100%;
-    z-index:($layer);
+    // Snap to edges
+    top:0; right:0; bottom:0; left:0;
+    // Optional z-indexing
+    @if( $layer and $layer > 0 )
+    {
+      z-index:($layer);
+    }
 }
 
 /**
@@ -28,14 +27,34 @@
   @media only screen and ( max-width: $break-mobile ) { @content; }
 }
 
+@mixin mobile_up() {
+  @media only screen and ( min-width: $break-mobile + 1 ) { @content; }
+}
+
 @mixin tablet() {
   @media only screen and ( min-width: $break-mobile + 1) and ( max-width: $break-tablet - 1 ) { @content; }
 }
 
-@mixin desktop() {
-  @media only screen and ( min-width: $break-desktop + 1 ) and ( max-width: $break-desktop-large - 1 ) { @content; }
+@mixin tablet_up() {
+  @media only screen and ( min-width: $break-mobile + 1) { @content; }
 }
 
-@mixin desktopLarge(){
-  @media only screen and ( min-width: $break-desktop-large ) { @content; }
+@mixin tablet_down(){
+  @media only screen and ( max-width: $break-tablet - 1 ) { @content; }
+}
+
+@mixin desktop() {
+  @media only screen and ( min-width: $break-desktop + 1 ) and ( max-width: $break-large - 1 ) { @content; }
+}
+
+@mixin desktop_up() {
+  @media only screen and ( min-width: $break-desktop + 1 )  { @content; }
+}
+
+@mixin desktop_down() {
+  @media only screen and  ( max-width: $break-large - 1 )  { @content; }
+}
+
+@mixin desktop_large(){
+  @media only screen and ( min-width: $break-large ) { @content; }
 }

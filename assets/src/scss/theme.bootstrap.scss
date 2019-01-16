@@ -1,0 +1,9 @@
+@import 'theme/vars';
+@import 'theme/bootstrap';
+
+$theme-colors: (
+  "primary": $color-purple,
+  "danger": #ff4136
+);
+
+@import "node_modules/bootstrap/scss/bootstrap";
