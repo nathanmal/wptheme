@@ -111,27 +111,25 @@ final class Theme
 		// Register Theme template directory
 		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
 
+		// Enqueue Scripts and Styles
+		Theme::enqueue();
 		// Custom Post Types
-		self::post_types();
+		Theme::post_types();
 		// Register nav menus
-		self::register_menus();
+		Theme::register_menus();
 		// Register sidebars
-		self::register_sidebars();
+		Theme::register_sidebars();
 		// Declare support 
-		self::declare_support();
+		Theme::declare_support();
 		// Clean up wp_head();
-		self::cleanup_head();
+		Theme::cleanup_head();
 		// Custom shortcodes
-		self::add_shortcodes();
-		
+		Theme::add_shortcodes();
 		// Hide admin bar from non-admins and redirect them to homepage
-		self::restrict_admin();
+		Theme::restrict_admin();
 
-		// Enqueue scripts & styles
-  	add_action( 'wp_enqueue_scripts', 'Theme::enqueue', 110 );
-
-  		// Mark initialized
-		self::$initialized = TRUE;
+  	// Mark initialized
+		Theme::$initialized = TRUE;
 	}
 
 	/**
@@ -459,7 +457,6 @@ final class Theme
 				$format = get_post_format();
 				// If not used, default with post
 				if( empty($format) ) $format = 'post';
-
 				// post format wrapper
 				echo '<div class="post-format post-format-' . $format . '">';
 				// Include format view
@@ -505,55 +502,51 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
+		if( is_admin() ) return;
+		// Replace built-in jQuery with v3
+		//wp_deregister_script('jquery');
+		//wp_deregister_script('jquery-ui-core');
 
-		if( ! is_admin() ) 
-		{
-			// Replace built-in jQuery with v3
-			wp_deregister_script('jquery');
-			wp_deregister_script('jquery-ui-core');
+		// Load scripts
+		$scripts = Theme::config('scripts');
 
-			// Load scripts
-			$scripts = Theme::config('scripts');
-
-			foreach($scripts as $name => $script)
-			{	
-				Theme::enqueue_script($name, $script);
-			}
-
-			// Load fonts first so stylesheets can use em
-			$fonts = Theme::config('fonts');
-
-			foreach($fonts as $font => $uri)
-			{
-				Theme::enqueue_font($font, $uri);
-			}
-
-			// Load stylesheets
-			$styles = Theme::config('styles');
-
-			foreach($styles as $name => $config)
-			{
-				Theme::enqueue_style($name, $config);
-			}
-
-			// Load template-specific scripts and styles if they exist
-			$template = self::getTemplate();
-
-			if( ! empty($template) ){
-
-				if( $js = Theme::asset('js/' . $template . '.js') )
-				{
-					Theme::enqueue_script('template', array('source'=>$js) );
-				}
-
-				if( $css = Theme::asset('css/' . $template . '.css') )
-				{
-					Theme::enqueue_style('template', array('source'=>$css) );
-				}
-
-			}
-
+		foreach($scripts as $name => $script)
+		{	
+			Theme::enqueue_script($name, $script);
 		}
+
+		// Load fonts first so stylesheets can use em
+		$fonts = Theme::config('fonts');
+
+		foreach($fonts as $font => $uri)
+		{
+			Theme::enqueue_font($font, $uri);
+		}
+
+		// Load stylesheets
+		$styles = Theme::config('styles');
+
+		foreach($styles as $name => $config)
+		{
+			Theme::enqueue_style($name, $config);
+		}
+
+		// Load template-specific scripts and styles if they exist
+		$template = self::getTemplate();
+
+		if( ! empty($template) ){
+
+			if( $js = Theme::asset('js/' . $template . '.js') )
+			{
+				Theme::enqueue_script('template', array('source'=>$js) );
+			}
+
+			if( $css = Theme::asset('css/' . $template . '.css') )
+			{
+				Theme::enqueue_style('template', array('source'=>$css) );
+			}
+		}
+		
 	}
 
 
@@ -566,17 +559,11 @@ final class Theme
 	public static function enqueue_script( $name, $config = array() )
 	{	
 
-		//echo 'ENQUEUE SCRIPT: ' . $name;
-		//pre($config);
-		//echo '<hr/>';
-
 		// Get the soruce. If config is a string then it's passed in that way
 		$source = is_array($config) ? element($config, 'source', '') : $config;
 
 		// Check for asset path
 		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
-
-		// var_dump($source);
 
 		// Missing
 		if( empty($source) ) return FALSE;
@@ -586,9 +573,9 @@ final class Theme
 		$version      = element( $config, 'version', NULL );
 		$footer       = element( $config, 'footer', TRUE );
 
-		// echo 'VALID';
 		// Enqueue the script
 		wp_enqueue_script($name, $source, $dependencies, $version, $footer);
+
 	}
 
 
@@ -732,9 +719,7 @@ final class Theme
 		{	
 			$ext  = pathinfo($file, PATHINFO_EXTENSION);
 
-			$path = $dir . $file;
-
-			echo $file.'<br/>';
+			$path = $directory . $file;
 
 			if( strpos($file, '.') === 0 OR $ext !== 'php' OR ! is_file($path) ) continue;
 
@@ -784,7 +769,7 @@ final class Theme
 	 */
 	public static function render()
 	{
-		$id 	= get_the_ID();
+		$id 		= get_the_ID();
 		$type   = get_post_type($id);
 		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
 		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
@@ -845,7 +830,7 @@ final class Theme
 
 		// Get the page content first, this allows it to load things into wp_head
 		$body = self::view($template, array(), 1, TRUE);
-
+		
 		// This is where the rubber meets the road
 		// Output header, page and footer
 		self::$header && get_header();
