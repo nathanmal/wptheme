@@ -47,6 +47,7 @@ temp/
 .sass-cache
 
 assets/vendor/*
+assets/dist/*
 library/vendor/*
 node_modules/*
 assets/css/theme.css
