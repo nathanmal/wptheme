@@ -1,3 +1,8 @@
+/**
+ * Creates a z-depth absolutely positioned full width & height layer
+ * @param  {[type]} $layer: null          [description]
+ * @return {[type]}         [description]
+ */
 @mixin layer( $layer: null ) {
     
     // Parent must have position set

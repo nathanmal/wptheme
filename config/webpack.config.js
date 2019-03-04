@@ -5,14 +5,16 @@ const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const CleanWebpackPlugin      = require('clean-webpack-plugin');
 const UglifyJsPlugin          = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const loader                  = require('./loader'); 
+const loader                  = require('./webpack.loader.js'); 
 
 // Webpack config
 module.exports = (env, argv) => {
 
+  // Test for production environment
   const production = argv.mode === 'production';
 
   const config = {
+
     // Project entry point(s)
     entry: { 
       // Main theme file
@@ -37,7 +39,7 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
           loader: loader('babel')
         },
-        // CSS url:() paths
+        // Images
         {
           test: /\.(png|jpg|gif)$/,
           loader: loader('file'),
@@ -46,8 +48,17 @@ module.exports = (env, argv) => {
               return production ? 'images/[hash].[ext]' : 'images/[name].[ext]'
             },
           },
-        }, 
-
+        },
+        // Font files
+        {
+           test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+           use: [{
+             loader: loader('file'),
+             options: {
+               name: 'fonts/[name].[ext]',
+             }
+           }]
+        },
         // SASS
         {
           test: /\.[s]?css$/,
@@ -59,16 +70,7 @@ module.exports = (env, argv) => {
             loader('postcss'),
           ]
         },
-        // Font files
-        {
-           test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-           use: [{
-             loader: loader('file'),
-             options: {
-               name: 'fonts/[name].[ext]',
-             }
-           }]
-         },
+        
       ]
     },
 

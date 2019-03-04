@@ -1,25 +1,28 @@
 <?php 
 
-$class = 'navbar navbar-default navbar-expand-md';
+$class = array('navbar','navbar-default','navbar-expand-md');
 
-$class .= array_contains($data, 'fixed') ? ' fixed-top' : '';
-$class .= array_contains($data, 'hidden') ? ' navbar-hidden' : '';
-$class .= array_contains($data, 'light') ? ' navbar-light' : '';
-$class .= array_contains($data, 'text-light') ? ' navbar-text-light' : '';
-$class .= array_contains($data, 'transparent') ? ' navbar-bg-transparent' : '';
+$fixed   = Theme::setting('theme_navbar_fixed', FALSE);
+$hide    = Theme::setting('theme_navbar_hide', FALSE);
+$text    = Theme::setting('theme_navbar_text', FALSE);
+$bg      = Theme::setting('theme_navbar_background', 'transparent');
+
+if($fixed) $class[] = 'fixed-top';
+if($hide)  $class[] = 'navbar-hidden';
+if($text)  $class[] = 'navbar-text-' . $text;
+if($bg)    $class[] = 'navbar-' . $bg;
 
 $container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
 
 ?>
 
 <!-- Navbar -->
-<nav class="<?=$class?>" role="navigation">
+<nav class="<?=classes($class)?>" role="navigation">
 	<div class="<?=$container?>">
     
     <div class="navbar-brand">
       <a href="<?= bloginfo('url') ?>"><?= bloginfo('title') ?></a>
     </div>
-
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
 	       <span class="navbar-toggler-icon"></span>
 	  </button>
