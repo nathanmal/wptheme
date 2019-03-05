@@ -92,7 +92,7 @@ final class Theme
 		if( self::$initialized ) return;
 
 		// Load config 
-		self::load_config();
+		self::$config = include(THEME_DIR . '/config/theme.config.php');
 		
 		// Add filters
 		add_filter( 'the_generator', 'Theme::remove_generator' );
@@ -130,24 +130,6 @@ final class Theme
 
   	// Mark initialized
 		Theme::$initialized = TRUE;
-	}
-
-	/**
-	 * Load configuration, allowing /theme config to override /library config
-	 * @return [type] [description]
-	 */
-	private static function load_config()
-	{
-		// Merge theme and core config arrays
-		$theme = THEME_DIR . '/config/theme.config.php';
-		$core  = THEME_DIR . '/library/theme.config.php';
-
-		// theme config optional
-		$tconf = is_file($theme) ? include $theme : array();
-		// core config required
-		$cconf = require($core);
-		// merge
-		self::$config = array_merge_recursive($cconf,$tconf);
 	}
 
 	/**

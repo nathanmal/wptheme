@@ -22,7 +22,13 @@ return array(
    *  )
    *  
    */
-  'scripts' => array(),
+  'scripts' => array(
+    // Main Theme File
+    'theme' => array(
+      'source'  => '/dist/theme.js',
+      'footer'  => TRUE,
+    )
+  ),
 
   /**
    * CSS StyleSheets to be pre-loaded into the theme
@@ -40,7 +46,13 @@ return array(
    *  )
    *
    */
-  'styles' => array(),
+  'styles' => array(
+    // Main theme stylesheet
+    'theme' => array(
+      'source' => 'dist/theme.css',
+      'version'=> time(),
+    )
+  ),
 
   /**
    * Theme font files
@@ -69,6 +81,9 @@ return array(
    * @see    https://developer.wordpress.org/reference/functions/wp_nav_menu/ 
    */
   'menus' => array(
+    'main-menu'   => __( 'Main Menu',   THEME_DOMAIN ),    
+    'mobile-menu' => __( 'Mobile Menu', THEME_DOMAIN ),   
+    'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ),
   ),
 
   
@@ -89,7 +104,17 @@ return array(
    *
    * @see https://codex.wordpress.org/Function_Reference/register_sidebar 
    */
-  'sidebars' => array(),
+  'sidebars' => array(
+    'main' => array(
+      'id'            => 'main',
+      'name'          => __( 'Main Sidebar', THEME_DOMAIN ),
+      'description'   => __( 'The main sidebar.', THEME_DOMAIN ),
+      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+      'after_widget'  => '</div>',
+      'before_title'  => '<h4 class="widgettitle">',
+      'after_title'   => '</h4>',
+    )
+  ),
 
   /**
    * Enable Widgets
