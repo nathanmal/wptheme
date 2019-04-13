@@ -191,6 +191,19 @@ final class Theme
 
 
 	/**
+	 * Echo the page/post's <title></title>
+	 * @return [type] [description]
+	 */
+	public static function title()
+	{
+		$name = bloginfo('name');
+		$desc = bloginfo('description');
+
+		return '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('') ) . '</title>';
+	}
+
+
+	/**
 	 * Get theme config item
 	 * @param  [type] $item [description]
 	 * @return [type]       [description]
