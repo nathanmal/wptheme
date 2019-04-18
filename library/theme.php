@@ -49,6 +49,15 @@ final class Theme
 	private static $footer = TRUE;
 
 	/**
+	 * Hold element class names
+	 * @var array
+	 */
+	private static $classes = array(
+		'header' => 'header header-fixed',
+		'page'   => 'container no-padding'
+	);
+
+	/**
 	 * Get the theme instance 
 	 * @return [type] [description]
 	 */
@@ -196,10 +205,10 @@ final class Theme
 	 */
 	public static function title()
 	{
-		$name = bloginfo('name');
-		$desc = bloginfo('description');
+		$name = get_bloginfo('name');
+		$desc = get_bloginfo('description');
 
-		return '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('') ) . '</title>';
+		return '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
 	}
 
 
@@ -214,6 +223,44 @@ final class Theme
 
 		return isset(self::$config[$item]) ? self::$config[$item] : NULL;
 
+	}
+
+
+	/**
+	 * Get theme option, but allow for post meta to override
+	 * @param  [type]  $name    [description]
+	 * @param  boolean $default [description]
+	 * @return [type]           [description]
+	 */
+	public static function option( $name, $default = NULL )
+	{
+		$option = 'wptheme_' . $name;
+
+		$value = get_option( $option, $default );
+
+		if( ( is_null($value) OR $value === $default ) && $post = get_post() )
+		{
+			$meta = get_post_meta( $post->ID, $option, TRUE );
+
+			if( is_null($meta) OR $meta === $default ) return $default;
+
+			return $meta;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Set theme option
+	 * @param [type]  $name     [description]
+	 * @param [type]  $value    [description]
+	 * @param boolean $autoload [description]
+	 */
+	public static function set_option( $name, $value, $autoload = TRUE )
+	{
+		$option = 'wptheme_' . $name;
+
+		return update_option( $option, $value, $autoload );
 	}
 
 
@@ -234,6 +281,38 @@ final class Theme
 	{
 		
 	}
+
+	/**
+	 * Get class names for an element
+	 * @param  [type] $element [description]
+	 * @return [type]          [description]
+	 */
+	public static function classes( $element = NULL )
+	{
+		// Get from array
+		$classes = (string) element( Theme::$classes, $element, '' );
+
+		// Remove duplicate classes
+		$classes = implode(' ',array_unique(explode(' ', $classes)));
+
+		return $classes;
+	}
+
+	/**
+	 * Add class name to an element
+	 * @param [type] $element [description]
+	 * @param [type] $classes [description]
+	 */
+	public static function addClass( $element, $classes )
+	{
+		// classes can be a string or array of strings
+		$classes = is_array($classes) ? implode(' ', $classes ) : $classes;
+
+		if( ! isset(Theme::$classes[$element]) ) Theme::$classes[$element] = '';
+
+		Theme::$classes[$element] .= (string) $classes;
+	}
+
 
 	/**
 	 * Get theme URI path
@@ -442,29 +521,39 @@ final class Theme
 	 * @param  string $post_template [description]
 	 * @return [type]                [description]
 	 */
-	public static function content( $view = '', $post_template = '' )
+	public static function content()
 	{
-		if ( have_posts() ) 
-		{
-			while ( have_posts() ) : the_post();
+		// No posts found or loaded
+		if( ! have_posts() ) return Theme::partial('missing');
 
-				// Check post format
-				$format = get_post_format();
-				// If not used, default with post
-				if( empty($format) ) $format = 'post';
-				// post format wrapper
-				echo '<div class="post-format post-format-' . $format . '">';
-				// Include format view
+		// Loop
+		while ( have_posts() ) : the_post();
+
+			// Check post format
+			$format = get_post_format();
+
+			// Add post format 
+			if( $format ) Theme::addClass('post', 'post-format post-format-' . $format );
+
+			// post wrapper
+			echo '<div class="post '. Theme::classes('post').'">';
+
+			// Include format view if used
+			if( $format ) 
+			{
 				Theme::view( 'formats/' . $format );
-				// close wrapper
-				echo '</div>';
+			}
+			else
+			{
+				Theme::view( 'formats/post' );
+			}
+			
+			// close wrapper
+			echo '</div>';
 
-			endwhile;
+		endwhile;
 
-		} else {
-			// Show missing content message if there are no posts
-			Theme::partial('missing'); 
-		}
+		
 	}
 
 	/**
