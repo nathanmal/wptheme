@@ -3,8 +3,8 @@
  * @param  {[type]} $layer: null          [description]
  * @return {[type]}         [description]
  */
-@mixin layer( $layer: null ) {
-    
+@mixin layer( $layer: null ) 
+{
     // Parent must have position set
     position:absolute;
     // Snap to edges

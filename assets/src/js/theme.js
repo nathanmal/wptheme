@@ -1,13 +1,18 @@
 // Import stylesheets (will be combined in order)
 // Bootstrap 4
 import 'bootstrap/dist/css/bootstrap.min.css';
-// Font awesome
-import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-// Theme SASS
-import '../scss/theme.scss';
 // Bootstrap JS
 import 'bootstrap/dist/js/bootstrap.min.js';
+// Font awesome
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+// App icon files
+import './icons';
+// Theme SASS
+import '../scss/theme.scss';
+// Import core theme class
+import Theme from './wptheme/theme';
+
 // Fire when ready
 jQuery(function($) {
-    console.log('Theme script ready');
+    window.wptheme = new Theme();
 });
