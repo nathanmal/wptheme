@@ -1,4 +1,4 @@
-// Webpack version 4
+// Webpack 4
 const webpack                 = require('webpack');
 const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
@@ -13,6 +13,7 @@ module.exports = (env, argv) => {
   // Test for production environment
   const production = argv.mode === 'production';
 
+  // Config object
   const config = {
 
     // Project entry point(s)
@@ -41,17 +42,17 @@ module.exports = (env, argv) => {
         },
         // Images
         {
-          test: /\.(png|jpg|gif)$/,
+          test: /images\/.*\.(png|jpg|gif)$/,
           loader: loader('file'),
           options: {
             name(file) {
-              return production ? 'images/[hash].[ext]' : 'images/[name].[ext]'
+              return production ? 'images/[path][hash].[ext]' : 'images/[path][name].[ext]';
             },
           },
         },
         // Font files
         {
-           test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+           test: /fonts\/.*\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
            use: [{
              loader: loader('file'),
              options: {
@@ -59,6 +60,39 @@ module.exports = (env, argv) => {
              }
            }]
         },
+        // Application Files
+        {
+          test: /app\/.*\.(png|jpg|ico|xml|webmanifest|xml)$/,
+          loader: loader('file'),
+          options: {
+            name(file) {
+              return production ? 'images/[path][hash].[ext]' : 'images/[path][name].[ext]';
+            },
+          }
+        },
+
+
+         /*
+        {                                                                        
+           test: /\.json$/,                                                       
+           loader: 'file-loader?name=[name].json'                                 
+        },
+       
+        
+
+        {
+          test: /\.(json)$/,
+          type: 'javascript/auto',
+          loader: loader('file'),
+          options: {
+            name(file) {
+              return production ? '[path][hash].[ext]' : '[path][name].[ext]';
+            }
+          }
+        },
+
+
+        */
         // SASS
         {
           test: /\.[s]?css$/,

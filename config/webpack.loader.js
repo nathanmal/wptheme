@@ -9,8 +9,11 @@ const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 
 module.exports = type => {
+
   switch(type){
 
+    // CSS Loaders
+    // importLoaders specifies # of loaders that run before it
     case 'css':
       return  { loader: 'css-loader',
                 options: { 
@@ -19,6 +22,7 @@ module.exports = type => {
               };
       break;
 
+    // Post CSS loader
     case 'postcss':
       return  { loader : 'postcss-loader',
                 options: {
@@ -30,14 +34,12 @@ module.exports = type => {
               };
       break;
 
+    // CSS Extract loader
     case 'extract':
       return MiniCssExtractPlugin.loader;
       break;
 
-  /*  case 'file':
-      return { loader: 'file-loader' };
-      break;*/
-
+    // By default just hypenate the loader
     default: 
       return type + '-loader';
       break;
