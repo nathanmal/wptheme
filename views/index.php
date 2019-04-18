@@ -1,15 +1,17 @@
 <!-- Main navigation -->
-<header id="header" class="header header-fixed" role="navigation">
+<header id="header" class="<?= Theme::classes('header') ?>" role="navigation">
 	<?php Theme::partial('navbar', array('fixed') ); ?>
 	<?php Theme::partial('dropmenu'); ?>
 </header>
 
 <!-- Main Page Content -->
-<main id="page" class="clear-navbar container no-padding" role="main">
+<main id="page" class="<?= Theme::classes('page'); ?>" role="main">
 	<!-- Sidebar -->
+	<?php if( Theme::option('display_sidebar') ) { ?>
 	<aside>
 		<?php Theme::sidebar(); ?>
 	</aside>
+	<?php } ?>
 	<!-- Main Article -->
 	<article>
 		<header></header>

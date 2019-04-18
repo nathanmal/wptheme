@@ -1,7 +1,4 @@
-<?php 
-$id = get_the_ID();
-?>
-<article id="post-<?=$id?>" class="post">
+<article id="post-<?= get_the_ID() ?>" class="post">
   <header class="post-header">
     <h2><?php the_title(); ?></h2>
   </header>
