@@ -208,8 +208,18 @@ final class Theme
 		$name = get_bloginfo('name');
 		$desc = get_bloginfo('description');
 
-		return '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
+		echo '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
 	}
+
+	/**
+	 * Echo out the head
+	 * @return [type] [description]
+	 */
+	public static function head()
+	{
+		wp_head();
+	}
+
 
 
 	/**
@@ -545,7 +555,7 @@ final class Theme
 			}
 			else
 			{
-				Theme::view( 'formats/post' );
+				Theme::view( 'formats/post' ); 
 			}
 			
 			// close wrapper
