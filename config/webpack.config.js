@@ -5,7 +5,7 @@ const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const CleanWebpackPlugin      = require('clean-webpack-plugin');
 const UglifyJsPlugin          = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const loader                  = require('./webpack.loader.js'); 
+const loader                  = require('./webpack.loaders.js'); 
 
 // Webpack config
 module.exports = (env, argv) => {
@@ -40,6 +40,7 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
           loader: loader('babel')
         },
+
         // Images
         {
           test: /images\/.*\.(png|jpg|gif)$/,
@@ -50,6 +51,7 @@ module.exports = (env, argv) => {
             },
           },
         },
+
         // Font files
         {
            test: /fonts\/.*\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
@@ -60,6 +62,7 @@ module.exports = (env, argv) => {
              }
            }]
         },
+
         // Application Files
         {
           test: /app\/.*\.(png|jpg|ico|xml|webmanifest|xml)$/,
@@ -71,28 +74,6 @@ module.exports = (env, argv) => {
           }
         },
 
-
-         /*
-        {                                                                        
-           test: /\.json$/,                                                       
-           loader: 'file-loader?name=[name].json'                                 
-        },
-       
-        
-
-        {
-          test: /\.(json)$/,
-          type: 'javascript/auto',
-          loader: loader('file'),
-          options: {
-            name(file) {
-              return production ? '[path][hash].[ext]' : '[path][name].[ext]';
-            }
-          }
-        },
-
-
-        */
         // SASS
         {
           test: /\.[s]?css$/,
