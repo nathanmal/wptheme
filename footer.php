@@ -1,3 +1,2 @@
-<?php
-// Output theme footer - theme/views/footer.php
-Theme::footer();
+<?php Theme::footer();
+// Output theme footer /views/footer.php

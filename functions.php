@@ -55,8 +55,3 @@ add_action( 'switch_theme', 'Theme::deactivate' );
 
 // Hook into WP theme init
 add_action( 'init', 'Theme::init' );
-
-
-// Anything below is custom code
-// ================================================================================
-// ================================================================================

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Page title -->
-    <?= Theme::title() ?> 
+    <?php Theme::title() ?> 
     <!-- Mobile -->
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -13,6 +13,6 @@
     <!-- Ping Back -->
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
     <!-- Generate Head -->
-    <?php wp_head() ?>
+    <?php Theme::head() ?>
 </head>
 <body <?php body_class(); ?> itemscope itemtype="http://schema.org/WebPage">
