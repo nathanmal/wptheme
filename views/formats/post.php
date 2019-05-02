@@ -6,6 +6,6 @@
     <?php the_content(); ?>
   </section>
   <footer class="post-footer">
-    Post footer
+    <small>Foot notes</small>
   </footer>
 </article>

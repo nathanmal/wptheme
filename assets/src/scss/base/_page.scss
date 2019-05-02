@@ -2,10 +2,18 @@ main#page
 {
   width:100%;
   min-height:100vh;
-  display:flex;
-  justify-content: flex-end;
+  display: flex;
+  justify-content: flex-start;
   align-items: flex-start;
-  background:$page-bg-color;
+  flex-direction: column;
+  padding:5rem;
+
+
+
+  h1 {
+    font-size:4rem;
+    font-weight: 100;
+  }
 
   &.sidebar-right 
   {
@@ -40,8 +48,6 @@ main#page
     
     width:100%;
     min-height:100%;
-    flex:1;
-
 
     & > header 
     {

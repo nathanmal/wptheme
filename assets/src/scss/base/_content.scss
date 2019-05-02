@@ -1,0 +1,13 @@
+article.post {
+  margin:2rem 0;
+
+  & > header {
+    h2 { 
+      font-weight:200;
+    }
+  }
+
+  & > footer {
+    padding:2rem 0;
+  }
+}

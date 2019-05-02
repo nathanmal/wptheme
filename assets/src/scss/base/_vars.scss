@@ -9,6 +9,7 @@ $break-desktop:       1200px                          !default;
 $break-large:         1440px                          !default;
 
 /* Colors */
+$color-transparent:   'transparent' !default;
 $color-black:         #000000                         !default;
 $color-gray:          #888899                         !default;
 $color-white:         #FFFFFF                         !default;
@@ -66,9 +67,9 @@ $navbar-opacity:      1                               !default;
 $navbar-color:        $color-light                    !default;
 
 /* Page Elements */
-$page-bg-color:       $color-light !default;
-$article-header-bg-color: $color-light !default;
-$article-content-bg-color: $color-light !default;
-$article-footer-bg-color: $color-light !default;
-$sidebar-bg-color: $color-light !default;
-$sidebar-widget-bg-color: $color-light !default;
+$page-bg-color:                   $color-transparent !default;
+$article-header-bg-color:         $color-transparent !default;
+$article-content-bg-color:        $color-transparent !default;
+$article-footer-bg-color:         $color-transparent !default;
+$sidebar-bg-color:                $color-transparent !default;
+$sidebar-widget-bg-color:         $color-transparent !default;

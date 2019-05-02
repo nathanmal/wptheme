@@ -8,8 +8,10 @@ nav.navbar
 
   padding:0 2rem;
 
+  transition: all 250ms $ease-out-quint;
+
   a {
-    color:$color-dark;
+    color:$color-black;
   }
 
   &.navbar-hidden 
@@ -39,8 +41,34 @@ nav.navbar
     }
   }
  
-  
+  .navbar-toggler 
+  {
+    color:black;
+  }
+
+  &.fixed-top 
+  {
+
+    @include mobile()
+    {
+      .navbar-collapse 
+      {
+        position:absolute;
+        left:0; top: $navbar-height; right:0;
+        background: rgba($color-light, 0.8);
+        padding:0 2rem 2rem 2rem;
+
+        &.show, &.collapsing {
+          max-height:100vh;
+        }
+      }
+    }
+    
+  }
 
 }
+
+
+
 
 

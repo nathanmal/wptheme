@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Bootstrap JS
 import 'bootstrap/dist/js/bootstrap.min.js';
 // Font awesome
-import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 // App icon files
 import './icons';
 // Theme SASS
