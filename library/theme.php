@@ -252,12 +252,32 @@ final class Theme
 		{
 			$meta = get_post_meta( $post->ID, $option, TRUE );
 
-			if( is_null($meta) OR $meta === $default ) return $default;
-
-			return $meta;
+			return ( is_null($meta) OR $meta === $default ) ? $default : $meta;
 		}
 
 		return $value;
+	}
+
+
+	/**
+	 * Get theme mod
+	 * @param  [type] $name    [description]
+	 * @param  [type] $default [description]
+	 * @return [type]          [description]
+	 */
+	public static function mod( $name, $default = NULL )
+	{
+		$name = 'wptheme_' . $name;
+
+		$value = get_theme_mod( $name, $default );
+
+		if( ( is_null($value) OR $value === $default ) && $post = get_post() )
+		{
+			$meta = get_post_meta( $post->ID, $option, TRUE );
+
+			return ( is_null($meta) OR $meta === $default ) ? $default : $meta;
+		}
+
 	}
 
 	/**
@@ -1084,13 +1104,7 @@ final class Theme
 	}
 
 
-
-	public static function setting( $name )
-	{
-		$value = get_theme_mod( $name, NULL );
-
-		return $value;
-	}
+	
 
 	/**
 	 * Display enqueue files
