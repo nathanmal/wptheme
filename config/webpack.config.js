@@ -5,7 +5,7 @@ const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const CleanWebpackPlugin      = require('clean-webpack-plugin');
 const UglifyJsPlugin          = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const loader                  = require('./webpack.loaders.js'); 
+const loader                  = require('./loader.js'); 
 
 // Webpack config
 module.exports = (env, argv) => {
@@ -40,14 +40,15 @@ module.exports = (env, argv) => {
           exclude: /node_modules/,
           loader: loader('babel')
         },
-
+        
         // Images
         {
           test: /images\/.*\.(png|jpg|gif)$/,
           loader: loader('file'),
           options: {
             name(file) {
-              return production ? 'images/[path][hash].[ext]' : 'images/[path][name].[ext]';
+              const filename = production ? '[hash].[ext]' : '[name].[ext]';
+              return 'images/' + filename;
             },
           },
         },
@@ -69,7 +70,8 @@ module.exports = (env, argv) => {
           loader: loader('file'),
           options: {
             name(file) {
-              return production ? 'images/[path][hash].[ext]' : 'images/[path][name].[ext]';
+              const filename = production ? '[hash].[ext]' : '[name].[ext]';
+              return 'app/' + filename;
             },
           }
         },
