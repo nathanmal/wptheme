@@ -1,4 +1,4 @@
-// Import stylesheets (will be combined in order)
+import $ from 'jquery';
 // Bootstrap 4
 import 'bootstrap/dist/css/bootstrap.min.css';
 // Bootstrap JS
