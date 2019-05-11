@@ -27,11 +27,3 @@
 	<!-- End Main Article -->
 </main>
 <!-- End Main Page Content -->
-
-<!-- Begin Footer -->
-<footer id="footer">
-	<?= get_footer() ?>
-</footer>
-<!-- End Footer -->
-</body>
-</html>
