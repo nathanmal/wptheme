@@ -1,20 +1,34 @@
-let theme;
+import ready from './ready';
 
-class Theme
+const defaults = {
+
+}
+
+class WPTheme
 {
   /**
    * Theme constructor
    * @type {Object}
    */
   constructor( config = {} )
-  {
-    theme = this;
-    
+  {    
     this.config = config;
 
+    // init on DOM load
+    jQuery(function($){ this.onReady }.bind(this));
+
+  }
+
+  /**
+   * Called when DOM is loaded
+   */
+  onReady()
+  {
     $(window).resize(this.onResize.bind(this));
     $(window).scroll(this.onScroll.bind(this));
     $(document).mousemove(this.onMouseMove.bind(this));
+
+    ready();
   }
 
   /**
@@ -63,4 +77,4 @@ class Theme
 }
 
 
-export default Theme;
+export default WPTheme;
