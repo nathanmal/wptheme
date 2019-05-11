@@ -1,9 +1,5 @@
 import ready from './ready';
 
-const defaults = {
-
-}
-
 class WPTheme
 {
   /**
