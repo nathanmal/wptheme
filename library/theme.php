@@ -141,85 +141,10 @@ final class Theme
 		Theme::$initialized = TRUE;
 	}
 
-	/**
-	 * Resolve path to allow /theme files to override /library files
-	 * @param  [type] $path [description]
-	 * @return [type]       [description]
-	 */
-	public static function path($path)
-	{
-		// Return if cached
-		if( isset(self::$paths[$path]) ) return self::$paths[$path];
-		
-		$theme = THEME_DIR . '/'. ltrim($path,'/');
-		$core  = THEME_DIR . '/library/' . ltrim($path,'/');
-
-		// Check theme directory first
-		if( is_file( $theme ) )
-		{
-			self::$paths[$path] = $theme;
-			return $theme;
-		}
-
-		// Check library
-		if( is_file( $core ) )
-		{
-			self::$paths[$path] = $core;
-			return $core;
-		}
-
-		return FALSE;
-	}
-
-	/**
-	 * Get the URL of an asset
-	 * @param  [type] $path [description]
-	 * @return [type]       [description]
-	 */
-	public static function asset( $path )
-	{
-		// No bueno
-		if( empty($path) ) return FALSE;
-
-		$path = strpos($path, 'assets/') === 0 ? $path : 'assets/' . ltrim($path, '/');
-
-		// Return if cached
-		if( isset(self::$paths[$path]) ) return self::$paths[$path];
-
-		// Check if file exists
-		if( is_file( THEME_DIR . '/' . $path ) ) 
-		{
-			// Cache the path
-			self::$paths[$path] = THEME_URI . '/' . $path;
-
-			return self::$paths[$path];
-		}
-
-		return FALSE;
-	}
-
-
-	/**
-	 * Echo the page/post's <title></title>
-	 * @return [type] [description]
-	 */
-	public static function title()
-	{
-		$name = get_bloginfo('name');
-		$desc = get_bloginfo('description');
-
-		echo '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
-	}
-
-	/**
-	 * Echo out the head
-	 * @return [type] [description]
-	 */
-	public static function head()
-	{
-		wp_head();
-	}
-
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/// UTILITY METHODS
+	//////////////////////////////////////////////////////////////////////////////////////////
 
 
 	/**
@@ -295,21 +220,133 @@ final class Theme
 
 
 	/**
-	 * Called on theme activation
-	 * @return [type] [description]
+	 * Resolve path to allow /theme files to override /library files
+	 * @param  [type] $path [description]
+	 * @return [type]       [description]
 	 */
-	public static function activate()
+	public static function path($path)
 	{
+		// Return if cached
+		if( isset(self::$paths[$path]) ) return self::$paths[$path];
+		
+		$theme = THEME_DIR . '/'. ltrim($path,'/');
+		$core  = THEME_DIR . '/library/' . ltrim($path,'/');
 
+		// Check theme directory first
+		if( is_file( $theme ) )
+		{
+			self::$paths[$path] = $theme;
+			return $theme;
+		}
+
+		// Check library
+		if( is_file( $core ) )
+		{
+			self::$paths[$path] = $core;
+			return $core;
+		}
+
+		return FALSE;
 	}
 
 	/**
-	 * Called on theme deactivation
+	 * Get theme URI path
+	 * @param  string $path path to add to the URI
+	 * @return [type]       [description]
+	 */
+	public static function uri( $path = '' )
+	{
+		return empty($path) ? THEME_URI : THEME_URI . '/' . ltrim($path, '/');
+	}
+
+	/**
+	 * Get theme directory path
+	 * @param  string $path [description]
+	 * @return [type]       [description]
+	 */
+	public static function dir( $path = '' )
+	{
+		return empty($path) ? THEME_DIR : THEME_DIR . '/' . ltrim($path, '/');
+	}
+
+	/**
+	 * Get the URL of an asset
+	 * @param  [type] $path [description]
+	 * @return [type]       [description]
+	 */
+	public static function asset( $path )
+	{
+		// No bueno
+		if( empty($path) ) return FALSE;
+
+		$path = strpos($path, 'assets/') === 0 ? $path : 'assets/' . ltrim($path, '/');
+
+		// Return if cached
+		if( isset(self::$paths[$path]) ) return self::$paths[$path];
+
+		// Check if file exists
+		if( is_file( THEME_DIR . '/' . $path ) ) 
+		{
+			// Cache the path
+			self::$paths[$path] = THEME_URI . '/' . $path;
+
+			return self::$paths[$path];
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Get src uri for an asset
+	 * can be external http or theme asset url
+	 * @param  [type] $uri [description]
+	 * @return [type]      [description]
+	 */
+	public static function src( $uri )
+	{
+		return 0 === strpos($uri, 'http') ? $uri : Theme::asset($uri);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/// RENDER METHODS
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+	/**
+	 * Echo the page/post's <title></title>
 	 * @return [type] [description]
 	 */
-	public static function deactivate()
+	public static function title()
 	{
-		
+		$name = get_bloginfo('name');
+		$desc = get_bloginfo('description');
+
+		echo '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
+	}
+
+	/**
+	 * Echo out the head
+	 * @return [type] [description]
+	 */
+	public static function head()
+	{
+		wp_head();
 	}
 
 	/**
@@ -345,158 +382,6 @@ final class Theme
 
 
 	/**
-	 * Get theme URI path
-	 * @param  string $path path to add to the URI
-	 * @return [type]       [description]
-	 */
-	public static function uri( $path = '' )
-	{
-		return empty($path) ? THEME_URI : THEME_URI . '/' . ltrim($path, '/');
-	}
-
-	/**
-	 * Get theme directory path
-	 * @param  string $path [description]
-	 * @return [type]       [description]
-	 */
-	public static function dir( $path = '' )
-	{
-		return empty($path) ? THEME_DIR : THEME_DIR . '/' . ltrim($path, '/');
-	}
-
-
-
-		/**
-	 * Clean up head tags generated by WP by default
-	 * @category optimization
-	 * @return [type] [description]
-	 */
-	public static function cleanup_head()
-	{
-		// Edit URI link
-		remove_action( 'wp_head', 'rsd_link' );
-		// windows live writer
-		remove_action( 'wp_head', 'wlwmanifest_link' );
-		// previous link
-		remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
-		// start link
-		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
-		// links for adjacent posts
-		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
-		// WP version
-		remove_action( 'wp_head', 'wp_generator' );
-		// Remove index link
-		remove_action( 'wp_head', 'index_rel_link' );
-		// Remove feed links
-		remove_action( 'wp_head', 'feed_links', 2 );
-		// Remove extra feed links
-		remove_action( 'wp_head', 'feed_links_extra', 3 );
-		// Remove shortlink
-		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
-
-
-	}
-
-
-	/**
-	 * Declare supports for this theme
-	 * @return [type] [description]
-	 */
-	public static function declare_support()
-	{
-		// load_theme_textdomain( 'startr',  get_template_directory() . '/library/lang' );
-		
-		// wp thumbnails (sizes handled in functions.php)
-		add_theme_support( 'post-thumbnails' );
-
-		// default thumb size
-		set_post_thumbnail_size(125, 125, TRUE);
-
-		// wp menus
-		add_theme_support( 'menus' );
-
-		// Enable support for HTML5 markup.
-		$html5 = array(
-			'comment-list',
-			'search-form',
-			'comment-form'
-		);
-		
-		add_theme_support( 'html5', $html5 );
-
-		// adding post format support
-		add_theme_support( 'post-formats',
-			array(
-				'aside',             // title less blurb
-				'gallery',           // gallery of images
-				'link',              // quick link to other site
-				'image',             // an image
-				'quote',             // a quick quote
-				'status',            // a Facebook like status update
-				'video',             // video
-				'audio',             // audio
-				'chat'               // chat transcript
-			)
-		);
-
-		// Add RSS Support
-		add_theme_support('automatic-feed-links');
-
-	}
-
-
-	/**
-	 * Strips version attribute from asset URLs
-	 * @category optimization
-	 * @param  string $src URL to check
-	 * @return [type]      [description]
-	 */
-	public static function remove_asset_version( $src )
-	{
-		return strpos( $src, 'ver=' ) ? remove_query_arg( 'ver', $src ) : $src;
-	}
-
-
-	/**
-	 * Remove WP generator tag from head
-	 * @category security
-	 * @return [type] [description]
-	 */
-	public static function remove_generator()
-	{
-		return '';
-	} 
-
-	/**
-	 * Show less information on failed login attempt
-	 * @category security
-	 * @return [type] [description]
-	 */
-	public static function secure_failed_login() 
-	{
-		return '<strong>ERROR</strong>: Invalid Login!';
-	}
-
-
-	/**
-	 * Add page slug to body class
-	 * @param [type] $classes [description]
-	 */
-	public static function add_body_class( $classes ) 
-	{
-		global $post;
-
-		$classes[] = str_replace('/', '-', self::getTemplate());
-
-		if ( isset( $post ) ) 
-		{
-			$classes[] = $post->post_type . '-' . $post->post_name;
-		}
-
-		return $classes;
-	}	
-
-	/**
 	 * Output menu by name
 	 * @see 	 https://developer.wordpress.org/reference/functions/wp_nav_menu/ 
 	 * @param  string $name   [description]
@@ -505,7 +390,6 @@ final class Theme
 	 */
 	public static function menu( $name='', $config = array() )
 	{
-
 		$label = ucfirst($name) . ' Menu';
 		
 		$location = $name . '-menu';
@@ -610,6 +494,147 @@ final class Theme
 		echo '</section>';
 	}
 
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/// HOOK METHODS
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Clean up head tags generated by WP by default
+	 * @category optimization
+	 * @return [type] [description]
+	 */
+	public static function cleanup_head()
+	{
+		// Edit URI link
+		remove_action( 'wp_head', 'rsd_link' );
+		// windows live writer
+		remove_action( 'wp_head', 'wlwmanifest_link' );
+		// previous link
+		remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
+		// start link
+		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
+		// links for adjacent posts
+		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+		// WP version
+		remove_action( 'wp_head', 'wp_generator' );
+		// Remove index link
+		remove_action( 'wp_head', 'index_rel_link' );
+		// Remove feed links
+		remove_action( 'wp_head', 'feed_links', 2 );
+		// Remove extra feed links
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+		// Remove shortlink
+		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
+
+
+	}
+
+	/**
+	 * Declare supports for this theme
+	 * @return [type] [description]
+	 */
+	public static function declare_support()
+	{
+		// load_theme_textdomain( 'startr',  get_template_directory() . '/library/lang' );
+		
+		// wp thumbnails (sizes handled in functions.php)
+		add_theme_support( 'post-thumbnails' );
+
+		// default thumb size
+		set_post_thumbnail_size(125, 125, TRUE);
+
+		// wp menus
+		add_theme_support( 'menus' );
+
+		// Enable support for HTML5 markup.
+		$html5 = array(
+			'comment-list',
+			'search-form',
+			'comment-form'
+		);
+		
+		add_theme_support( 'html5', $html5 );
+
+		// adding post format support
+		add_theme_support( 'post-formats',
+			array(
+				'aside',             // title less blurb
+				'gallery',           // gallery of images
+				'link',              // quick link to other site
+				'image',             // an image
+				'quote',             // a quick quote
+				'status',            // a Facebook like status update
+				'video',             // video
+				'audio',             // audio
+				'chat'               // chat transcript
+			)
+		);
+
+		// Add RSS Support
+		add_theme_support('automatic-feed-links');
+
+	}
+
+
+	/**
+	 * Strips version attribute from asset URLs
+	 * @category optimization
+	 * @param  string $src URL to check
+	 * @return [type]      [description]
+	 */
+	public static function remove_asset_version( $src )
+	{
+		return strpos( $src, 'ver=' ) ? remove_query_arg( 'ver', $src ) : $src;
+	}
+
+
+	/**
+	 * Remove WP generator tag from head
+	 * @category security
+	 * @return [type] [description]
+	 */
+	public static function remove_generator()
+	{
+		return '';
+	} 
+
+	/**
+	 * Show less information on failed login attempt
+	 * @category security
+	 * @return [type] [description]
+	 */
+	public static function secure_failed_login() 
+	{
+		return '<strong>ERROR</strong>: Invalid Login!';
+	}
+
+
+	/**
+	 * Add page slug to body class
+	 * @param [type] $classes [description]
+	 */
+	public static function add_body_class( $classes ) 
+	{
+		global $post;
+
+		$classes[] = str_replace('/', '-', self::template());
+
+		if ( isset( $post ) ) 
+		{
+			$classes[] = $post->post_type . '-' . $post->post_name;
+		}
+
+		return $classes;
+	}	
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/// ENQUEUE METHODS
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+
 	/**
 	 * Enqueue theme scripts and styles
 	 * @return [type] [description]
@@ -617,36 +642,26 @@ final class Theme
 	public static function enqueue()
 	{
 		if( is_admin() ) return;
-		// Replace built-in jQuery with v3
-		//wp_deregister_script('jquery');
-		//wp_deregister_script('jquery-ui-core');
 
-		// Load scripts
-		$scripts = Theme::config('scripts');
+		// Load any config scripts/fonts
+		Theme::scripts( Theme::config('scripts') );
+		Theme::fonts( Theme::config('fonts') );
+		Theme::styles( Theme::config('styles') );
 
-		foreach($scripts as $name => $script)
-		{	
-			Theme::enqueue_script($name, $script);
-		}
+		// Load Bootstrap
+		Theme::script( 'bootstrap', array('source' => '/dist/bootstrap.js','footer' => TRUE));
+		Theme::style(  'bootstrap', array('source' => '/dist/bootstrap.css','version'=> time()));
 
-		// Load fonts first so stylesheets can use em
-		$fonts = Theme::config('fonts');
+		// Load theme assets
+		Theme::script( 'wptheme', array('source' => '/dist/theme.js','footer' => TRUE));
 
-		foreach($fonts as $font => $uri)
-		{
-			Theme::enqueue_font($font, $uri);
-		}
+		$css = Theme::src('/dist/theme.css');
 
-		// Load stylesheets
-		$styles = Theme::config('styles');
-
-		foreach($styles as $name => $config)
-		{
-			Theme::enqueue_style($name, $config);
-		}
+		wp_enqueue_style( 'wptheme', $css, NULL, false, 'all' );
+		// Theme::style(  'theme', array('source' => '/dist/theme.css','version'=> time()));
 
 		// Load template-specific scripts and styles if they exist
-		$template = self::getTemplate();
+		$template = self::template();
 
 		if( ! empty($template) ){
 
@@ -663,6 +678,19 @@ final class Theme
 		
 	}
 
+	/**
+	 * Enqueue an array of scripts
+	 * @param  [type] $scripts [description]
+	 * @return [type]          [description]
+	 */
+	public static function scripts( $scripts )
+	{
+		foreach($scripts as $name => $script)
+		{	
+			Theme::script($name, $script);
+		}
+	}
+
 
 	/**
 	 * Enqueue a script
@@ -670,17 +698,17 @@ final class Theme
 	 * @param  [type] $config [description]
 	 * @return [type]         [description]
 	 */
-	public static function enqueue_script( $name, $config = array() )
+	public static function script( $name, $config = array() )
 	{	
+		// Check if already enqueued
+		if( wp_script_is($name) ) return;
 
 		// Get the soruce. If config is a string then it's passed in that way
-		$source = is_array($config) ? element($config, 'source', '') : $config;
+		$uri = is_array($config) ? element($config, 'source', '') : $config;
 
-		// Check for asset path
-		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
+		$src = Theme::src($uri);
 
-		// Missing
-		if( empty($source) ) return FALSE;
+		if( empty($src) ) return;
 
 		// Get enqueue params
 		$dependencies = element( $config, 'dependencies', array() );
@@ -688,10 +716,22 @@ final class Theme
 		$footer       = element( $config, 'footer', TRUE );
 
 		// Enqueue the script
-		wp_enqueue_script($name, $source, $dependencies, $version, $footer);
+		wp_enqueue_script($name, $src, $dependencies, $version, $footer);
 
 	}
 
+	/**
+	 * Enqueue an array of fonts
+	 * @param  [type] $fonts [description]
+	 * @return [type]        [description]
+	 */
+	public static function fonts( $fonts )
+	{
+		foreach($fonts as $font => $uri)
+		{	
+			Theme::font($font, $uri);
+		}
+	}
 
 
 	/**
@@ -700,18 +740,33 @@ final class Theme
 	 * @param  [type] $uri  [description]
 	 * @return [type]       [description]
 	 */
-	public static function enqueue_font( $name, $source )
+	public static function font( $name, $uri )
 	{
-		// Check for asset path
-		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
+		$name = $name . '-font';
 
-		// Missing
-		if( empty($source) ) return;
+		if( wp_style_is($name) ) return;
+
+		$src  = Theme::src($uri);
+
+		if( empty($src) ) return;
 
 		// Enqueue as style
-		wp_enqueue_style( 'font-' . $name, $source );
+		wp_enqueue_style( $name, $src );
 	}
 
+
+	/**
+	 * Enqueue an array of styles
+	 * @param  [type] $styles [description]
+	 * @return [type]         [description]
+	 */
+	public static function styles( $styles )
+	{
+		foreach($styles as $name => $style)
+		{	
+			Theme::style($name, $style);
+		}
+	}
 
 
 	/**
@@ -720,16 +775,18 @@ final class Theme
 	 * @param  [type] $config [description]
 	 * @return [type]         [description]
 	 */
-	public static function enqueue_style( $name, $config = array() )
+	public static function style( $name, $config = array() )
 	{
+		if( wp_style_is($name) ) return;
+
 		// Get the soruce. If config is a string then it's passed in that way
-		$source = is_array($config) ? element($config, 'source', '') : $config;
+		$uri = is_array($config) ? element($config, 'source', '') : $config;
 	
 		// Check for asset path
-		if( 0 !== strpos($source, 'http') ) $source = Theme::asset($source);
+		$src  = Theme::src($uri);
 
 		// Missing
-		if( empty($source) ) return FALSE;
+		if( empty($src) ) return;
 
 		// Get enqueue params
 		$dependencies = element( $config, 'dependencies', array() );
@@ -737,7 +794,7 @@ final class Theme
 		$media        = element( $config, 'media', 'screen' );
 
 		// Enqueue the style
-		wp_enqueue_style( $name, $source, $dependencies, $version, $media );
+		wp_enqueue_style( $name, $src, $dependencies, $version, $media );
 	}
 
 
@@ -795,12 +852,13 @@ final class Theme
 		// If we have widgets, include the theme base widget class
 		include THEME_DIR . '/library/classes/widget.php';
 
-		foreach($widgets as $widget) {
-
+		foreach($widgets as $widget) 
+		{
 			$widget_file  = THEME_DIR . '/library/widgets/' . $widget . '.php';
 			$widget_class = ucfirst($widget) . '_Widget';
 
-			if( is_file($widget_file) ) {
+			if( is_file($widget_file) ) 
+			{
 				include $widget_file;
 				register_widget($widget_class);
 			}
@@ -852,6 +910,16 @@ final class Theme
 	  if( isset($templates['library/theme.php']) ) unset($templates['library/theme.php']);
 
 		return $templates;
+	}
+
+	/**
+	 * Load a page template
+	 * @param  [type] $name [description]
+	 * @return [type]       [description]
+	 */
+	public static function template()
+	{
+		return self::$template;
 	}
 
 	/**
@@ -954,14 +1022,6 @@ final class Theme
 	}
 
 	/**
-	 * Get the current template
-	 * @return [type] [description]
-	 */
-	public static function getTemplate(){
-		return self::$template;
-	}
-
-	/**
 	 * Get slug of a page
 	 * @param  int $post_id ID of post
 	 * @return string|false FALSE if post is not a page
@@ -1030,15 +1090,7 @@ final class Theme
 		Theme::view('partials/' . $path, $data, $repeat);
 	}
 
-	/**
-	 * Load a page template
-	 * @param  [type] $name [description]
-	 * @return [type]       [description]
-	 */
-	public static function template($name)
-	{
-		Theme::view( 'templates/' . $name . '.php' );
-	}
+	
 
 	/**
 	 * Check if view file exists
@@ -1104,8 +1156,6 @@ final class Theme
 	}
 
 
-	
-
 	/**
 	 * Display enqueue files
 	 * @category utility
@@ -1142,4 +1192,24 @@ final class Theme
 			if( is_string($msg) ) echo $msg;
 		}
 	}
+
+
+		/**
+	 * Called on theme activation
+	 * @return [type] [description]
+	 */
+	public static function activate()
+	{
+
+	}
+
+	/**
+	 * Called on theme deactivation
+	 * @return [type] [description]
+	 */
+	public static function deactivate()
+	{
+		
+	}
+
 }

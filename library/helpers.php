@@ -13,7 +13,7 @@ if ( ! function_exists('template_placeholder') ){
 
     function template_placeholder( $name = '' ){
 
-        $template = Theme::getTemplate();
+        $template = Theme::template();
         echo '<style>body { margin:0 }</style>';
         echo '<div style="margin:0;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;width:100%;background:#eee;margin-bottom:">';
         echo '<h1>[' . strtoupper($name) . ' Template]<h1/>';
@@ -123,5 +123,25 @@ if( ! function_exists('array_contains') )
     function array_contains( &$array, $str )
     {
         return is_string($str) && ( isset($array[$str]) OR in_array($str, $array) ); 
+    }
+}
+
+
+if( ! function_exists('enqueued') )
+{
+    function enqueued( $type = NULL )
+    {
+        global $wp_scripts, $wp_styles;
+
+        $list = array('scripts'=>[],'styles'=>[]);
+
+        foreach( $wp_scripts->queue as $script )
+            $list['scripts'][] = $wp_scripts->registered[$script];
+
+        foreach( $wp_styles->queue as $style)
+            $list['styles'][] = $wp_styles->registered[$style];
+
+        return $list;
+
     }
 }
