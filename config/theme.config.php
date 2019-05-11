@@ -22,13 +22,7 @@ return array(
    *  )
    *  
    */
-  'scripts' => array(
-    // Main Theme File
-    'theme' => array(
-      'source'  => '/dist/theme.js',
-      'footer'  => TRUE,
-    )
-  ),
+  'scripts' => array(),
 
   /**
    * CSS StyleSheets to be pre-loaded into the theme
@@ -46,13 +40,7 @@ return array(
    *  )
    *
    */
-  'styles' => array(
-    // Main theme stylesheet
-    'theme' => array(
-      'source' => 'dist/theme.css',
-      'version'=> time(),
-    )
-  ),
+  'styles' => array(),
 
   /**
    * Theme font files
