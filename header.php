@@ -1,2 +1,1 @@
-<?php Theme::header();
-// Output theme header /views/header.php
+<?php Theme::header(); // Output theme header /views/header.php
