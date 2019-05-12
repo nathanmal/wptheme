@@ -10,8 +10,16 @@ class WPTheme
   {    
     this.config = config;
 
+
+    this.onReady = this.onReady.bind(this);
+    this.onResize = this.onResize.bind(this);
+    this.onScroll = this.onScroll.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+
     // init on DOM load
-    jQuery(function($){ this.onReady }.bind(this));
+    jQuery(this.onReady);
+
+    
 
   }
 
@@ -20,9 +28,9 @@ class WPTheme
    */
   onReady()
   {
-    $(window).resize(this.onResize.bind(this));
-    $(window).scroll(this.onScroll.bind(this));
-    $(document).mousemove(this.onMouseMove.bind(this));
+    $(window).resize(this.onResize);
+    $(window).scroll(this.onScroll);
+    $(document).mousemove(this.onMouseMove);
 
     ready();
   }
@@ -42,11 +50,12 @@ class WPTheme
   {
     const top = $(window).scrollTop();
     const show = top > this.navbar.outerHeight();
+
     this.navbar.toggleClass('navbar-hidden', ! show );
 
-    if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
+    // if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
 
-    console.log('scroll', $(window).scrollTop() );
+    //console.log('scroll', $(window).scrollTop() );
 
   }
 
@@ -55,13 +64,15 @@ class WPTheme
    */
   onMouseMove(e)
   {
+
+
     if( $(window).scrollTop() > this.navbar.outerHeight() ) return;
 
     const show = e.pageY < this.navbar.outerHeight();
      
     this.navbar.toggleClass('navbar-hidden', ! show );
 
-    if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
+    // if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
   
   }
 
