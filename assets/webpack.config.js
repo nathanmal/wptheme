@@ -12,6 +12,9 @@ module.exports = (env, argv) => {
   // Test for production environment
   const production = argv.mode === 'production';
 
+  // Hash filenames on production
+  const filename = production ? '[hash].[ext]' : '[name].[ext]';
+
   // Config object
   const config = {
 
@@ -45,8 +48,8 @@ module.exports = (env, argv) => {
           test: /images\/.*\.(png|jpg|gif)$/,
           loader: 'file-loader',
           options: {
+            outputPath: './dist/',
             name(file) {
-              const filename = production ? '[hash].[ext]' : '[name].[ext]';
               return 'images/' + filename;
             },
           },
