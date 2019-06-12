@@ -19,8 +19,6 @@ class WPTheme
     // init on DOM load
     jQuery(this.onReady);
 
-    
-
   }
 
   /**
@@ -40,7 +38,7 @@ class WPTheme
    */
   onResize(e)
   {
-    console.log('resize', $(window).width(), $(window).height());
+    // console.log('resize', $(window).width(), $(window).height());
   }
 
   /**
@@ -51,12 +49,10 @@ class WPTheme
     const top = $(window).scrollTop();
     const show = top > this.navbar.outerHeight();
 
-    this.navbar.toggleClass('navbar-hidden', ! show );
-
-    // if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
-
-    //console.log('scroll', $(window).scrollTop() );
-
+    if( this.navbar.hasClass('navbar-hidden') )
+    {
+      this.navbar.toggleClass('navbar-show', show );
+    }
   }
 
   /**
@@ -64,18 +60,15 @@ class WPTheme
    */
   onMouseMove(e)
   {
-
-
     if( $(window).scrollTop() > this.navbar.outerHeight() ) return;
 
     const show = e.pageY < this.navbar.outerHeight();
      
-    this.navbar.toggleClass('navbar-hidden', ! show );
-
-    // if( ! show ) this.navbar.find('.navbar-collapse').collapse('hide');
-  
+    if( this.navbar.hasClass('navbar-hidden') )
+    {
+      this.navbar.toggleClass('navbar-show', show );
+    }
   }
-
   
   get navbar()
   {
