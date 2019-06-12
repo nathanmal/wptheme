@@ -2,17 +2,16 @@
 
 $class = array('navbar','navbar-default','navbar-expand-md');
 
-$fixed   = Theme::mod('navbar_fixed', FALSE);
-$hide    = Theme::mod('navbar_hide', FALSE);
-$text    = Theme::mod('navbar_text', FALSE);
-$bg      = Theme::mod('navbar_background', 'transparent');
+// Is it a fixed navbar?
+if( isset($fixed) && $fixed ) 
+{
+  $class[] = 'fixed-top';
+  
+  // Does it hide?
+  if( isset($hidden) && $hidden ) $class[] = 'navbar-hidden';
+}
 
-if($fixed) $class[] = 'fixed-top';
-if($hide)  $class[] = 'navbar-hidden';
-if($text)  $class[] = 'navbar-text-' . $text;
-if($bg)    $class[] = 'navbar-' . $bg;
-
-$container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
+$container = isset($wide) && $wide ? 'container-fluid' : 'container';
 
 ?>
 
