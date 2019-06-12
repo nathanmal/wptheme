@@ -654,11 +654,7 @@ final class Theme
 
 		// Load theme assets
 		Theme::script( 'wptheme', array('source' => '/dist/theme.js','footer' => TRUE));
-
-		$css = Theme::src('/dist/theme.css');
-
-		wp_enqueue_style( 'wptheme', $css, NULL, false, 'all' );
-		// Theme::style(  'theme', array('source' => '/dist/theme.css','version'=> time()));
+		Theme::style( 'wptheme', array( 'source' => '/dist/theme.css'));
 
 		// Load template-specific scripts and styles if they exist
 		$template = self::template();
@@ -1044,7 +1040,18 @@ final class Theme
 	public static function view( $path, $data = array(), $repeat = 1, $return = FALSE )
 	{
 		// If non-empty array, extract variables for the view
-		if( ! empty($data) && is_array($data) ) extract($data, EXTR_SKIP);
+		if( ! empty($data) && is_array($data) ) 
+		{
+			foreach( $data as $key => $val )
+			{
+				// Convert simple items to item = TRUE
+				if( is_int($key) ) {
+					$data[$val] = TRUE;
+					unset($data[$key]);
+				}
+			}
+			extract($data, EXTR_SKIP);
+		}
 
 		// Append extension if needed
 		if( substr($path, -4) != '.php' ) $path .= '.php';
@@ -1085,8 +1092,6 @@ final class Theme
 	 */
 	public static function partial( $path, $data = array(), $repeat = 1 )
 	{	
-		// pre($data);
-
 		Theme::view('partials/' . $path, $data, $repeat);
 	}
 
