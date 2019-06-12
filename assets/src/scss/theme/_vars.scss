@@ -1,1 +1,77 @@
 @import '../base/vars';
+
+/**
+ * Base variables for WP Theme
+ */
+
+/* Breakpoints */
+$break-mobile:        768px;
+$break-tablet:        992px;
+$break-desktop:       1200px;
+$break-large:         1440px;
+
+/* Colors */
+$color-transparent:   'transparent';
+$color-black:         #000000;
+$color-gray:          #888899;
+$color-white:         #FFFFFF;
+
+/* Theme Colors */
+$color-primary:       #007bff;
+$color-secondary:     #9AFD13;
+$color-light:         #EEEEEE;
+$color-dark:          #F3C;
+$color-info:          #f303f2;
+$color-success:       #f393f2;
+$color-danger:        #FF4444;
+$color-warning:       #FFCC44;
+
+/* Brand Colors */
+$color-brand:         $color-primary;
+$color-brand-alt:     $color-secondary;
+
+/* Sizes */
+$size-sm:             0.25rem;
+$size-md:             0.5rem;
+$size-lg:             1rem;
+$size-xl:             1.5rem;
+$size-xx:             2.25rem;
+
+/* Spaces */
+$space-sm:            $size-sm;
+$space-md:            $size-md;
+$space-lg:            $size-lg;
+$space-xl:            $size-xl;
+$space-xx:            $size-xx;
+
+/* Fonts */
+$font-root-size:      16px;
+
+/* Font Families */
+$font-header:         'Arial', sans-serif;
+$font-body:           'Arial', sans-serif;
+$font-header-alt:     $font-header;
+$font-body-alt:       $font-body;
+$font-mono:           'Monaco', Courier, monospace;
+
+/* Font Sizes */
+$font-size-xs:        0.625rem;
+$font-size-sm:        0.875rem;
+$font-size:           1rem;
+$font-size-md:        1.25rem;
+$font-size-lg:        1.75rem;
+$font-size-xl:        2.5rem;
+$font-size-xxl:       3.75rem;
+
+/* Navbar */
+$navbar-height:       100px;
+$navbar-opacity:      1;
+$navbar-color:        $color-light;
+
+/* Page Elements */
+$page-bg-color:                   $color-transparent;
+$article-header-bg-color:         $color-transparent;
+$article-content-bg-color:        $color-transparent;
+$article-footer-bg-color:         $color-transparent;
+$sidebar-bg-color:                $color-transparent;
+$sidebar-widget-bg-color:         $color-transparent;
