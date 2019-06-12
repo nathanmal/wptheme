@@ -1,6 +1,6 @@
 <!-- Main navigation -->
 <header id="header" class="<?= Theme::classes('header') ?>" role="navigation">
-	<?php Theme::partial('navbar', array('fixed') ); ?>
+	<?php Theme::partial('navbar', array('fixed','hidden') ); ?>
 	<?php Theme::partial('dropmenu'); ?>
 </header>
 
