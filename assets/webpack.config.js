@@ -12,6 +12,12 @@ module.exports = (env, argv) => {
   // Test for production environment
   const production = argv.mode === 'production';
 
+  // Absolute path to distro
+  const dist = path.resolve( __dirname, 'dist' );
+
+  // Absolute path to source
+  const src  = path.resolve( __dirname, 'src' );
+
   // Hash filenames on production
   const filename = production ? '[hash].[ext]' : '[name].[ext]';
 
@@ -21,22 +27,23 @@ module.exports = (env, argv) => {
     // Project entry point(s)
     entry: { 
       // Main theme file
-      theme: './assets/src/js/theme.js',
+      theme: path.resolve( __dirname, 'src/js/theme.js'),
       // Bootstrap theme
-      bootstrap: './assets/src/js/bootstrap.js'
+      bootstrap: path.resolve( __dirname, './src/js/bootstrap.js'),
     },
 
     // Output directory
     output: {
-      path: path.resolve(  __dirname, '../assets/dist' ),
+      path: path.resolve(  __dirname, 'dist' ),
       filename: '[name].js'
     },
 
     // Module Rules
     module: {
 
-      rules: [
-        // Javascript
+      rules: 
+      [
+        // Javascript Files
         {
           test: /\.js$/,
           exclude: /node_modules/,
@@ -48,14 +55,14 @@ module.exports = (env, argv) => {
           test: /images\/.*\.(png|jpg|gif)$/,
           loader: 'file-loader',
           options: {
-            outputPath: './dist/',
+            outputPath: 'images',
             name(file) {
-              return 'images/' + filename;
+              return filename;
             },
           },
         },
 
-        // Font files
+        // Web fonts
         {
            test: /fonts\/.*\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
            use: [{
@@ -66,7 +73,7 @@ module.exports = (env, argv) => {
            }]
         },
 
-        // Application Files
+        // Application Icons & Images
         {
           test: /app\/.*\.(png|jpg|ico|xml|webmanifest|xml)$/,
           loader: 'file-loader',
@@ -109,25 +116,31 @@ module.exports = (env, argv) => {
     // Plugins
     plugins: [
       new webpack.ProgressPlugin(),
-      // clean distro
-      new CleanWebpackPlugin(),
-      // css file name
+
+      // Clean distro, except for images directory
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['!**/images/*'],
+        cleanAfterEveryBuildPatterns: ['!**/images/*']
+      }),
+
+      // Set CSS file name
       new MiniCssExtractPlugin({ filename: '[name].css' }),
-      // external jquery
+
+      // Provide external jQuery
       new webpack.ProvidePlugin({  $: 'jquery', jQuery: 'jquery' }), 
 
       //new UglifyJsPlugin({ cache: true, parallel: true, sourceMap: true }),
     ],
 
-    performance: {
+    // Prevents warnings when file sizes are too large
+    performance: 
+    {
       hints: false
     }
-
-
   }
 
   // Add optimization in production
-  
+  // Terser Webpack Plugin seems to be the only one that works
   if( production )
   {
     config.optimization = {
@@ -142,12 +155,8 @@ module.exports = (env, argv) => {
         new OptimizeCSSAssetsPlugin({})
       ]
     }
-
-
   }
-  
 
-  // return webpack config object
   return config;
 
 }
