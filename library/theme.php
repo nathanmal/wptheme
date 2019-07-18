@@ -137,6 +137,12 @@ final class Theme
 		// Hide admin bar from non-admins and redirect them to homepage
 		Theme::restrict_admin();
 
+		// load theme custom functions
+		require_once( THEME_DIR . '/config/functions.theme.php' );
+
+		// load admin custom functions
+		if( is_admin() ) require_once( THEME_DIR . '/config/functions.admin.php' );
+
   	// Mark initialized
 		Theme::$initialized = TRUE;
 	}
@@ -652,8 +658,13 @@ final class Theme
 		Theme::script( 'bootstrap', array('source' => '/dist/bootstrap.js','footer' => TRUE));
 		Theme::style(  'bootstrap', array('source' => '/dist/bootstrap.css','version'=> time()));
 
+		$data = array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'ajaxnonce' => wp_create_nonce('ajax_nonce')
+		);
+
 		// Load theme assets
-		Theme::script( 'wptheme', array('source' => '/dist/theme.js','footer' => TRUE));
+		Theme::script( 'wptheme', array('source' => '/dist/theme.js','footer' => TRUE), $data, 'wpdata');
 		Theme::style( 'wptheme', array( 'source' => '/dist/theme.css'));
 
 		// Load template-specific scripts and styles if they exist
@@ -694,10 +705,10 @@ final class Theme
 	 * @param  [type] $config [description]
 	 * @return [type]         [description]
 	 */
-	public static function script( $name, $config = array() )
+	public static function script( $handle, $config = array(), $data = array(), $varname = 'data'  )
 	{	
 		// Check if already enqueued
-		if( wp_script_is($name) ) return;
+		if( wp_script_is($handle) ) return;
 
 		// Get the soruce. If config is a string then it's passed in that way
 		$uri = is_array($config) ? element($config, 'source', '') : $config;
@@ -711,8 +722,17 @@ final class Theme
 		$version      = element( $config, 'version', NULL );
 		$footer       = element( $config, 'footer', TRUE );
 
+		// Register the script
+		wp_register_script($handle, $src, $dependencies, $version, $footer);
+
+		// Is there localized data?
+		if( ! empty($data) )
+		{
+			wp_localize_script( $handle, $varname, $data );
+		}
+
 		// Enqueue the script
-		wp_enqueue_script($name, $src, $dependencies, $version, $footer);
+		wp_enqueue_script($handle, $src, $dependencies, $version, $footer);
 
 	}
 

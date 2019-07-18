@@ -38,15 +38,6 @@ require_once('library/theme.php');
 // Theme autoloader
 spl_autoload_register( array('Theme','autoload') );
 
-// load theme custom functions
-require_once('config/functions.theme.php');
-
-// load admin custom functions
-if( is_admin() ) require_once('config/functions.admin.php');
-
-// Theme customization
-// add_action( 'customize_register', array('Customize','init') );
-
 // Hook into WP theme activation
 add_action( 'after_switch_theme', 'Theme::activate' );
 
