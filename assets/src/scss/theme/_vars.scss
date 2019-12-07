@@ -1,77 +1,89 @@
-@import '../base/vars';
-
+@import 'defaults';
 /**
- * Base variables for WP Theme
+ * Default variable overrides
  */
 
 /* Breakpoints */
-$break-mobile:        768px;
-$break-tablet:        992px;
-$break-desktop:       1200px;
-$break-large:         1440px;
+// $break-mobile:        768px;
+// $break-tablet:        992px;
+// $break-desktop:       1200px;
+// $break-large:         1440px;
 
 /* Colors */
-$color-transparent:   'transparent';
-$color-black:         #000000;
-$color-gray:          #888899;
-$color-white:         #FFFFFF;
+// $color-transparent:   'transparent';
+// $color-black:         #000000;
+// $color-gray:          #888899;
+// $color-white:         #FFFFFF;
+// $color-red:           #FF2222;
+// $color-green:         #22FF22;
+// $color-blue:          #2222FF;
 
-/* Theme Colors */
-$color-primary:       #007bff;
-$color-secondary:     #9AFD13;
-$color-light:         #EEEEEE;
-$color-dark:          #F3C;
-$color-info:          #f303f2;
-$color-success:       #f393f2;
-$color-danger:        #FF4444;
-$color-warning:       #FFCC44;
+/* Named Colors */
+// $color-primary:       #007bff;
+// $color-secondary:     #9AFD13;
+// $color-light:         #EEEEEE;
+// $color-dark:          #FF33CC;
+// $color-info:          #f303f2;
+// $color-success:       #f393f2;
+// $color-error:         #FF4444;
+// $color-warning:       #FFCC44;
 
 /* Brand Colors */
-$color-brand:         $color-primary;
-$color-brand-alt:     $color-secondary;
-
-/* Sizes */
-$size-sm:             0.25rem;
-$size-md:             0.5rem;
-$size-lg:             1rem;
-$size-xl:             1.5rem;
-$size-xx:             2.25rem;
-
-/* Spaces */
-$space-sm:            $size-sm;
-$space-md:            $size-md;
-$space-lg:            $size-lg;
-$space-xl:            $size-xl;
-$space-xx:            $size-xx;
+// $color-brand:         $color-primary;
+// $color-brand-alt:     $color-secondary;
 
 /* Fonts */
-$font-root-size:      16px;
 
 /* Font Families */
-$font-header:         'Arial', sans-serif;
-$font-body:           'Arial', sans-serif;
-$font-header-alt:     $font-header;
-$font-body-alt:       $font-body;
-$font-mono:           'Monaco', Courier, monospace;
+// $font-header:         'Roboto','Arial', sans-serif;
+// $font-body:           'Arial', sans-serif;
+// $font-header-alt:     $font-header;
+// $font-body-alt:       $font-body;
+// $font-mono:           'Monaco', Courier, monospace;
 
-/* Font Sizes */
-$font-size-xs:        0.625rem;
-$font-size-sm:        0.875rem;
-$font-size:           1rem;
-$font-size-md:        1.25rem;
-$font-size-lg:        1.75rem;
-$font-size-xl:        2.5rem;
-$font-size-xxl:       3.75rem;
+/* Root font sizes for desktop, tablet and mobile */
+// $font-size:         16px;
+// $font-size-mobile:  14px;
+// $font-size-tablet:  16px;
+// $font-size-desktop: 16px;
+
+/* Font Sizes (1.333 modular scale) */
+// $font-size-1:  0.5625rem;
+// $font-size-2:  0.750rem;
+// $font-size-3:  1.000rem;
+// $font-size-4:  1.333rem;
+// $font-size-5:  1.777rem;
+// $font-size-6:  2.370rem;
+// $font-size-7:  3.160rem;
+// $font-size-8:  4.213rem;
+// $font-size-9:  5.618rem;
+// $font-size-10: 7.4915rem;
+
+/* Text Sizes */
+// $font-size-body:  $font-size-3;
+// $font-size-small: $font-size-2;
+
+/* Heading Sizes */
+// $font-size-h1:    $font-size-8;
+// $font-size-h2:    $font-size-7;
+// $font-size-h3:    $font-size-6;
+// $font-size-h4:    $font-size-5;
+// $font-size-h5:    $font-size-4;
+// $font-size-h6:    $font-size-3;
+
+/* Font weights */
+// $font-weight-body:    400;
+// $font-weight-heading: 700;
 
 /* Navbar */
-$navbar-height:       100px;
-$navbar-opacity:      1;
-$navbar-color:        $color-light;
+// $navbar-height:   100px;
+// $navbar-opacity:  1;
+// $navbar-color:    $color-light;
 
 /* Page Elements */
-$page-bg-color:                   $color-transparent;
-$article-header-bg-color:         $color-transparent;
-$article-content-bg-color:        $color-transparent;
-$article-footer-bg-color:         $color-transparent;
-$sidebar-bg-color:                $color-transparent;
-$sidebar-widget-bg-color:         $color-transparent;
+// $page-bg-color:                   $color-transparent;
+// $article-header-bg-color:         $color-transparent;
+// $article-content-bg-color:        $color-transparent;
+// $article-footer-bg-color:         $color-transparent;
+// $sidebar-bg-color:                $color-transparent;
+// $sidebar-widget-bg-color:         $color-transparent;

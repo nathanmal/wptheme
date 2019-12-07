@@ -1,0 +1,32 @@
+.wpt-intro 
+{
+  height:26vh;
+  margin-bottom:4rem;
+
+
+}
+
+
+.wpt-styles 
+{
+
+  .col-lg-4 
+  {
+    margin:0;
+    padding:0;
+    .wpt-styles-panel 
+    {
+      height:540px;
+      background:#f2f2f2;
+      padding:2rem 1rem 2rem 2rem;
+      margin-right:1rem;
+
+      > strong:first-child {
+        display:block;
+        margin-bottom:1rem;
+      }
+    }
+
+    
+  }
+}

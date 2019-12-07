@@ -4,7 +4,8 @@
 #wpt-settings section {
   border: 1px solid #ccc;
   background: #eee;
-  padding: 2rem; }
+  padding: 2rem;
+  margin-bottom: 2rem; }
   #wpt-settings section .wpt-setting-row {
     display: flex; }
     #wpt-settings section .wpt-setting-row .wpt-setting-label {
@@ -13,5 +14,38 @@
         display: block;
         margin-top: 0.5rem; }
     #wpt-settings section .wpt-setting-row .wpt-setting {
-      flex: 1; }
+      flex: 1;
+      flex-direction: row; }
+    #wpt-settings section .wpt-setting-row .wpt-setting-image {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start; }
+      #wpt-settings section .wpt-setting-row .wpt-setting-image .wpt-setting-image-wrapper {
+        flex: 3;
+        min-height: 540px;
+        margin-right: 1rem;
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background: #ddd;
+        border: 3px dashed #999;
+        color: #666; }
+        #wpt-settings section .wpt-setting-row .wpt-setting-image .wpt-setting-image-wrapper.wpt-setting-image-wrapper-mobile {
+          flex: 1; }
+        #wpt-settings section .wpt-setting-row .wpt-setting-image .wpt-setting-image-wrapper a.wpt-setting-image-upload {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          color: #666;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none; }
+          #wpt-settings section .wpt-setting-row .wpt-setting-image .wpt-setting-image-wrapper a.wpt-setting-image-upload .dashicons-format-image {
+            transform: scale(2);
+            opacity: 0.5; }
+        #wpt-settings section .wpt-setting-row .wpt-setting-image .wpt-setting-image-wrapper a.wpt-setting-image-delete {
+          display: none; }
 

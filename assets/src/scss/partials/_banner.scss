@@ -1,1 +1,37 @@
-@import '../base/banner';
+.banner {
+    
+    width:100%;
+    height:300px;
+    position:relative;
+    display:flex;
+    transition: height 300ms ease-out;
+
+    .overlay {
+        @include layer(12);
+        background-color:rgba($color-black, 0);
+        transition: background-color 300ms ease-out;
+    }
+
+    .content {
+        @include layer(13);
+        display:flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        color:white;
+        padding:2rem;
+    }
+
+    .image { 
+        @include layer(11);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size:cover;
+        background-color: $color-gray;
+    }
+
+    &.banner-full {
+        height:100vh;
+    }
+
+}

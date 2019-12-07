@@ -1,1 +1,75 @@
-@import '../base/navbar';
+nav.navbar 
+{
+  top:0;
+  background-color: rgba($navbar-color, $navbar-opacity);
+  height:$navbar-height;
+  padding:0 2rem;
+  transition: all 250ms $ease-out-quint;
+
+  a {
+    color:$color-black;
+  }
+
+  &.navbar-hidden 
+  {
+    top:-$navbar-height;
+  }
+
+  &.navbar-show 
+  {
+    top:0;
+  }
+
+  &.navbar-transparent
+  {
+    background-color:transparent;
+  }
+
+  &.navbar-light 
+  {
+    background-color: rgba($color-light, $navbar-opacity);
+  }
+
+  &.navbar-dark
+  {
+    background-color: rgba($color-dark, $navbar-opacity);
+  }
+
+  &.navbar-text-light 
+  {
+    .navbar-brand,.navbar-brand a,.navbar-text,ul.navbar-nav li.nav-item a.nav-link {
+      color: $color-light;
+    }
+  }
+ 
+  .navbar-toggler 
+  {
+    color:black;
+  }
+
+  &.fixed-top 
+  {
+
+    @include mobile()
+    {
+      .navbar-collapse 
+      {
+        position:absolute;
+        left:0; top: $navbar-height; right:0;
+        background: rgba($color-light, 0.8);
+        padding:0 2rem 2rem 2rem;
+
+        &.show, &.collapsing {
+          max-height:100vh;
+        }
+      }
+    }
+    
+  }
+
+}
+
+
+
+
+

@@ -1,1 +1,69 @@
-@import '../base/page';
+main#page 
+{
+  width:100%;
+  min-height:100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  padding:5rem 0;
+
+
+  
+
+  &.sidebar-right 
+  {
+    flex-direction: row-reverse;
+  }
+
+  &.page-left 
+  {
+    margin:0 auto 0 0;
+  }
+
+  &.page-right 
+  {
+    margin:0 0 0 auto;
+  }
+  
+  @include mobile() {
+    flex-direction: column-reverse !important;
+  }
+  
+  & > aside {
+    // Sidebar
+    @import 'sidebar';
+
+    @include mobile() 
+    {
+      width:100%;
+    }
+  }
+
+  & > article {
+    
+    width:100%;
+    min-height:100%;
+
+    & > header 
+    {
+      background-color:$article-header-bg-color;
+    }
+
+    & > section#content
+    {
+      background-color:$article-content-bg-color;
+    }
+
+    & > footer 
+    {
+      background-color:$article-footer-bg-color;
+    }
+
+  }
+  
+  &.clear-navbar 
+  {
+    padding-top:$navbar-height;
+  }
+}
