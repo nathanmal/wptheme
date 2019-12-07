@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-12">
       <p class="copyright">All content and media copyright &copy; <?php echo bloginfo('name') . ' ' . date('Y'); ?></p>
-      <?php echo THEME_DEBUG ? 'Template: ' . Theme::template() : ''; ?>
+      <?php echo THEME_DEBUG ? 'Template: ' . WPTheme\Theme::template() : ''; ?>
     </div>
   </div>
 </footer>

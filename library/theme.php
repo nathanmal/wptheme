@@ -1,4 +1,8 @@
 <?php
+
+namespace WPTheme;
+
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -63,33 +67,11 @@ final class Theme
 	 */
 	public static function instance()
 	{
-		if( empty(self::$instance) ){
-			self::$instance = new Theme();
-		}
-
+		if( empty(self::$instance) ) self::$instance = new Theme();
+			
 		return self::$instance;
 	}
-
-	/**
-	 * PSR-4 Plugin autoloader
-	 * Used with spl_autoload_register
-	 * @see    http://php.net/manual/en/function.spl-autoload-register.php
-	 * @param  string $class Class name
-	 */
-	public static function autoload($class)
-	{	
-		$base   = THEME_DIR . '/library/classes/';
-
-		$file = strtolower($class);
-
-		$path =  $base . str_replace('\\','/',$file) . '.php';
-
-		if( is_file($path) ) 
-		{	
-			require $path;
-		}
-
-	}
+	
 
 	/**
 	 * Initialization
@@ -104,47 +86,57 @@ final class Theme
 		self::$config = include(THEME_DIR . '/config/theme.config.php');
 		
 		// Add filters
-		add_filter( 'the_generator', 'Theme::remove_generator' );
+		add_filter( 'the_generator', 'WPTheme\\Theme::remove_generator' );
 		// Hide descriptive login errors
-		add_filter( 'login_errors', 'Theme::secure_failed_login' );
+		add_filter( 'login_errors', 'WPTheme\\Theme::secure_failed_login' );
 		// remove WP version from css
-		add_filter( 'style_loader_src', 'Theme::remove_asset_version', 9999 );
+		add_filter( 'style_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
 		// remove Wp version from scripts
-		add_filter( 'script_loader_src', 'Theme::remove_asset_version', 9999 );
+		add_filter( 'script_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
 		// Add slug className to body
-		add_filter( 'body_class', 'Theme::add_body_class' );
+		add_filter( 'body_class', 'WPTheme\\Theme::add_body_class' );
 		// Manage theme template directory
-		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
+		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
 		// Register Widgets
-		add_action( 'widgets_init', 'Theme::register_widgets');
+		add_action( 'widgets_init', 'WPTheme\\Theme::register_widgets');
 		// Register Theme template directory
-		add_filter( 'theme_page_templates', 'Theme::page_templates', 10, 4);
+		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
 
-		// Enqueue Scripts and Styles
-		Theme::enqueue();
+		
 		// Custom Post Types
-		Theme::post_types();
+		self::post_types();
 		// Register nav menus
-		Theme::register_menus();
+		self::register_menus();
 		// Register sidebars
-		Theme::register_sidebars();
+		self::register_sidebars();
 		// Declare support 
-		Theme::declare_support();
+		self::declare_support();
 		// Clean up wp_head();
-		Theme::cleanup_head();
+		self::cleanup_head();
 		// Custom shortcodes
-		Theme::add_shortcodes();
+		self::add_shortcodes();
 		// Hide admin bar from non-admins and redirect them to homepage
-		Theme::restrict_admin();
+		self::restrict_admin();
 
 		// load theme custom functions
 		require_once( THEME_DIR . '/config/functions.theme.php' );
 
-		// load admin custom functions
-		if( is_admin() ) require_once( THEME_DIR . '/config/functions.admin.php' );
+		// load admin if needed
+		if( is_admin() ) 
+		{
+			Admin::init();
+			// add_action('admin_init', array('WPTheme\\Admin', 'init') );
+		}
+		else
+		{
+			// Enqueue Scripts and Styles for front end
+			self::enqueue();
+		}
+
+			require_once( THEME_DIR . '/config/functions.admin.php' );
 
   	// Mark initialized
-		Theme::$initialized = TRUE;
+		self::$initialized = TRUE;
 	}
 
 	
@@ -317,16 +309,6 @@ final class Theme
 
 
 
-
-
-
-
-
-
-
-
-
-
 	//////////////////////////////////////////////////////////////////////////////////////////
 	/// RENDER METHODS
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -416,8 +398,8 @@ final class Theme
 			'container_class' => '',  								 
 			'menu_class'      => '',               					
 			'depth'           => 0,
-			'fallback_cb'     => 'Navwalker::fallback',
-    		'walker'        => new Navwalker()                             		
+			'fallback_cb'     => 'WPTheme\\Navwalker::fallback',
+    	'walker'          => new WPTheme\Navwalker()                             		
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
@@ -533,8 +515,59 @@ final class Theme
 		remove_action( 'wp_head', 'feed_links_extra', 3 );
 		// Remove shortlink
 		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
+		// Remove rest head link
+		remove_action( 'wp_head',  'rest_output_link_wp_head');
+		// Remove oembed
+		remove_action( 'wp_head', 'wp_oembed_add_discovery_links');
+		// Remove rest output header
+		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+
+		// Disable emojis
+		Theme::disable_emojis();
+
+	}
 
 
+	public static function disable_emojis() 
+	{
+		 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+		 remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+		 remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		 remove_action( 'admin_print_styles', 'print_emoji_styles' ); 
+		 remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+		 remove_filter( 'comment_text_rss', 'wp_staticize_emoji' ); 
+		 remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+		 add_filter( 'tiny_mce_plugins', array(__CLASS__, 'disable_emojis_tinymce') );
+		 add_filter( 'wp_resource_hints', array(__CLASS__,'disable_emojis_remove_dns_prefetch'), 10, 2 );
+	}
+
+	/**
+	 * Filter function used to remove the tinymce emoji plugin.
+	 * 
+	 * @param array $plugins 
+	 * @return array Difference betwen the two arrays
+	 */
+	public static function disable_emojis_tinymce( $plugins ) 
+	{
+	 return is_array($plugins) ? array_diff( $plugins, array( 'wpemoji' ) ) : array();
+	}
+
+	/**
+	 * Remove emoji CDN hostname from DNS prefetching hints.
+	 *
+	 * @param array $urls URLs to print for resource hints.
+	 * @param string $relation_type The relation type the URLs are printed for.
+	 * @return array Difference betwen the two arrays.
+	 */
+	public static function disable_emojis_remove_dns_prefetch( $urls, $relation_type ) 
+	{
+	 if ( 'dns-prefetch' == $relation_type ) {
+		 /** This filter is documented in wp-includes/formatting.php */
+		 $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/' );
+		 $urls = array_diff( $urls, array( $emoji_svg_url ) );
+	 }
+
+	 return $urls;
 	}
 
 	/**
@@ -1238,3 +1271,6 @@ final class Theme
 	}
 
 }
+
+// Global theme getter
+function theme() { return \WPTheme\Theme::instance(); }

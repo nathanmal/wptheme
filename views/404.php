@@ -1,10 +1,10 @@
-<?php Theme::$footer = FALSE; ?>
+<?php WPTheme\Theme::$footer = FALSE; ?>
 <!-- Main Page Content -->
-<main id="page" class="<?= Theme::classes('page'); ?>" role="main">
+<main id="page" class="<?= WPTheme\Theme::classes('page'); ?>" role="main">
   <!-- Sidebar -->
-  <?php if( Theme::option('display_sidebar') ) { ?>
+  <?php if( WPTheme\Theme::option('display_sidebar') ) { ?>
   <aside>
-    <?php Theme::sidebar(); ?>
+    <?php WPTheme\Theme::sidebar(); ?>
   </aside>
   <?php } ?>
   <!-- Main Article -->

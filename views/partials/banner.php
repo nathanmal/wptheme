@@ -5,10 +5,12 @@ $thumb   = get_the_post_thumbnail_url($id,'full');
 
 // Check for image or video, fallback to current post thumbnail
 $video   = element($data, 'video', FALSE);
-$image   = element($data, 'image', $thumb);
+$image   = element($data, 'image', '');
+$content = element($data, 'content', '');
+$class   = element($data, 'class', '');
+$fluid   = !! element($data, 'fluid', FALSE);
+$overlay = intval(element($data, 'overlay', 0));
 
-// Overlay opacity 0-100
-$overlay = 0;
 
 $class   = array('banner');
 
@@ -20,22 +22,38 @@ $container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
 
 ?>
 <!-- Begin page banner -->
-<div class="<?=classes($class)?>" role="banner">
+<div class="banner <?=classes($class)?>" role="banner">
+
+    
+    <?php if( ! empty($content) ) { ?>
     <!-- Content Layer -->
-    <div class="content">
-      <div class="<?=$container?>">
-        <?= element($data, 'content', '') ?>
-      </div>
+    <div class="banner-content">
+        <?= $content ?>
     </div>
-    <!-- Image Overlay Layer -->
-    <div class="overlay" style="background-color:rgba(0,0,0,<?=$overlay?>);"></div>
-    <!-- Video Layer -->
-    <?php if( $video ) { ?>
-    <div class="video">
-      <?= html_video( $video, array('class'=>'banner-video','autoplay','loop','muted','preload') ) ?>
+    <!-- End Content Layer -->
+    <?php } ?>
+    
+    
+    <?php if( ! empty($overlay) ) { ?>
+    <!-- Background Overlay Layer -->
+    <div class="banner-overlay" style="background-color:rgba(0,0,0,<?=round($overlay/100,2)?>);"></div>
+    <!-- End Background Overlay Layer -->
+    <?php } ?>
+    
+    <?php if( ! empty($video) ) { ?>
+    <!-- Background Video Layer -->
+    <div class="banner-video">
+    wpt_background_video($video);
     </div>
+    <!-- End Background Video Layer -->
+    <?php } ?>
+
+    <?php if( ! empty($image) ) { ?>
+    <!-- Background Image Layer -->
+    <div class="banner-image" style="background-image:url('<?=$image?>');"></div>
+    <!-- End Background Image Layer -->
     <?php } ?>
     <!-- Image Layer -->
-    <div class="image" style="background-image:url('<?=$image?>');"></div>
+    
 </div>
 <!-- End page banner -->

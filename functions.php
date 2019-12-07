@@ -30,19 +30,19 @@ define('THEME_VERSION', '0.1.0');
 define('THEME_DEBUG', TRUE);
 
 // load helpers
+require_once('library/autoload.php');
+
+// load helpers
 require_once('library/helpers.php');
 
-// load the main theme class
-require_once('library/theme.php');
-
 // Theme autoloader
-spl_autoload_register( array('Theme','autoload') );
+spl_autoload_register( 'wptheme_autoload' );
 
 // Hook into WP theme activation
-add_action( 'after_switch_theme', 'Theme::activate' );
+add_action( 'after_switch_theme', 'WPTheme\\Theme::activate' );
 
 // Hook into WP theme deactivation
-add_action( 'switch_theme', 'Theme::deactivate' );
+add_action( 'switch_theme', 'WPTheme\\Theme::deactivate' );
 
 // Hook into WP theme init
-add_action( 'init', 'Theme::init' );
+add_action( 'init', array('WPTheme\\Theme', 'init') );

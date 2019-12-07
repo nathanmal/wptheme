@@ -1,1 +1,1 @@
-<?php Theme::header(); // Output theme header /views/header.php
+<?php WPTheme\Theme::header(); // Output theme header /views/header.php

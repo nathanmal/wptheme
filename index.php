@@ -10,4 +10,4 @@
  *
  * @package wptheme
  */
-Theme::render();
+WPTheme\Theme::render();

@@ -28,14 +28,18 @@ module.exports = (env, argv) => {
     entry: { 
       // Main theme file
       theme: path.resolve( __dirname, 'src/js/theme.js'),
-      // Bootstrap theme
-      bootstrap: path.resolve( __dirname, './src/js/bootstrap.js'),
+      // Admin stuff
+      admin: path.resolve( __dirname, 'src/js/admin.js')
     },
 
     // Output directory
     output: {
       path: path.resolve(  __dirname, 'dist' ),
       filename: '[name].js'
+    },
+
+    externals: {
+      jquery: 'jQuery'
     },
 
     // Module Rules

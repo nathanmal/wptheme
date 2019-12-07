@@ -1,0 +1,17 @@
+#wpt-settings h1 {
+  margin-bottom: 2rem; }
+
+#wpt-settings section {
+  border: 1px solid #ccc;
+  background: #eee;
+  padding: 2rem; }
+  #wpt-settings section .wpt-setting-row {
+    display: flex; }
+    #wpt-settings section .wpt-setting-row .wpt-setting-label {
+      width: 180px; }
+      #wpt-settings section .wpt-setting-row .wpt-setting-label small {
+        display: block;
+        margin-top: 0.5rem; }
+    #wpt-settings section .wpt-setting-row .wpt-setting {
+      flex: 1; }
+

@@ -1,4 +1,9 @@
 <?php
+
+namespace WPTheme;
+
+use \Walker_Nav_Menu;
+
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) exit;
 

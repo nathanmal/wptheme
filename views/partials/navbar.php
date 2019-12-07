@@ -27,7 +27,7 @@ $container = isset($wide) && $wide ? 'container-fluid' : 'container';
 	  </button>
 		
 		<div id="navbarCollapse" class="collapse navbar-collapse">
-			<?php Theme::menu('main', array('menu_class'=>'nav navbar-nav ml-auto')); ?>
+			<?php WPTheme\Theme::menu('main', array('menu_class'=>'nav navbar-nav ml-auto')); ?>
 		</div>
     
 	</div>

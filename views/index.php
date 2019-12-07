@@ -1,15 +1,15 @@
 <!-- Main navigation -->
-<header id="header" class="<?= Theme::classes('header') ?>" role="navigation">
-	<?php Theme::partial('navbar', array('fixed','hidden') ); ?>
-	<?php Theme::partial('dropmenu'); ?>
+<header id="header" class="<?= WPTheme\Theme::classes('header') ?>" role="navigation">
+	<?php WPTheme\Theme::partial('navbar', array('fixed','hidden') ); ?>
+	<?php WPTheme\Theme::partial('dropmenu'); ?>
 </header>
 
 <!-- Main Page Content -->
-<main id="page" class="<?= Theme::classes('page'); ?>" role="main">
+<main id="page" class="<?= WPTheme\Theme::classes('page'); ?>" role="main">
 	<!-- Sidebar -->
-	<?php if( Theme::option('display_sidebar') ) { ?>
+	<?php if( WPTheme\Theme::option('display_sidebar') ) { ?>
 	<aside>
-		<?php Theme::sidebar(); ?>
+		<?php WPTheme\Theme::sidebar(); ?>
 	</aside>
 	<?php } ?>
 	<!-- Main Article -->
@@ -20,7 +20,7 @@
       <a href="#">Settings</a> | 
       <a href="#">Documentation</a>
       <hr/>
-      <?php Theme::content(); ?>
+      <?php WPTheme\Theme::content(); ?>
     </section>
 		<footer></footer>
 	</article>

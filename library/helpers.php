@@ -6,21 +6,6 @@
  * 
  */
 
-/**
- * Echo empty template header
- */
-if ( ! function_exists('template_placeholder') ){
-
-    function template_placeholder( $name = '' ){
-
-        $template = Theme::template();
-        echo '<style>body { margin:0 }</style>';
-        echo '<div style="margin:0;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;width:100%;background:#eee;margin-bottom:">';
-        echo '<h1>[' . strtoupper($name) . ' Template]<h1/>';
-        echo '<h2>Edit at /library/views/'.$template.'.php</h2>';
-        echo '</div>';
-    }
-}
 
 /**
  * Print out an object or array in a pre element for debugging
@@ -38,6 +23,19 @@ if( ! function_exists('pre') )
         echo '</pre></div>';
     }
 }
+
+/**
+ * Get the short class name of an object without namespace
+ */
+if( ! function_exists('get_class_shortname') )
+{
+  function get_class_shortname( $object )
+  {
+    return (new \ReflectionObject($object))->getShortName();
+  }
+}
+
+
 
 /**
  * Access array elements easily, with default
@@ -65,8 +63,9 @@ if( ! function_exists('get_post_slug') )
     }
 }
 
-
-
+/**
+ * Combine array of classnames
+ */
 if( ! function_exists('classes') )
 {
     function classes( $classes )
@@ -75,43 +74,47 @@ if( ! function_exists('classes') )
     }
 }
 
-
-if( ! function_exists('html_video') )
+/**
+ * Generate an html list based on categories for post
+ */
+if( ! function_exists('category_list') )
 {
-    function html_video( $src, $config = array() )
+  function category_list( $post_id, $taxonomy = 'category', $permalink = TRUE, $class = '' )
+  {
+    $terms = get_the_terms( $post_id, $taxonomy );
+
+    if( ! empty($terms) )
     {
-        $video = '<video src="' . $src .'" ';
+      echo '<ul class="category-list ' . $class . '">';
 
-        if( isset($config['class']) ) $video .= 'class="'  . classes($config['class']) . '" ';
+      foreach($terms as $term)
+      {
 
-        foreach( array('width','height','poster') as $attr )
-        {
-            if( isset($config[$attr]) ) $video .= $attr.='="'.$config[$attr].'" ';
-        }
+         if( is_string($permalink) )
+         {
+            $link = sprintf($permalink, $term->ID);    
+         } 
+         else if( TRUE === $permalink )
+         {
+            $link = get_term_link( $term, $taxonomy );
+         }
+         else
+         {
+            $link = FALSE;
+         }
 
-        foreach( array('autoplay','muted','loop','preload','controls') as $attr )
-        {
-            if( isset($config[$attr]) OR in_array($attr, $config) ) $video .= $attr .' ';
-        }   
+        echo '<li>';
 
-        $video .= '>';
+        echo !! $link ? '<a href="'.$link.'">' . $term->name . '</a>' : $term->name;
 
-        if( isset($config['src']) && is_array($config['src']) )
-        {
-            foreach($config['src'] as $src)
-            {
-                $video .= '<source src="' . $src['src'].'" type="' . $src['type'] .'">';
-            }
-        }
+        echo '</li>';
 
-        // Show message in case of lack of html5 support
-        $video .= element($config, 'support', 'Your browser does not support the video tag');
+        
+      }
 
-        $video .= '</video>';
-
-        return $video;
-
+      echo '</ul>';
     }
+  }
 }
 
 /**
@@ -126,7 +129,9 @@ if( ! function_exists('array_contains') )
     }
 }
 
-
+/**
+ * Get enqueued assets
+ */
 if( ! function_exists('enqueued') )
 {
     function enqueued( $type = NULL )
@@ -143,5 +148,56 @@ if( ! function_exists('enqueued') )
 
         return $list;
 
+    }
+}
+
+if( ! function_exists('wpt_banner_video') )
+{
+    function wpt_banner_video( $video, $poster = '' )
+    {
+        return wpt_background_video($video, $poster);
+    }
+}
+
+
+if( ! function_exists('wpt_background_video') )
+{
+    function wpt_background_video($video, $poster = '')
+    {
+        echo '<video class="video-background" playsinline loop muted autoplay ';
+
+        if( ! empty($poster) ) 
+        {
+            echo 'poster="' . $poster .'"';
+        }
+
+        echo '>';
+
+        if( is_string($video) )
+        {
+            $video = array( $video => mime_content_type($video) );
+        }
+
+        foreach($video as $src => $type)
+        {
+            echo '<source src="' . $src . '" type="' . $type .'" />';
+        }
+
+        if( ! empty($poster) )
+        {
+            echo '<img class="video-background-poster" src="' . $poster . '"/>';
+        }
+
+        echo '</video>';
+    }
+}
+
+
+
+if( ! function_exists('wpt_setting') )
+{
+    function wpt_setting($key, $default = FALSE)
+    {
+        return WPTheme\Settings::get($key, $default);
     }
 }
