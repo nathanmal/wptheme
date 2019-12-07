@@ -1,6 +1,5 @@
-@import 'defaults';
 /**
- * Default variable overrides
+ * Base variables for WP Theme
  */
 
 /* Breakpoints */
@@ -35,9 +34,9 @@
 /* Fonts */
 
 /* Font Families */
-// $font-header:         'Roboto','Arial', sans-serif;
-// $font-body:           'Arial', sans-serif;
-// $font-header-alt:     $font-header;
+// $font-heading:        'Roboto', 'Helvetica Neue', sans-serif;
+// $font-body:           'Open Sans','Arial', sans-serif;
+// $font-heading-alt:    $font-heading;
 // $font-body-alt:       $font-body;
 // $font-mono:           'Monaco', Courier, monospace;
 
@@ -73,7 +72,7 @@
 
 /* Font weights */
 // $font-weight-body:    400;
-// $font-weight-heading: 700;
+// $font-weight-heading: 100;
 
 /* Navbar */
 // $navbar-height:   100px;
