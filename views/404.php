@@ -1,6 +1,6 @@
 <?php WPTheme\Theme::$footer = FALSE; ?>
 <!-- Main Page Content -->
-<main id="page" class="<?= WPTheme\Theme::classes('page'); ?>" role="main">
+<main id="page" class="<?= classes('page'); ?>" role="main">
   <!-- Sidebar -->
   <?php if( WPTheme\Theme::option('display_sidebar') ) { ?>
   <aside>

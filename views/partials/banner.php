@@ -1,30 +1,23 @@
 <?php
-// Get page/post ID and banner image
-$id      = get_the_ID();
-$thumb   = get_the_post_thumbnail_url($id,'full');
-
 // Check for image or video, fallback to current post thumbnail
 $video   = element($data, 'video', FALSE);
 $image   = element($data, 'image', '');
 $content = element($data, 'content', '');
-$class   = element($data, 'class', '');
-$fluid   = !! element($data, 'fluid', FALSE);
 $overlay = intval(element($data, 'overlay', 0));
 
+// Build class array
+$classes = array();
 
-$class   = array('banner');
+foreach( array('fixed','fixed-image','full') as $class )
+{
+    if( in_array($data, $class) ) $classes[] = 'banner-' . $class;
+}
 
-if( array_contains($data, 'full') )    $class[] = 'banner-full';
-if( array_contains($data, 'class') )   $class[] = classes($data['class']);
-if( array_contains($data, 'overlay') ) $overlay = intval($data['overlay']) / 100;
-
-$container = array_contains($data, 'wide') ? 'container-fluid' : 'container';
+// $container = array_intersect($data, array('fluid','wide')) ? 'container-fluid'
 
 ?>
 <!-- Begin page banner -->
-<div class="banner <?=classes($class)?>" role="banner">
-
-    
+<div class="banner <?=classes($classes)?>" role="banner">
     <?php if( ! empty($content) ) { ?>
     <!-- Content Layer -->
     <div class="banner-content">

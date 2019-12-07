@@ -1,17 +1,17 @@
 <!-- Main navigation -->
 <header id="header" class="header-fixed" role="navigation">
-	<?php WPTheme\Theme::partial('navbar', array('fixed') ); ?>
-	<?php WPTheme\Theme::partial('dropmenu'); ?>
+  <?php WPTheme\Theme::partial('navbar', array('fixed') ); ?>
+  <?php WPTheme\Theme::partial('dropmenu'); ?>
 </header>
-<!-- Index Template Content -->
+<!-- Page Template Content -->
 <main id="page" role="main">
-	<!-- Main Article -->
-	<article>
+  <!-- Main Article -->
+  <article>
     <section id="content">
       <?php wpt_partial('wptheme'); ?>
     </section>
-	</article>
-	<!-- End Main Article -->
+  </article>
+  <!-- End Main Article -->
 </main>
 <!-- End Main Page Content -->
 
