@@ -117,17 +117,6 @@ if( ! function_exists('category_list') )
   }
 }
 
-/**
- * array_contains
- * Checks if $str is either a value or a key
- */
-if( ! function_exists('array_contains') )
-{
-    function array_contains( &$array, $str )
-    {
-        return is_string($str) && ( isset($array[$str]) OR in_array($str, $array) ); 
-    }
-}
 
 /**
  * Get enqueued assets
@@ -151,15 +140,20 @@ if( ! function_exists('enqueued') )
     }
 }
 
+/**
+ * Output video background for WPTheme banner
+ */
 if( ! function_exists('wpt_banner_video') )
 {
     function wpt_banner_video( $video, $poster = '' )
     {
-        return wpt_background_video($video, $poster);
+       wpt_background_video($video, $poster);
     }
 }
 
-
+/**
+ * Output video tag for background video, using poster image as fallback
+ */
 if( ! function_exists('wpt_background_video') )
 {
     function wpt_background_video($video, $poster = '')
@@ -193,11 +187,25 @@ if( ! function_exists('wpt_background_video') )
 }
 
 
-
+/**
+ * Get a theme setting
+ */
 if( ! function_exists('wpt_setting') )
 {
     function wpt_setting($key, $default = FALSE)
     {
         return WPTheme\Settings::get($key, $default);
     }
+}
+
+
+/**
+ * Load a theme partial view
+ */
+if( ! function_exists('wpt_partial') )
+{
+  function wpt_partial( $path, $data = array(), $repeat = 1 )
+  {
+    WPTheme\Theme::partial( $path, $data, $repeat );
+  }
 }

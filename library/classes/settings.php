@@ -82,11 +82,15 @@ class Settings
     
     <section id="wpt-assets">
     <h1>Assets</h1>
-  
-    <?php 
-    $this->do_setting('assets_use_cdn','boolean', array('label'=>'Use CDN'));
-    ?>
+    <?php $this->do_setting('assets_use_cdn','boolean', array('label'=>'Use CDN')); ?>
+    </section>
 
+    <section id="wpt-design">
+    <h1>Global Design</h1>
+    <!-- Desktop Background -->
+    <?php $this->do_setting('assets_background_image','image', array('label'=>'Background Image')); ?>
+    <!-- Mobile Background -->
+    <?php // $this->do_setting('assets_background_image_mobile','image', array('label'=>'Background Image Mobile')); ?>
 
     </section>
 
@@ -135,6 +139,37 @@ class Settings
 
     switch($type)
     {
+
+      case 'image':
+
+        wp_enqueue_media();
+
+        ?>
+        <div class="wpt-setting-image-wrapper">
+          <a href="#" class="wpt-setting-image-upload">
+            <span class="dashicons dashicons-format-image"></span>
+          </a>
+          <a href="#" class="wpt-setting-image-delete">
+            <span class="dashicons dashicons-trash"></span>
+          </a>
+        </div>
+        <input type="hidden" name="<?= $name ?>" value="">
+
+        <div class="wpt-setting-image-wrapper wpt-setting-image-wrapper-mobile">
+          <a href="#" class="wpt-setting-image-upload">
+            <span class="dashicons dashicons-format-image"></span>
+          </a>
+          <a href="#" class="wpt-setting-image-delete">
+            <span class="dashicons dashicons-trash"></span>
+          </a>
+        </div>
+        <input type="hidden" name="<?= $name ?>" value="">
+
+        <?php
+
+        break;
+
+
 
       case 'boolean':
 

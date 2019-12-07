@@ -2,6 +2,8 @@
 
 namespace WPTheme;
 
+use WPTheme\Navwalker;
+
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -328,14 +330,6 @@ final class Theme
 		echo '<title>' . ( is_front_page() ? $name . ' : ' . $desc : wp_title('', false) ) . '</title>';
 	}
 
-	/**
-	 * Echo out the head
-	 * @return [type] [description]
-	 */
-	public static function head()
-	{
-		wp_head();
-	}
 
 	/**
 	 * Get class names for an element
@@ -387,10 +381,6 @@ final class Theme
 			return;
 		};
 
-		if( ! class_exists('Navwalker') ) {
-			include THEME_DIR . '/library/classes/navwalker.php';
-		}
-
 		$default = array(
 			'menu'            => __( $label, THEME_DOMAIN ), 
 			'theme_location'  => $location,              
@@ -398,8 +388,8 @@ final class Theme
 			'container_class' => '',  								 
 			'menu_class'      => '',               					
 			'depth'           => 0,
-			'fallback_cb'     => 'WPTheme\\Navwalker::fallback',
-    	'walker'          => new WPTheme\Navwalker()                             		
+			'fallback_cb'     => array('WPTheme\\Navwalker','fallback'),
+    	'walker'          => new Navwalker()
 		);
 
 		wp_nav_menu(wp_parse_args($config,$default));
@@ -426,61 +416,17 @@ final class Theme
 	public static function content()
 	{
 		// No posts found or loaded
-		if( ! have_posts() ) return Theme::partial('missing');
+		if( ! have_posts() ) return 'Content not found';
 
 		// Loop
 		while ( have_posts() ) : the_post();
 
-			// Check post format
-			$format = get_post_format();
-
-			// Add post format 
-			if( $format ) Theme::addClass('post', 'post-format post-format-' . $format );
-
-			// post wrapper
-			echo '<div class="post '. Theme::classes('post').'">';
-
-			// Include format view if used
-			if( $format ) 
-			{
-				Theme::view( 'formats/' . $format );
-			}
-			else
-			{
-				Theme::view( 'formats/post' ); 
-			}
-			
-			// close wrapper
-			echo '</div>';
+			the_content();
 
 		endwhile;
-
 		
 	}
 
-	/**
-	 * Render a page section
-	 * @param  [type] $id      [description]
-	 * @param  [type] $content [description]
-	 * @param  array  $config  [description]
-	 * @return [type]          [description]
-	 */
-	public static function section( $id, $content, $config = array() )
-	{
-		$class = element( $config, 'class', '' );
-
-		$container = array_contains( $config, 'wide' ) ? 'container-fluid' : 'container';
-
-		echo '<section id="' . $id . '" class="'.classes($class).'">';
-
-		echo '<div class="'.$container.'">';
-
-		echo $content;
-
-		echo '</div>';
-
-		echo '</section>';
-	}
 
 
 
@@ -680,16 +626,13 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
-		if( is_admin() ) return;
+
 
 		// Load any config scripts/fonts
 		Theme::scripts( Theme::config('scripts') );
 		Theme::fonts( Theme::config('fonts') );
 		Theme::styles( Theme::config('styles') );
 
-		// Load Bootstrap
-		Theme::script( 'bootstrap', array('source' => '/dist/bootstrap.js','footer' => TRUE));
-		Theme::style(  'bootstrap', array('source' => '/dist/bootstrap.css','version'=> time()));
 
 		$data = array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
