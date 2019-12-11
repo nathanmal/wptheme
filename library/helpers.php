@@ -8,36 +8,6 @@
 
 
 /**
- * Print out an object or array in a pre element for debugging
- */
-if( ! function_exists('pre') ) 
-{
-    function pre($obj)
-    {
-        echo '<div class="pre-debug"><pre>';
-        if( is_array($obj) ) {
-            print_r($obj);
-        } else {
-            var_dump($obj);
-        }
-        echo '</pre></div>';
-    }
-}
-
-/**
- * Get the short class name of an object without namespace
- */
-if( ! function_exists('get_class_shortname') )
-{
-  function get_class_shortname( $object )
-  {
-    return (new \ReflectionObject($object))->getShortName();
-  }
-}
-
-
-
-/**
  * Access array elements easily, with default
  */
 if( ! function_exists('element') )
@@ -75,55 +45,116 @@ if( ! function_exists('classes') )
 }
 
 /**
- * Generate an html list based on categories for post
+ * Print out an object or array in a pre element for debugging
  */
-if( ! function_exists('category_list') )
+if( ! function_exists('pre') ) 
 {
-  function category_list( $post_id, $taxonomy = 'category', $permalink = TRUE, $class = '' )
-  {
-    $terms = get_the_terms( $post_id, $taxonomy );
-
-    if( ! empty($terms) )
+    function pre($obj)
     {
-      echo '<ul class="category-list ' . $class . '">';
-
-      foreach($terms as $term)
-      {
-
-         if( is_string($permalink) )
-         {
-            $link = sprintf($permalink, $term->ID);    
-         } 
-         else if( TRUE === $permalink )
-         {
-            $link = get_term_link( $term, $taxonomy );
-         }
-         else
-         {
-            $link = FALSE;
-         }
-
-        echo '<li>';
-
-        echo !! $link ? '<a href="'.$link.'">' . $term->name . '</a>' : $term->name;
-
-        echo '</li>';
-
-        
-      }
-
-      echo '</ul>';
+        echo '<div class="pre-debug"><pre>';
+        if( is_array($obj) ) {
+            print_r($obj);
+        } else {
+            var_dump($obj);
+        }
+        echo '</pre></div>';
     }
+}
+
+/**
+ * Get the short class name of an object without namespace
+ */
+if( ! function_exists('get_class_shortname') )
+{
+  function get_class_shortname( $object )
+  {
+    return (new \ReflectionObject($object))->getShortName();
   }
 }
+
+
+
+if( ! function_exists('wpt_filed_under') )
+{
+  function wpt_filed_under( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank' )
+  {
+    $terms = get_the_terms( $post, $taxonomy );
+
+    echo '<div class="filed-under">Filed under';
+    wpt_category_list($post,$taxonomy,$limit,$link,$target);
+    echo '</div>';
+
+  }
+}
+
+if( ! function_exists('wpt_category_list') )
+{
+  function wpt_category_list( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank', $return = FALSE )
+  {
+    $terms = get_the_terms( $post, $taxonomy );
+    $c = 0;
+    $out = '<ul class="terms terms-'.$taxonomy.'">';
+    foreach($terms as $term)
+    {
+      if( $c >= $limit ) break;
+      $out .= '<li class="term">';
+      if( $link ) $out .= '<a href="' . get_term_link($term->term_id) .'" target="' . $target .'">';
+      $out .= '<span class="term-name">' . $term->name . '</span>';
+      if( $link ) $out .= '</a>';
+      $out .= '</li>';
+      $c++; 
+    }
+    $out .= '</ul>';
+
+    if( $return ) return $out;
+
+    echo $out;
+  }
+}
+
+/**
+ * Return category list as string
+ */
+if( ! function_exists('wpt_get_category_list') )
+{
+  function wpt_get_category_list( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank' )
+  {
+    return wpt_category_list( $post, $taxonomy, $limit, $link, $target, TRUE );
+  }
+}
+
+/**
+ * Get 
+ */
+if( ! function_exists('wpt_get_excerpt') )
+{
+  function wpt_get_excerpt($post, $length = NULL)
+  {
+    // Use excerpt if it exists
+    if( ! empty($post->post_excerpt) )
+    {
+      return $post->post_excerpt;
+    }
+
+    // Otherwise generate it from content
+    $text = strip_shortcodes( $post->post_content );
+    $text = apply_filters( 'the_content', $text );
+    $text = str_replace(']]>', ']]&gt;', $text);
+    $excerpt_length = intval($length) ?: apply_filters( 'excerpt_length', 55 );
+    $excerpt_more = apply_filters( 'excerpt_more', '&nbsp;[&hellip;]' );
+    $text = wp_trim_words( $text, $excerpt_length, $excerpt_more );
+    return $text;
+  }
+}
+
 
 
 /**
  * Get enqueued assets
  */
-if( ! function_exists('enqueued') )
+if( ! function_exists('wpt_enqueued') )
 {
-    function enqueued( $type = NULL )
+    function wpt_enqueued( $type = NULL )
     {
         global $wp_scripts, $wp_styles;
 

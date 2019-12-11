@@ -104,6 +104,11 @@ final class Theme
 		// Register Theme template directory
 		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
 
+
+		add_filter( 'script_loader_tag', 'WPTheme\\Package::script_attributes', 10, 3 );
+
+		add_filter( 'style_loader_tag', 'WPTheme\\Package::style_attributes', 10, 3 );
+
 		
 		// Custom Post Types
 		self::post_types();
@@ -157,9 +162,7 @@ final class Theme
 		if( empty($item) ) return self::$config;
 
 		return isset(self::$config[$item]) ? self::$config[$item] : NULL;
-
 	}
-
 
 	/**
 	 * Get theme option, but allow for post meta to override
@@ -182,6 +185,8 @@ final class Theme
 
 		return $value;
 	}
+
+
 
 
 	/**
@@ -413,10 +418,15 @@ final class Theme
 	 * @param  string $post_template [description]
 	 * @return [type]                [description]
 	 */
-	public static function content()
+	public static function content( $str = NULL )
 	{
+		if( is_string($str) )
+		{
+			return apply_filters( 'the_content', $str );
+		}
+
 		// No posts found or loaded
-		if( ! have_posts() ) return 'Content not found';
+		if( ! have_posts() ) return 'Nothing found';
 
 		// Loop
 		while ( have_posts() ) : the_post();
@@ -626,12 +636,10 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
-
-
 		// Load any config scripts/fonts
-		Theme::scripts( Theme::config('scripts') );
+		// Theme::scripts( Theme::config('scripts') );
 		Theme::fonts( Theme::config('fonts') );
-		Theme::styles( Theme::config('styles') );
+		// Theme::styles( Theme::config('styles') );
 
 
 		$data = array(
@@ -639,25 +647,17 @@ final class Theme
 			'ajaxnonce' => wp_create_nonce('ajax_nonce')
 		);
 
-		// Load theme assets
-		Theme::script( 'wptheme', array('source' => '/dist/theme.js','footer' => TRUE), $data, 'wpdata');
-		Theme::style( 'wptheme', array( 'source' => '/dist/theme.css'));
+		$action = element($_REQUEST, 'action');
 
-		// Load template-specific scripts and styles if they exist
-		$template = self::template();
-
-		if( ! empty($template) ){
-
-			if( $js = Theme::asset('js/' . $template . '.js') )
-			{
-				Theme::enqueue_script('template', array('source'=>$js) );
-			}
-
-			if( $css = Theme::asset('css/' . $template . '.css') )
-			{
-				Theme::enqueue_style('template', array('source'=>$css) );
-			}
+		// Don't enqueue on login or register screen
+		if( $GLOBALS['pagenow'] === 'wp-login.php' OR $action === 'register' ) {
+			return;
 		}
+
+		
+		Package::enqueue( 'jquery', FALSE );
+		Package::enqueue( 'bootstrap', FALSE );
+		Package::enqueue( 'wptheme', FALSE, array('wpdata'=>$data) );
 		
 	}
 
@@ -980,10 +980,9 @@ final class Theme
 			
 		// Single Posts	by type or template				
 		} else if( is_single() ) {
-
 			if( ! empty($type) && Theme::view_exists('single/'.$type) ) {
 				$template = 'single/'.$type;
-			} else if( Theme::template_exists('single') ) {
+			} else if( Theme::view_exists('single') ) {
 				$template = 'single';
 			}
 
@@ -993,7 +992,7 @@ final class Theme
 			if( ! empty($type) && is_post_type_archive($type) 
 				&& Theme::view_exists('archive/'.$type) ){
 				$template = 'archive/'.$type; 
-			} else if ( Theme::template_exists('archive') ){
+			} else if ( Theme::view_exists('archive') ){
 				$template = 'archive';
 			}
 		}
@@ -1035,20 +1034,6 @@ final class Theme
 	 */
 	public static function view( $path, $data = array(), $repeat = 1, $return = FALSE )
 	{
-		// If non-empty array, extract variables for the view
-		if( ! empty($data) && is_array($data) ) 
-		{
-			foreach( $data as $key => $val )
-			{
-				// Convert simple items to item = TRUE
-				if( is_int($key) ) {
-					$data[$val] = TRUE;
-					unset($data[$key]);
-				}
-			}
-			extract($data, EXTR_SKIP);
-		}
-
 		// Append extension if needed
 		if( substr($path, -4) != '.php' ) $path .= '.php';
 		
@@ -1057,6 +1042,21 @@ final class Theme
 
 		// Warn if missing
 		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
+
+		// If non-empty array, extract variables for the view
+		if( ! empty($data) && is_array($data) ) 
+		{
+			foreach( $data as $key => $val )
+			{
+				// Convert unnamed (indexed) items so that its value is true
+				if( is_int($key) ) {
+					$data[$val] = TRUE;
+					unset($data[$key]);
+				}
+			}
+			// Extract but don't overwrite vars
+			extract($data, EXTR_SKIP);
+		}
 
 		if( $return ) {
 			ob_start();
