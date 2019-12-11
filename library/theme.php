@@ -657,6 +657,7 @@ final class Theme
 		
 		Package::enqueue( 'jquery', FALSE );
 		Package::enqueue( 'bootstrap', FALSE );
+		Package::enqueue( 'fontawesome', FALSE );
 		Package::enqueue( 'wptheme', FALSE, array('wpdata'=>$data) );
 		
 	}
