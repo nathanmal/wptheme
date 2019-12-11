@@ -2,6 +2,8 @@
 
 namespace WPTheme;
 
+use \WPTheme\Package;
+
 class Settings
 {
 
@@ -25,6 +27,9 @@ class Settings
   {
 
     Settings::$page = element($_GET, 'page', 'wptheme');
+
+   
+
 
 
     $settings = new Settings();
@@ -77,13 +82,42 @@ class Settings
   public function render()
   {
 
-   
+    $types = get_post_types();
+
     ?>
     
     <section id="wpt-assets">
     <h1>Assets</h1>
     <?php $this->do_setting('assets_use_cdn','boolean', array('label'=>'Use CDN')); ?>
     </section>
+
+    <section id="wpt-packages">
+    <h1>Packages</h1>
+    
+    <?php 
+
+    $all = Package::all();
+
+    foreach($all as $name => $package)
+    {
+      $setting = 'assets_package_' . $name;
+      $version = element($package,'version','');
+      $label   = 'Enable ' . element($package,'title',ucwords($name)) . ' ' . $version;
+
+      $this->do_setting( $setting,'boolean', array('label'=>$label));
+    }
+
+    ?>
+
+
+
+    </section>
+
+
+    <section id="wpt-fonts">
+    <h1>Fonts</h1>
+    </section>
+
 
     <section id="wpt-design">
     <h1>Global Design</h1>
@@ -181,7 +215,7 @@ class Settings
         
         $checked = !! $value ? 'checked' : '';
 
-        echo '<input name="'.$name.'" type="checkbox" value="1" '.$checked.'>';
+        echo '<input name="'.$name.'" type="checkbox" value="1" '.$checked.' />';
         break;
 
       case 'text':
@@ -190,8 +224,11 @@ class Settings
         break;
     }
 
+    // End Setting
     echo '</div>';
     
+    // End Row
+    echo '</div>';
 
 
   }
