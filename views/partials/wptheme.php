@@ -24,7 +24,7 @@
     </div>
     
   </div>
-
+  <!-- 
   <div class="row wpt-styles">
     <div class="col-lg-12">
         <h3>Style Guide</h3>
@@ -65,6 +65,8 @@
     </div>
 
   </div>
+
+-->
 
 
 </div>
