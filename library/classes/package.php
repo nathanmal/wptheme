@@ -145,7 +145,28 @@ class Package
     return $tag;
   }
 
+  /**
+   * Enqueue Google Font
+   * @param  [type] $family [description]
+   * @param  array  $sizes  [description]
+   * @return [type]         [description]
+   */
+  public static function google_font( $family, $sizes = array() )
+  {
+    $src = 'https://fonts.googleapis.com/css?family=' . $family;
 
+    if( ! empty($sizes) )
+    {
+      $src .= ':' . implode(',', $sizes);
+    }
+
+    $src .= '&display=swap';
+
+    echo $src;
+
+    wp_enqueue_style( 'font-' . strtolower($family), $src );
+
+  }
 
   /**
    * Enqueue package assets

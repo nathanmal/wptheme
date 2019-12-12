@@ -104,12 +104,11 @@ final class Theme
 		// Register Theme template directory
 		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
 
-
+		// Apply attributes to style/script tags
 		add_filter( 'script_loader_tag', 'WPTheme\\Package::script_attributes', 10, 3 );
 
 		add_filter( 'style_loader_tag', 'WPTheme\\Package::style_attributes', 10, 3 );
 
-		
 		// Custom Post Types
 		self::post_types();
 		// Register nav menus
@@ -146,6 +145,9 @@ final class Theme
 		self::$initialized = TRUE;
 	}
 
+
+
+
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	/// UTILITY METHODS
@@ -164,94 +166,26 @@ final class Theme
 		return isset(self::$config[$item]) ? self::$config[$item] : NULL;
 	}
 
-	/**
-	 * Get theme option, but allow for post meta to override
-	 * @param  [type]  $name    [description]
-	 * @param  boolean $default [description]
-	 * @return [type]           [description]
-	 */
-	public static function option( $name, $default = NULL )
-	{
-		$option = 'wptheme_' . $name;
-
-		$value = get_option( $option, $default );
-
-		if( ( is_null($value) OR $value === $default ) && $post = get_post() )
-		{
-			$meta = get_post_meta( $post->ID, $option, TRUE );
-
-			return ( is_null($meta) OR $meta === $default ) ? $default : $meta;
-		}
-
-		return $value;
-	}
-
-
-
-
-	/**
-	 * Get theme mod
-	 * @param  [type] $name    [description]
-	 * @param  [type] $default [description]
-	 * @return [type]          [description]
-	 */
-	public static function mod( $name, $default = NULL )
-	{
-		$name = 'wptheme_' . $name;
-
-		$value = get_theme_mod( $name, $default );
-
-		if( ( is_null($value) OR $value === $default ) && $post = get_post() )
-		{
-			$meta = get_post_meta( $post->ID, $option, TRUE );
-
-			return ( is_null($meta) OR $meta === $default ) ? $default : $meta;
-		}
-
-	}
-
-	/**
-	 * Set theme option
-	 * @param [type]  $name     [description]
-	 * @param [type]  $value    [description]
-	 * @param boolean $autoload [description]
-	 */
-	public static function set_option( $name, $value, $autoload = TRUE )
-	{
-		$option = 'wptheme_' . $name;
-
-		return update_option( $option, $value, $autoload );
-	}
-
 
 	/**
 	 * Resolve path to allow /theme files to override /library files
 	 * @param  [type] $path [description]
 	 * @return [type]       [description]
 	 */
-	public static function path($path)
+	public static function find($path)
 	{
 		// Return if cached
 		if( isset(self::$paths[$path]) ) return self::$paths[$path];
 		
-		$theme = THEME_DIR . '/'. ltrim($path,'/');
-		$core  = THEME_DIR . '/library/' . ltrim($path,'/');
-
-		// Check theme directory first
-		if( is_file( $theme ) )
+		foreach( array('/','/library/') as $dir )
 		{
-			self::$paths[$path] = $theme;
-			return $theme;
-		}
-
-		// Check library
-		if( is_file( $core ) )
-		{
-			self::$paths[$path] = $core;
-			return $core;
+			$file = THEME_DIR . $dir . ltrim($path,'/');
+			// Found
+			if( is_file( $file ) ) return $file;
 		}
 
 		return FALSE;
+
 	}
 
 	/**
@@ -1039,7 +973,7 @@ final class Theme
 		if( substr($path, -4) != '.php' ) $path .= '.php';
 		
 		// Set absolute path
-		$path = self::path( 'views/' . $path );
+		$path = self::find( 'views/' . $path );
 
 		// Warn if missing
 		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
@@ -1103,10 +1037,8 @@ final class Theme
 	{	
 		// prep path
 		$file = 'views/'.$name.'.php';
-		// verify path
-		$path = self::path($file);
-
-		return ! empty($path);
+		// find it
+		return FALSE !== Theme::find($file);
 	}
 
 	/**
@@ -1124,16 +1056,13 @@ final class Theme
 	 */
 	public static function add_shortcodes()
 	{
-		$shortcodes = self::config('shortcodes');
+		$files  = glob(THEME_LIB.'/shortcodes/*.php');
 
-		foreach($shortcodes as $shortcode)
+		if( ! empty($files) )
 		{
-			$file = THEME_DIR . '/library/shortcodes/' . $shortcode . '.php';
-
-			if( is_file($file) ) {
-				include($file);
-			}
+			foreach($files as $file) include $file;
 		}
+
 	}
 
 	/**

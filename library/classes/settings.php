@@ -58,7 +58,7 @@ class Settings
     echo '</div>';
 
 
-     pre($_POST);
+    if( ! empty($_POST) ) pre($_POST);
    
   }
 
@@ -93,7 +93,7 @@ class Settings
 
     <section id="wpt-packages">
     <h1>Packages</h1>
-    
+    <p>Include these packages</p>
     <?php 
 
     $all = Package::all();
@@ -102,7 +102,7 @@ class Settings
     {
       $setting = 'assets_package_' . $name;
       $version = element($package,'version','');
-      $label   = 'Enable ' . element($package,'title',ucwords($name)) . ' ' . $version;
+      $label   = element($package,'title',ucwords($name)) . ' ' . $version;
 
       $this->do_setting( $setting,'boolean', array('label'=>$label));
     }
@@ -114,19 +114,30 @@ class Settings
     </section>
 
 
+    <section id="wpt-integrations">
+      <h1>Integrations</h1>
+
+      <?php
+      $this->do_setting( 'google_maps_key','text', array('label'=>'Google Maps API Key'));
+
+      $this->do_setting( 'google_maps_center', 'text' );
+
+      $this->do_setting( 'google_maps_style','textarea');
+
+
+
+      $this->do_setting( 'google_analytics_ua','text', array('label'=>'Google Analytics Code','note'=>'UA-XXXXXXX'));
+
+      ?>
+    </section>
+
+
     <section id="wpt-fonts">
     <h1>Fonts</h1>
     </section>
 
 
-    <section id="wpt-design">
-    <h1>Global Design</h1>
-    <!-- Desktop Background -->
-    <?php $this->do_setting('assets_background_image','image', array('label'=>'Background Image')); ?>
-    <!-- Mobile Background -->
-    <?php // $this->do_setting('assets_background_image_mobile','image', array('label'=>'Background Image Mobile')); ?>
-
-    </section>
+  
 
     <?php
 
@@ -216,6 +227,11 @@ class Settings
         $checked = !! $value ? 'checked' : '';
 
         echo '<input name="'.$name.'" type="checkbox" value="1" '.$checked.' />';
+        break;
+
+      case 'textarea':
+
+        echo '<textarea name="'.$name.'" class="widefat" rows="12">' . $value .'</textarea>';
         break;
 
       case 'text':

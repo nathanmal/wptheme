@@ -15,9 +15,14 @@
     .wpt-setting-row 
     {
       display:flex;
+      margin:1rem 0;
 
       .wpt-setting-label 
       {
+        label {
+          font-weight: 700;
+        }
+
         width:180px;
 
         small {

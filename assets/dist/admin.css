@@ -7,9 +7,12 @@
   padding: 2rem;
   margin-bottom: 2rem; }
   #wpt-settings section .wpt-setting-row {
-    display: flex; }
+    display: flex;
+    margin: 1rem 0; }
     #wpt-settings section .wpt-setting-row .wpt-setting-label {
       width: 180px; }
+      #wpt-settings section .wpt-setting-row .wpt-setting-label label {
+        font-weight: 700; }
       #wpt-settings section .wpt-setting-row .wpt-setting-label small {
         display: block;
         margin-top: 0.5rem; }

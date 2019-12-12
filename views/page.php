@@ -6,11 +6,13 @@
 <!-- Page Template Content -->
 <main id="page" role="main">
   <!-- Main Article -->
-  <article>
-    <section id="content">
-      <?php wpt_partial('wptheme'); ?>
-    </section>
-  </article>
+  <div class="container">
+    <article>
+      <section id="content">
+        <?php wpt_partial('wptheme'); ?>
+      </section>
+    </article>
+  </div>
   <!-- End Main Article -->
 </main>
 <!-- End Main Page Content -->

@@ -24,7 +24,7 @@ define('THEME_ENV', 'development');
 define('THEME_DOMAIN', 'wptheme');
 
 // Theme version
-define('THEME_VERSION', '0.1.0');
+define('THEME_VERSION', '0.6.0');
 
 // Theme debugging
 define('THEME_DEBUG', TRUE);
