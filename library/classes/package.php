@@ -151,7 +151,7 @@ class Package
    * @param  array  $sizes  [description]
    * @return [type]         [description]
    */
-  public static function google_font( $family, $sizes = array() )
+  public static function google_font( $family, $sizes = array(400) )
   {
     $src = 'https://fonts.googleapis.com/css?family=' . $family;
 
@@ -161,8 +161,6 @@ class Package
     }
 
     $src .= '&display=swap';
-
-    echo $src;
 
     wp_enqueue_style( 'font-' . strtolower($family), $src );
 
