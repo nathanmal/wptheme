@@ -19,6 +19,23 @@ if( ! function_exists('element') )
 }
 
 
+if( ! function_exists('wpt_labelize') )
+{
+  function wpt_labelize( $str )
+  {
+    return ucwords(str_replace(['_','-'],' ',$str));
+  }
+}
+
+if( ! function_exists('wpt_slugify') )
+{
+  function wpt_slugify( $str )
+  {
+    return strtolower(str_replace(' ','_',$str));
+  }
+}
+
+
 /**
  * Get slug of a post
  * @param  int $post_id ID of post
@@ -42,6 +59,19 @@ if( ! function_exists('classes') )
     {
         return is_array($classes) ? implode(' ', $classes) : $classes;
     }
+}
+
+
+/**
+ * Get the current page URL
+ */
+if( ! function_exists('current_url') )
+{
+  function current_url()
+  {
+    global $wp;
+    return home_url($wp->request);
+  }
 }
 
 /**

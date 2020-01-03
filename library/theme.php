@@ -588,11 +588,20 @@ final class Theme
 			return;
 		}
 
+		$packages = Settings::get('packages.imported', array());
+
+		foreach($packages as $name => $package)
+		{
+			if( ! element($package,'enabled',FALSE) )
+			{
+				continue;
+			}
+
+			Enqueue::package($name);
+		}
 		
-		Package::enqueue( 'jquery', FALSE );
-		Package::enqueue( 'bootstrap', FALSE );
-		Package::enqueue( 'fontawesome', FALSE );
-		Package::enqueue( 'wptheme', FALSE, array('wpdata'=>$data) );
+		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js' );
+		Enqueue::style( 'wptheme', THEME_URI . '/assets/dist/theme.css' );
 		
 	}
 
@@ -973,10 +982,13 @@ final class Theme
 		if( substr($path, -4) != '.php' ) $path .= '.php';
 		
 		// Set absolute path
-		$path = self::find( 'views/' . $path );
+		$file = self::find( 'views/' . $path );
 
 		// Warn if missing
-		if( ! is_file($path) ) wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
+		if( empty($file) OR ! is_file($file) ) 
+		{
+			wp_die('Could not locate view:<br/><strong>' . $path . '</strong>');
+		}
 
 		// If non-empty array, extract variables for the view
 		if( ! empty($data) && is_array($data) ) 
@@ -1001,7 +1013,7 @@ final class Theme
 		for( $i = 1; $i <= $repeat; $i++ ){
 			$loop_total = $repeat;
 			$loop_count = $i;
-			include($path);
+			include($file);
 		}
 
 		if( $return )
@@ -1023,7 +1035,7 @@ final class Theme
 	 */
 	public static function partial( $path, $data = array(), $repeat = 1 )
 	{	
-		Theme::view('partials/' . $path, $data, $repeat);
+		Theme::view( 'partials/' . $path, $data, $repeat );
 	}
 
 	
@@ -1111,6 +1123,21 @@ final class Theme
 
 	}
 
+
+	public static function cache( $key, $value = NULL, $expire = 86400 )
+	{
+		if( empty($key) ) return FALSE;
+
+		$key = 'wpt-' . $key;
+
+		if( is_null($value) )
+		{
+			return get_transient( $key );
+		}
+
+		set_transient( $key, $value, intval($expire) );
+	}
+
 	/**
 	 * Debugging
 	 * @param  [type] $msg [description]
@@ -1124,6 +1151,38 @@ final class Theme
 		}
 	}
 
+	/**
+	 * Log an error
+	 * @param  [type] $message [description]
+	 * @return [type]          [description]
+	 */
+	public static function error( $message, $context = NULL, $line = NULL )
+	{
+		if( ! empty($context) )
+		{	
+			$class = is_object($context) ? get_class($context) : strval($context);
+			$line  = ! empty($line) && is_int($line) ? ' line ' . $line : '';
+
+			$message = $class . $line . ' ' . $message;
+		}
+
+		Theme::log($message, 'error');
+	}
+
+	/**
+	 * Log a message
+	 * @param  [type] $message [description]
+	 * @param  string $level   [description]
+	 * @return [type]          [description]
+	 */
+	public static function log( $message, $level = 'info' )
+	{
+		if( is_string($level) && ! empty($level) ) $message = '['.$level.'] ' . $message;
+
+		$message = '[wptheme] ' . $message;
+
+		error_log( $message );
+	}
 
 		/**
 	 * Called on theme activation

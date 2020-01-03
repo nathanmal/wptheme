@@ -3,6 +3,7 @@ import '../scss/theme.scss';
 
 // Import components
 import Navbar  from './theme/navbar';
+import Gmaps   from './theme/gmaps.js';
 
 // Add/Remove autofill class based on whether or not input is auto-filled
 const onAnimationStart = ({ target, name }) => {
@@ -17,17 +18,23 @@ class WPTheme
    * @type {Object}
    */
   constructor() { 
+
+    // Attach components
+    this.navbar = new Navbar('.navbar');
+    this.gmaps  = new Gmaps('.wpt-map');
+
     // init on DOM load
     jQuery(this.init.bind(this));
   }
+
+  
 
   /**
    * Called when DOM is loaded
    */
   init()
   { 
-    // Navbar
-    this.navbar = new Navbar('#header .navbar');
+    
 
     // Input autofill detection
     $('input').on('animationstart', onAnimationStart, false);
@@ -37,42 +44,7 @@ class WPTheme
   }
 
 
-  initMap()
-  {
-
-    const config = {
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        rotateControl: false,
-        streetViewControl: false,
-    };
-
-    $('.wpt-map').each(function(i,map){
-      const lat = $(map).data('map-lat');
-      const lng = $(map).data('map-lng');
-      const style = $(map).data('map-style');
-      const zoom = $(map).data('map-zoom');
-
-      config.zoom   = zoom || 14;
-      config.styles = style || [];
-      config.center = { lat, lng };
-
-      // console.log(config);
-
-      const gmap = new google.maps.Map(map,config);
-      const gmkr = new google.maps.Marker({ 
-            position: config.center, 
-            map: gmap, 
-            animation:google.maps.Animation.DROP, 
-      });
-
-      $(map).data('gmap', gmap);
-      $(map).data('gmkr', gmkr);
-
-    
-    });
-  }
+  
 }
 
 // Instantiate in global context
