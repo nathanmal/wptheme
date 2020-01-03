@@ -10,13 +10,6 @@ class Enqueue
 {
 
 
-
-  public static function bootstrap()
-  {
-
-  }
-
-
   /**
    * Enqueue installed package
    * @param  [type] $name [description]
@@ -97,8 +90,6 @@ class Enqueue
    */
   public static function font( $family, $variants = array() )
   {
-    exit($family);
-
     $name = 'font-' . strtolower($family);
     $src  = 'https://fonts.googleapis.com/css?family=' . $family;
 
