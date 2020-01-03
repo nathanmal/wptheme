@@ -11,6 +11,17 @@ class Enqueue
 
 
 
+  public static function bootstrap()
+  {
+
+  }
+
+
+  /**
+   * Enqueue installed package
+   * @param  [type] $name [description]
+   * @return [type]       [description]
+   */
   public static function package( $name )
   {
 
@@ -78,17 +89,64 @@ class Enqueue
 
   }
 
-  public static function script( $name, $src, $version = '', $dep = array(), $footer = TRUE )
+  /**
+   * Enqueue Google Font
+   * @param  [type] $family   [description]
+   * @param  array  $variants [description]
+   * @return [type]           [description]
+   */
+  public static function font( $family, $variants = array() )
   {
-    wp_deregister_script($name);
-    wp_register_script($name, $src, $version, $dep, $footer);
-    wp_enqueue_script($name);
+    $name = 'font-' . strtolower($family);
+    $src  = 'https://fonts.googleapis.com/css?family=' . $family;
+
+    if( ! empty($variants) )
+    {
+      $src .= ':' . implode(',', $variants);
+    }
+
+    Enqueue::style( $name, $src );
   }
 
+  /**
+   * Enqueue a script
+   * @param  [type]  $name    [description]
+   * @param  [type]  $src     [description]
+   * @param  string  $version [description]
+   * @param  array   $dep     [description]
+   * @param  boolean $footer  [description]
+   * @return [type]           [description]
+   */
+  public static function script( $name, $src, $version = '', $dep = array(), $footer = TRUE )
+  {
+
+    if( strpos($src, 'http') !== 0 )
+    {
+      $src = THEME_ENV === 'production' ? 'https://cdnjs.cloudflare.com/ajax/libs/' . $src : THEME_URI . '/assets/vendor/' . $src;
+    }
+
+    wp_deregister_script($name);
+    wp_enqueue_script($name, $src, $version, $dep, $footer);
+  }
+
+
+  /**
+   * Enqueue a style
+   * @param  [type] $name    [description]
+   * @param  [type] $src     [description]
+   * @param  string $version [description]
+   * @param  array  $dep     [description]
+   * @param  string $media   [description]
+   * @return [type]          [description]
+   */
   public static function style( $name, $src, $version = '', $dep = array(), $media = 'all' )
   {
+    if( strpos($src, 'http') !== 0 )
+    {
+      $src = THEME_ENV === 'production' ? 'https://cdnjs.cloudflare.com/ajax/libs/' . $src : THEME_URI . '/assets/vendor/' . $src;
+    }
+
     wp_deregister_style($name);
-    wp_register_style($name, $src, $version, $dep, $media);
-    wp_enqueue_style($name);
+    wp_enqueue_style($name, $src, $version, $dep, $media);
   }
 }

@@ -570,12 +570,6 @@ final class Theme
 	 */
 	public static function enqueue()
 	{
-		// Load any config scripts/fonts
-		// Theme::scripts( Theme::config('scripts') );
-		Theme::fonts( Theme::config('fonts') );
-		// Theme::styles( Theme::config('styles') );
-
-
 		$data = array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'ajaxnonce' => wp_create_nonce('ajax_nonce')
@@ -584,24 +578,14 @@ final class Theme
 		$action = element($_REQUEST, 'action');
 
 		// Don't enqueue on login or register screen
-		if( $GLOBALS['pagenow'] === 'wp-login.php' OR $action === 'register' ) {
-			return;
-		}
+		if( $GLOBALS['pagenow'] === 'wp-login.php' OR $action === 'register' ) return;
 
-		$packages = Settings::get('packages.imported', array());
-
-		foreach($packages as $name => $package)
-		{
-			if( ! element($package,'enabled',FALSE) )
-			{
-				continue;
-			}
-
-			Enqueue::package($name);
-		}
-		
-		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js' );
-		Enqueue::style( 'wptheme', THEME_URI . '/assets/dist/theme.css' );
+		// Enqueue files
+		Enqueue::script( 'jquery', 'jquery/3.4.1/jquery.min.js' );
+		Enqueue::style(  'bootstrap', 'twitter-bootstrap/4.4.1/css/bootstrap.min.css' );
+		Enqueue::script( 'bootstrap', 'twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js');
+		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js', THEME_VERSION, 'bootstrap' );
+		Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', THEME_VERSION, 'bootstrap' );
 		
 	}
 

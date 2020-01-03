@@ -270,24 +270,6 @@ class Assets extends Settings
     ?>
 
 
-    <?php 
-
-    /*
-    $all = Package::all();
-
-    foreach($all as $name => $package)
-    {
-      $setting = 'packages.' . $name;
-      $version = element($package,'version','');
-      $label   = element($package,'title',ucwords($name)) . ' ' . $version;
-
-      $this->do_setting( $setting, 'boolean', $label );
-    }
-
-    */
-
-    ?>
-
 
 
     </section>
