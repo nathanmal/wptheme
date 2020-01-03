@@ -54,6 +54,7 @@ class WPAdmin
 
     data.nonce = nonce.length ? nonce.val() : false;
 
+    console.log('requesting url', url);
     return $.post(url, data, callback, 'json').fail(this.onRequestFail.bind(this));
      
   }

@@ -10,17 +10,18 @@ class Ajax
 {
   public static function init()
   {
-    // Ajax package search function
-    add_action( 'wp_ajax_wpt_packagesearch', array( __CLASS__, 'package_search'), 10);
 
     // Ajax package search function
-    add_action( 'wp_ajax_wpt_snazzymaps', array( __CLASS__, 'snazzymap_search'), 10);
+    add_action( 'wp_ajax_wpt_packagesearch', array( __CLASS__, 'packages'), 10);
+
+    // Ajax package search function
+    add_action( 'wp_ajax_wpt_snazzymaps', array( __CLASS__, 'snazzymaps'), 10);
 
     // Ajax package search function
     add_action( 'wp_ajax_wpt_googlefonts', array( __CLASS__, 'googlefonts'), 10);
   }
 
-  public static function package_search()
+  public static function packages()
   { 
     // Check nonce
     if( ! wp_verify_nonce( element($_POST,'nonce'), 'wpt-settings' ) )
@@ -41,13 +42,49 @@ class Ajax
   }
 
 
-  public static function snazzymap_search()
+  public static function snazzymaps()
   {
+   
     // Check nonce
     if( ! wp_verify_nonce( element($_POST,'nonce'), 'wpt-settings' ) )
     {
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
+
+    $key = Settings::get('maps.snazzymaps.apikey');
+
+    if( empty($key) )
+    {
+      return Ajax::response(FALSE, array('error'=>'Google Maps API key not set'));
+    }
+
+    $url = 'https://snazzymaps.com/explore.json?key='.$key;
+
+
+
+    $filters = element($_POST, 'filters', array());
+
+    $text  = element($filters, 'text', '');
+    $sort  = element($filters, 'sort', 'popular');
+    $tag   = element($filters, 'tag', '');
+    $color = element($filters, 'color', '');
+    $page  = element($filters, 'page', 1);
+
+    foreach( array('text','sort','tag','color','page') as $param )
+    {
+      if( ! empty(${$param}) ) $url .= '&' . $param . '=' . urlencode(${$param}); 
+    }
+
+    $json = file_get_contents($url);
+
+    if( empty($json) )
+    {
+      return Ajax::response(FALSE, array('error'=>'No results returned') );
+    }
+
+
+    return Ajax::response(TRUE, array('results'=>json_decode($json)));
+
   }
 
   public static function googlefonts()

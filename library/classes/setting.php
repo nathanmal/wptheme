@@ -190,7 +190,7 @@ class Setting
 
   public function input_id()
   {
-    return 'wpt-settings-' . $this->name;
+    return 'wpt-settings-' . str_replace('.','-',$this->name);
   }
 
 

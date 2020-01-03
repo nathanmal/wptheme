@@ -584,6 +584,7 @@ final class Theme
 		Enqueue::script( 'jquery', 'jquery/3.4.1/jquery.min.js' );
 		Enqueue::style(  'bootstrap', 'twitter-bootstrap/4.4.1/css/bootstrap.min.css' );
 		Enqueue::script( 'bootstrap', 'twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js');
+		
 		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js', THEME_VERSION, 'bootstrap' );
 		Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', THEME_VERSION, 'bootstrap' );
 		

@@ -1,33 +1,63 @@
-
+import Search from '../search.js';
 
 class Maps
 {
 
   constructor()
   {
-    this.key = null;
+    $('#wpt-add-snazzymaps').on('click', this.onAddStyleClick.bind(this));
 
-    this.select.on('click', function(e){
+    this.select = new Search('#wpt-snazzymaps-search', this.onMapSearch.bind(this) );
 
-      this.key = $(e.target).data('key');
+    this.input = $('#wpt-settings-maps-snazzymaps-style');
+  }
 
-      // wpadmin.oldmodal({ title: 'Select Map Style', id: 'wpt-snazzymaps-modal'});
+  onMapSearch(query)
+  {
+    this.loadSnazzyMaps();
+  }
 
-      wpadmin.modal.open('wpt-snazzymaps-modal','Select Map Style');
+  onAddStyleClick(e)
+  {
+    wpadmin.modal.open('wpt-modal-snazzymaps','Add Snazzymaps Style');
 
-      this.loadSnazzyMaps();
-      
-    }.bind(this));
+    $('#TB_ajaxContent .wpt-modal-snazzymaps').find('select').on('change',this.onFilterChange.bind(this));
+
+    this.loadSnazzyMaps();
+  }
+
+  onFilterChange(e){
+    this.loadSnazzyMaps();
   }
 
 
-  loadSnazzyMaps( page = 1 )
+  loadSnazzyMaps()
   {
-    console.log('key',this.key);
+    if( this.loading ) return;
 
-    if( ! this.key ) return;
+    const filters = {
+      'text' : $('#wpt-snazzymaps-search').val(),
+      'sort' : $('#wpt-snazzymaps-sort').val(),
+      'tag' : $('#wpt-snazzymaps-tag').val(),
+      'color' : $('#wpt-snazzymaps-color').val()
+    };
 
-    let url = 'https://snazzymaps.com/explore.json?key=' + this.key;
+    wpadmin.request( 'snazzymaps', { 'filters' : filters }, function(data){
+
+      console.log('data', data);
+
+      if( data.success && data.results && data.results.styles && data.results.styles.length )
+      {
+        this.showStyles(data.results.styles);
+      }
+
+      this.loading = false;
+      
+    }.bind(this));
+
+
+
+  /*  let url = 'https://snazzymaps.com/explore.json?key=' + this.key;
 
     url += '&page=' + page;
 
@@ -49,7 +79,18 @@ class Maps
 
       }
 
-    }.bind(this)).fail(function(xhr,message){ console.error(message)});
+    }.bind(this)).fail(function(xhr,message){ console.error(message)});*/
+  }
+
+  showStyles(styles)
+  {
+    this.content.empty();
+
+    $.each(styles, function(i, style)
+    {
+      const styleItem = this.createStyleItem(style);
+      this.content.append(styleItem);
+    }.bind(this));
   }
 
   createStyleItem( style )
@@ -72,26 +113,36 @@ class Maps
 
   onSelectStyleClick(e)
   {
+
+    $('#TB_ajaxContent .wpt-modal-snazzymaps').find('select').off('change');
+
     const item  = $(e.target).parent();
     const style = $(item).data('mapstyle')
-    const json  = item.find('input[type="hidden"]').val();
 
-    if( item && style && json )
+
+    console.log('style', JSON.stringify(style));
+
+    if( style )
     {
-      $('#wpt-snazzmaps-value').val( JSON.stringify(style) );
-      $('#wpt-snazzymaps-style').val(style.json);
+      console.log('input', this.input);
+      this.input.val( JSON.stringify(style) );
 
-      this.current.find('.wpt-snazzymaps-current-img').css('background-image','url(\''+style.imageUrl+'\')');
-      this.current.find('h3').text(style.name);
-      this.current.find('p').text(style.description);
-      this.current.removeClass('hidden');
+      this.setCurrentStyle(style);
     }
     
 
 
     tb_remove();
-    
 
+  }
+
+
+  setCurrentStyle( style )
+  {
+    this.current.find('.wpt-snazzymaps-current-img').css('background-image','url(\''+style.imageUrl+'\')');
+    this.current.find('h3').text(style.name);
+    this.current.find('p').text(style.description);
+    this.current.removeClass('hidden');
   }
 
   get current()
@@ -99,15 +150,16 @@ class Maps
     return $('#wpt-snazzymaps-current');
   }
 
-  get select()
+  get modal()
   {
-    return $('#wpt-snazzymaps-select');
+    return $('#TB_ajaxContent');
   }
 
   get content()
   {
-    return $('#TB_ajaxContent .wpt-snazzymaps-modal-content');
+    return this.modal.find('.wpt-modal-content');
   }
+
 }
 
 

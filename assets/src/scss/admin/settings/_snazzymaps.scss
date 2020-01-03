@@ -1,66 +1,12 @@
-#wpt-snazzymaps-modal {
-  display:none;
-}
 
-.wpt-snazzymaps-modal-header {
-  position:absolute;
-  top:34px;
-  left:15px;
-  right:15px;
-  height:40px;
-  display:flex;
-  align-items:center;
-
-  input, select {
-    margin-right:0.5rem;
-  }
-}
-
-#wpt-snazzymaps-style {
-  display:none;
-}
-
-#wpt-snazzymaps-current
-{
-  height:300px;
-  display:flex;
-  flex-direction: row;
-  background:white;
-  width:600px;
-  border:1px solid #ccc;
-  margin-bottom:1rem;
-
-  &.hidden {
-    display:none;
-  }
-
-  .wpt-snazzymaps-current-detail
-  {
-    width:300px;
-    padding:2rem;
-    box-sizing:border-box;
-  }
+.wpt-modal-snazzymaps {
 
 
-  .wpt-snazzymaps-current-img
-  {
-    height:300px;
-    width:300px;
-    background-size:cover;
-    background-position:center center;
-  }
-}
-
-.wpt-snazzymaps-modal-content {
-  position:absolute;
-  top:84px;
-  left:15px;
-  right:15px;
-  bottom:15px;
+  .wpt-modal-content {
+ 
   display:flex;
   flex-direction: row;
   overflow-x:hidden;
-  overflow-y:overlay;
   flex-wrap: wrap;
 
   .snazzymap-style-item {
@@ -121,3 +67,39 @@
     }
   }
 }
+
+
+}
+
+
+#wpt-snazzymaps-current
+{
+  height:300px;
+  display:flex;
+  flex-direction: row;
+  background:white;
+  width:600px;
+  border:1px solid #ccc;
+  margin-bottom:1rem;
+
+  &.hidden {
+    display:none;
+  }
+
+  .wpt-snazzymaps-current-detail
+  {
+    width:300px;
+    padding:2rem;
+    box-sizing:border-box;
+  }
+
+
+  .wpt-snazzymaps-current-img
+  {
+    height:300px;
+    width:300px;
+    background-size:cover;
+    background-position:center center;
+  }
+}
+

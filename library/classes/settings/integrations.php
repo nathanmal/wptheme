@@ -35,13 +35,20 @@ class Integrations extends Settings
       'note' => 'Enter API Key to Enable Google Maps'
     );
 
-    $this->do_setting( 'google.maps.apikey','text','Google Maps API Key', $config);
+    $this->do_setting( 'maps.google.apikey','text','Google Maps API Key', $config);
 
-    $key = Settings::get('google.maps.apikey', FALSE);
+    $config = array(
+      'note' => 'Enter Snazzymaps API Key to enable style selection'
+    );
+
+
+    $this->do_setting( 'maps.snazzymaps.apikey', 'text', 'Snazzymaps API Key', $config);
+
+    $key = Settings::get('maps.snazzymaps.apikey', FALSE);
 
     if( ! empty($key) )
     {
-      $this->do_setting('google.maps.style','googlemaps','Map Style');
+      $this->do_setting('maps.snazzymaps.style','snazzymaps','Map Style');
 
       $config = array('note'=>'Set the default center of the map');
 

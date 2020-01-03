@@ -5,18 +5,14 @@ namespace WPTheme\Setting;
 use WPTheme\Setting;
 use WPTheme\Settings;
 
-class Googlemaps extends Setting
+class Snazzymaps extends Setting
 {
 
-  public function update( $value = NULL )
-  {
-   
-  }
-
+  
 
   public function sanitize( $value )
   {
-    
+    return $value;
   }
 
 
@@ -25,7 +21,7 @@ class Googlemaps extends Setting
 
     $this->render_map();
 
-    echo '<button class="button button-primary" id="wpt-add-googlemaps" type="button">Select Style</button>';
+    echo '<button class="button button-primary" id="wpt-add-snazzymaps" type="button">Select Style</button>';
 
     $this->modal_content();
   }
@@ -33,6 +29,34 @@ class Googlemaps extends Setting
 
   public function render_map()
   {
+    $value = stripslashes( $this->value );
+
+    $style = json_decode( $value );
+
+    $imageUrl    = $style && isset($style->imageUrl) ? $style->imageUrl : '';
+    $stylename   = $style && isset($style->name) ? $style->name : '';
+    $description = $style && isset($style->description) ? $style->description : '';
+
+    $hidden = empty($style) ? 'hidden' : '';
+
+    $name = $this->input_name();
+    $id = $this->input_id();
+
+    ?> 
+
+    <div id="wpt-snazzymaps-current" class="<?=$hidden?>">
+      <div class="wpt-snazzymaps-current-img" style="background-image:url('<?= $imageUrl ?>');"></div>
+      <div class="wpt-snazzymaps-current-detail">
+        <h3><?= $stylename ?></h3>
+        <p><?= $description ?></p>
+      </div>
+    </div>
+
+
+<!--     <textarea class="widefat" rows="12" id="wpt-snazzymaps-style"><?= $json ?></textarea>
+ -->    <input type="hidden" id="<?=$id?>" name="<?= $name ?>" value='<?= $value ?>' />
+
+    <?php
 
   }
 
@@ -43,19 +67,19 @@ class Googlemaps extends Setting
     ?> 
     
     <!-- Snazzy Map Selection Modal -->
-    <div id="wpt-modal-googlemaps" style="display:none;">
-      <div class="wpt-modal-wrapper wpt-modal-googlemaps">
+    <div id="wpt-modal-snazzymaps" style="display:none;">
+      <div class="wpt-modal-wrapper wpt-modal-snazzymaps">
         <div class="wpt-modal-header">
-          <input id="wpt-googlemaps-search" type="text" placeholder="Search Styles" />
-          <select id="wpt-googlemaps-sort">
-            <option value="">None</option>
+          <input id="wpt-snazzymaps-search" type="text" placeholder="Search Styles" />
+          <select id="wpt-snazzymaps-sort">
+            <option value="">Sort By</option>
             <option value="name">Name</option>
             <option value="relevance">Relevance</option>
             <option value="popular">Popularity</option>
             <option value="recent">Recent</option>
           </select>
-          <select id="wpt-googlemaps-tag">
-            <option value="">None</option>
+          <select id="wpt-snazzymaps-tag">
+            <option value="">Select Tag</option>
             <option value="colorful">Colorful</option>
             <option value="complex">Complex</option>
             <option value="dark">Dark</option>
@@ -66,8 +90,8 @@ class Googlemaps extends Setting
             <option value="simple">Simple</option>
             <option value="two-tone">Two Tone</option>
           </select>
-          <select id="wpt-googlemaps-color">
-            <option value="">None</option>
+          <select id="wpt-snazzymaps-color">
+            <option value="">Select Color</option>
             <option value="black">Black</option>
             <option value="blue">Blue</option>
             <option value="gray">Gray</option>
