@@ -55,31 +55,6 @@ class Maps
       
     }.bind(this));
 
-
-
-  /*  let url = 'https://snazzymaps.com/explore.json?key=' + this.key;
-
-    url += '&page=' + page;
-
-    console.log(this.content);
-
-    $.getJSON(url,{},function(data){
-       
-      if( data ) {
-
-        this.content.empty();
-
-        $.each(data.styles, function(i,style){
-
-          const styleItem = this.createStyleItem(style);
-          // console.log('item '+i, styleItem);
-          this.content.append(styleItem);
-
-        }.bind(this));
-
-      }
-
-    }.bind(this)).fail(function(xhr,message){ console.error(message)});*/
   }
 
   showStyles(styles)

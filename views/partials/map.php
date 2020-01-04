@@ -1,14 +1,13 @@
 <?php
 $id     = 'map';
-$key    = wpt_setting('google.maps.apikey');
-$center = wpt_setting('google.maps.center');
-$style  = json_decode(stripslashes(wpt_setting('google.maps.style', '')));
-$zoom   = wpt_setting('google.maps.zoom', 14);
-
+$key    = wpt_setting('maps.google.apikey');
+$center = wpt_setting('maps.center', array());
+$zoom   = wpt_setting('maps.zoom', 14);
+$style  = json_decode(stripslashes(wpt_setting('maps.snazzymaps.style', '')));
 $json = $style && isset($style->json) ? $style->json : '';
 
-$lat = '';
-$lng = '';
+$lat = element($center, 'lat', '');
+$lng = element($center, 'lng', '');
 
 $src = 'https://maps.googleapis.com/maps/api/js?key='.$key;
 $src .= '&callback=theme.gmaps.init';
@@ -17,15 +16,6 @@ if( ! empty($key) )
 {
   wp_enqueue_script( 'google-maps', $src, array('wptheme'), NULL, TRUE );
 }
-
-if( ! empty($center) && FALSE !== strpos($center, ',') )
-{
-  list($lat,$lng) = explode(',', $center);
-}
-
-pre($center);
-pre($zoom);
-pre($style);
 
 ?> 
 <div id="<?=$id?>" class="wpt-map" data-map-zoom="<?=$zoom?>" data-map-lat="<?=$lat?>" data-map-lng="<?=$lng?>" data-map-style='<?=$json?>'>

@@ -382,8 +382,7 @@ class Settings extends Component
 
     <?php 
 
-
-    pre($_POST);
+    if(! empty($_POST) ) pre($_POST);
   }
 
   public static function _render2()

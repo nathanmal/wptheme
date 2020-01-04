@@ -16,7 +16,7 @@ class Gmaps
 {
 
 
-  constructor( selector, config )
+  constructor( selector, config = {} )
   {
     this.maps = $(selector);
 
@@ -43,7 +43,7 @@ class Gmaps
       if( lat && lng ) {
         const gmap = new google.maps.Map(map,this.config);
         const gmkr = new google.maps.Marker({ 
-              position: config.center, 
+              position: this.config.center, 
               map: gmap, 
               animation:google.maps.Animation.DROP, 
         });

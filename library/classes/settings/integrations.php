@@ -37,6 +37,20 @@ class Integrations extends Settings
 
     $this->do_setting( 'maps.google.apikey','text','Google Maps API Key', $config);
 
+    $key = Settings::get('maps.google.apikey');
+
+    if( ! empty($key) )
+    {
+      $config = array('note'=>'Set the default map center');
+
+      $this->do_setting('maps.center','latlong','Map Center', $config);
+
+      $config = array('note'=>'Set the default map zoom level');
+
+      $this->do_setting('maps.zoom','integer', 'Zoom Level', $config);
+    }
+
+
     $config = array(
       'note' => 'Enter Snazzymaps API Key to enable style selection'
     );
@@ -44,16 +58,14 @@ class Integrations extends Settings
 
     $this->do_setting( 'maps.snazzymaps.apikey', 'text', 'Snazzymaps API Key', $config);
 
-    $key = Settings::get('maps.snazzymaps.apikey', FALSE);
+    $skey = Settings::get('maps.snazzymaps.apikey', FALSE);
 
-    if( ! empty($key) )
+    if( ! empty($skey) )
     {
       $this->do_setting('maps.snazzymaps.style','snazzymaps','Map Style');
-
-      $config = array('note'=>'Set the default center of the map');
-
-      $this->do_setting('google.maps.center','latlong','Map Center', $config);
     }
+
+
   }
 
 
