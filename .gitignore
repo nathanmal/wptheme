@@ -10,5 +10,6 @@
 ## Theme files
 !assets/dist/
 assets/dist/*
+assets/package/*
 library/vendor/*
 node_modules/*
