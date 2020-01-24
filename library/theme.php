@@ -89,25 +89,32 @@ final class Theme
 		
 		// Add filters
 		add_filter( 'the_generator', 'WPTheme\\Theme::remove_generator' );
+
 		// Hide descriptive login errors
 		add_filter( 'login_errors', 'WPTheme\\Theme::secure_failed_login' );
+
 		// remove WP version from css
 		add_filter( 'style_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
+
 		// remove Wp version from scripts
 		add_filter( 'script_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
+
 		// Add slug className to body
 		add_filter( 'body_class', 'WPTheme\\Theme::add_body_class' );
+
 		// Manage theme template directory
 		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
+
 		// Register Widgets
 		add_action( 'widgets_init', 'WPTheme\\Theme::register_widgets');
+
 		// Register Theme template directory
 		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
 
 		// Apply attributes to style/script tags
-		add_filter( 'script_loader_tag', 'WPTheme\\Package::script_attributes', 10, 3 );
+		add_filter( 'script_loader_tag', 'WPTheme\\Enqueue::script_attributes', 10, 3 );
 
-		add_filter( 'style_loader_tag', 'WPTheme\\Package::style_attributes', 10, 3 );
+		// add_filter( 'style_loader_tag', 'WPTheme\\Package::style_attributes', 10, 3 );
 
 		// Custom Post Types
 		self::post_types();
@@ -571,7 +578,7 @@ final class Theme
 	public static function enqueue()
 	{
 		$data = array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
 			'ajaxnonce' => wp_create_nonce('ajax_nonce')
 		);
 
@@ -580,13 +587,14 @@ final class Theme
 		// Don't enqueue on login or register screen
 		if( $GLOBALS['pagenow'] === 'wp-login.php' OR $action === 'register' ) return;
 
-		// Enqueue files
-		Enqueue::script( 'jquery', 'jquery/3.4.1/jquery.min.js' );
-		Enqueue::style(  'bootstrap', 'twitter-bootstrap/4.4.1/css/bootstrap.min.css' );
-		Enqueue::script( 'bootstrap', 'twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js');
-		
-		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js', THEME_VERSION, 'bootstrap' );
-		Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', THEME_VERSION, 'bootstrap' );
+		// Enqueue jquery
+		Enqueue::jquery();
+		// Enqueue bootstrap
+		Enqueue::bootstrap();
+	
+		// Enqueue theme scripts/styles
+		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js',  array('bootstrap'), THEME_VERSION );
+		Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', array('bootstrap'), THEME_VERSION );
 		
 	}
 
