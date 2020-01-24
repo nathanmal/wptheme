@@ -88,6 +88,26 @@ class Enqueue
    * @param  array  $variants [description]
    * @return [type]           [description]
    */
+  public static function googlefont( $family, $variants = array() )
+  {
+    $name = 'font-' . strtolower($family);
+    
+    $src  = 'https://fonts.googleapis.com/css?family=' . $family;
+
+    if( ! empty($variants) )
+    {
+      $src .= ':' . implode(',', $variants);
+    }
+
+    Enqueue::style( $name, $src );
+  }
+
+  /**
+   * Enqueue Google Font
+   * @param  [type] $family   [description]
+   * @param  array  $variants [description]
+   * @return [type]           [description]
+   */
   public static function font( $family, $variants = array() )
   {
     $name = 'font-' . strtolower($family);
@@ -119,7 +139,7 @@ class Enqueue
     }
 
     wp_deregister_script($name);
-    wp_enqueue_script($name, $src, $version, $dep, $footer);
+    wp_enqueue_script($name, $src, $dep, $version, $footer);
   }
 
 
@@ -140,6 +160,6 @@ class Enqueue
     }
 
     wp_deregister_style($name);
-    wp_enqueue_style($name, $src, $version, $dep, $media);
+    wp_enqueue_style($name, $src, $dep, $version, $media);
   }
 }
