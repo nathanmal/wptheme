@@ -138,17 +138,14 @@ final class Theme
 		if( is_admin() ) 
 		{
 			Admin::init();
-			// add_action('admin_init', array('WPTheme\\Admin', 'init') );
+			require_once( THEME_DIR . '/config/functions.admin.php' );
 		}
 		else
 		{
-			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::base', 10, 1);
-
-			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::theme', 999, 1);
-
+			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::theme', 10, 1);
 		}
 
-			require_once( THEME_DIR . '/config/functions.admin.php' );
+		
 
   	// Mark initialized
 		self::$initialized = TRUE;

@@ -41,14 +41,15 @@ class Enqueue
 
   }
 
-  public static function base()
+  /**
+   * Enqueue theme base scripts & styles
+   * @return [type] [description]
+   */
+  public static function theme()
   {
     Enqueue::jquery();
     Enqueue::bootstrap();
-  }
 
-  public static function theme()
-  {
     // Enqueue theme scripts/styles
     Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js',  Enqueue::$theme_dependencies, THEME_VERSION );
     Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', Enqueue::$theme_dependencies, THEME_VERSION );
