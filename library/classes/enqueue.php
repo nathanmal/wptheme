@@ -95,7 +95,7 @@ class Enqueue
 
     if( strpos($src, 'http') !== 0 )
     {
-      $src = THEME_URL . '/assets/fonts/' . $src;
+      $src = THEME_URI . '/assets/fonts/' . $src;
     }
 
     $handle = 'font-' . strtolower($family);
@@ -116,7 +116,7 @@ class Enqueue
   {
     if( strpos($src, 'http') !== 0 )
     {
-      $src = THEME_URL . '/' . $src;
+      $src = THEME_URI . '/' . $src;
     }
 
     if( ! empty($attr) && is_array($attr) )
@@ -143,7 +143,7 @@ class Enqueue
   {
     if( strpos($src, 'http') !== 0 )
     {
-      $src = THEME_URL . '/' . $src;
+      $src = THEME_URI . '/' . $src;
     }
 
     wp_deregister_style($name);
