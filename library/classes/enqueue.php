@@ -9,6 +9,9 @@ use WPTheme\Component;
 class Enqueue
 {
 
+  private static $theme_dependencies = array('bootstrap');
+
+
   private static $script_attributes = array();
 
   /**
@@ -36,6 +39,19 @@ class Enqueue
 
     return $tag;
 
+  }
+
+  public static function base()
+  {
+    Enqueue::jquery();
+    Enqueue::bootstrap();
+  }
+
+  public static function theme()
+  {
+    // Enqueue theme scripts/styles
+    Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js',  Enqueue::$theme_dependencies, THEME_VERSION );
+    Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', Enqueue::$theme_dependencies, THEME_VERSION );
   }
 
   /**
@@ -100,6 +116,26 @@ class Enqueue
     $handle = 'font-' . strtolower($family);
 
     Enqueue::style( $handle, $src );
+  }
+
+  /**
+   * Enqueue a theme dependent script
+   * @param  [type]  $handle       [description]
+   * @param  [type]  $src          [description]
+   * @param  array   $dependencies [description]
+   * @param  string  $version      [description]
+   * @param  boolean $footer       [description]
+   * @param  array   $attr         [description]
+   * @return [type]                [description]
+   */
+  public static function dependency( $handle, $src, $dependencies = array(), $version = '', $footer = TRUE, $attr = array() )
+  {
+    if( ! in_array( $handle, Enqueue::$theme_dependencies) )
+    {
+      Enqueue::$theme_dependencies[] = $handle;
+    }
+
+    Enqueue::script( $handle, $src, $dependencies = array(), $version = '', $footer = TRUE, $attr = array() );
   }
 
   /**

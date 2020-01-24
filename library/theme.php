@@ -142,8 +142,10 @@ final class Theme
 		}
 		else
 		{
-			// Enqueue Scripts and Styles for front end
-			self::enqueue();
+			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::base', 10, 1);
+
+			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::theme', 999, 1);
+
 		}
 
 			require_once( THEME_DIR . '/config/functions.admin.php' );
@@ -252,16 +254,6 @@ final class Theme
 	{
 		return 0 === strpos($uri, 'http') ? $uri : Theme::asset($uri);
 	}
-
-
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////
-	/// RENDER METHODS
-	//////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 	/**
@@ -591,11 +583,7 @@ final class Theme
 		Enqueue::jquery();
 		// Enqueue bootstrap
 		Enqueue::bootstrap();
-	
-		// Enqueue theme scripts/styles
-		Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js',  array('bootstrap'), THEME_VERSION );
-		Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', array('bootstrap'), THEME_VERSION );
-		
+			
 	}
 
 	/**
