@@ -45,7 +45,6 @@ class Enqueue
   public static function jquery()
   {
     $jquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js';
-    $attr   = array('SameSite'=>'None','Secure');
     Enqueue::script( 'jquery', $jquery, array(), '3.4.1', TRUE );
   }
 
@@ -56,8 +55,8 @@ class Enqueue
   public static function bootstrap()
   {
     $bsjs = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js';
-    $attr   = array('SameSite'=>'None','Secure');
     Enqueue::script( 'bootstrap', $bsjs, array('jquery'), '4.4.1', TRUE );
+
     $bscss = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css';
     Enqueue::style( 'bootstrap', $bscss );
   }
@@ -100,12 +99,12 @@ class Enqueue
 
     $handle = 'font-' . strtolower($family);
 
-    Enqueue::style( $name, $src );
+    Enqueue::style( $handle, $src );
   }
 
   /**
    * Enqueue a script
-   * @param  [type]  $name    [description]
+   * @param  [type]  $handle    [description]
    * @param  [type]  $src     [description]
    * @param  string  $version [description]
    * @param  array   $dep     [description]
@@ -132,22 +131,22 @@ class Enqueue
 
   /**
    * Enqueue a style
-   * @param  [type] $name    [description]
+   * @param  [type] $handle    [description]
    * @param  [type] $src     [description]
    * @param  string $version [description]
    * @param  array  $dep     [description]
    * @param  string $media   [description]
    * @return [type]          [description]
    */
-  public static function style( $name, $src, $dependencies = array(), $version = '', $media = 'all' )
+  public static function style( $handle, $src, $dependencies = array(), $version = '', $media = 'all' )
   {
     if( strpos($src, 'http') !== 0 )
     {
       $src = THEME_URI . '/' . $src;
     }
 
-    wp_deregister_style($name);
+    wp_deregister_style($handle);
 
-    wp_enqueue_style($name, $src, $dependencies, $version, $media);
+    wp_enqueue_style($handle, $src, $dependencies, $version, $media);
   }
 }
