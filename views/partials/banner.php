@@ -10,7 +10,7 @@ $classes = array();
 
 foreach( array('fixed','fixed-image','full') as $class )
 {
-    if( in_array($data, $class) ) $classes[] = 'banner-' . $class;
+    if( in_array($class, $data) ) $classes[] = 'banner-' . $class;
 }
 
 // $container = array_intersect($data, array('fluid','wide')) ? 'container-fluid'
@@ -26,7 +26,6 @@ foreach( array('fixed','fixed-image','full') as $class )
     <!-- End Content Layer -->
     <?php } ?>
     
-    
     <?php if( ! empty($overlay) ) { ?>
     <!-- Background Overlay Layer -->
     <div class="banner-overlay" style="background-color:rgba(0,0,0,<?=round($overlay/100,2)?>);"></div>
@@ -36,7 +35,7 @@ foreach( array('fixed','fixed-image','full') as $class )
     <?php if( ! empty($video) ) { ?>
     <!-- Background Video Layer -->
     <div class="banner-video">
-    wpt_background_video($video);
+        <?php wpt_background_video($video); ?>
     </div>
     <!-- End Background Video Layer -->
     <?php } ?>
