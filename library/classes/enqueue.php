@@ -47,10 +47,18 @@ class Enqueue
    */
   public static function theme()
   {
-    Enqueue::jquery();
-    Enqueue::bootstrap();
+    // Enqueue jQuery
+    $jquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js';
+    Enqueue::script( 'jquery', $jquery, array(), '3.4.1', TRUE );
 
-    // Enqueue theme scripts/styles
+    // Enqueue Bootstrap
+    $bsjs = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js';
+    Enqueue::script( 'bootstrap', $bsjs, array('jquery'), '4.4.1', TRUE );
+
+    $bscss = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css';
+    Enqueue::style( 'bootstrap', $bscss );
+
+    // Enqueue theme assets
     Enqueue::script( 'wptheme', THEME_URI . '/assets/dist/theme.js',  Enqueue::$theme_dependencies, THEME_VERSION );
     Enqueue::style(  'wptheme', THEME_URI . '/assets/dist/theme.css', Enqueue::$theme_dependencies, THEME_VERSION );
   }
@@ -61,8 +69,7 @@ class Enqueue
    */
   public static function jquery()
   {
-    $jquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js';
-    Enqueue::script( 'jquery', $jquery, array(), '3.4.1', TRUE );
+    
   }
 
   /**
