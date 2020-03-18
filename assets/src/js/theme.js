@@ -39,8 +39,22 @@ class WPTheme
     // Input autofill detection
     $('input').on('animationstart', onAnimationStart, false);
 
+    // Scroll effects
+    $(window).on('scroll', this.onWindowScroll.bind(this));
+
     // Mark init 
     console.log('Theme initialized');
+  }
+
+  onWindowScroll(e)
+  {
+    const top = $(window).scrollTop();
+    const bar = top + ($(window).height() * 0.75);
+
+    $('.on-scroll').each(function(e){
+      const t = $(this).offset().top;
+      $(this).toggleClass('on-scroll-visible', (t && ($(this).offset().top<bar)));
+    });
   }
 
 

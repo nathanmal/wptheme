@@ -102,7 +102,6 @@ module.exports = (env, argv) => {
                   importLoaders: 2
                 }
             },
-            'sass-loader',
             { 
               loader : 'postcss-loader',
               options: {
@@ -111,6 +110,7 @@ module.exports = (env, argv) => {
                 }
               }
             },
+            'sass-loader'
           ]
         },
         
