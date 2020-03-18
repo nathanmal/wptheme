@@ -123,24 +123,31 @@ if( ! function_exists('wpt_category_list') )
   {
     $terms = get_the_terms( $post, $taxonomy );
     $c = 0;
-    $out = '<ul class="terms terms-'.$taxonomy.'">';
-    foreach($terms as $term)
+    $out = '';
+
+    if( ! empty($terms) )
     {
-      if( $c >= $limit ) break;
-      $out .= '<li class="term">';
-      if( $link ) $out .= '<a href="' . get_term_link($term->term_id) .'" target="' . $target .'">';
-      $out .= '<span class="term-name">' . $term->name . '</span>';
-      if( $link ) $out .= '</a>';
-      $out .= '</li>';
-      $c++; 
+      $out = '<ul class="terms terms-'.$taxonomy.'">';
+      foreach($terms as $term)
+      {
+        if( $c >= $limit ) break;
+        $out .= '<li class="term">';
+        if( $link ) $out .= '<a href="' . get_term_link($term->term_id) .'" target="' . $target .'">';
+        $out .= '<span class="term-name">' . $term->name . '</span>';
+        if( $link ) $out .= '</a>';
+        $out .= '</li>';
+        $c++; 
+      }
+      $out .= '</ul>';
     }
-    $out .= '</ul>';
+    
 
     if( $return ) return $out;
 
     echo $out;
   }
 }
+
 
 /**
  * Return category list as string
