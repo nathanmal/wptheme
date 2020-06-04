@@ -14,7 +14,14 @@ if( ! function_exists('element') )
 {
     function element( &$array, $key, $default=NULL )
     {
-        return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
+      if( $p = strpos($key, '.') )
+      {
+        $c = substr($key, 0, $p); $n = substr($key, $p+1);
+
+        return ( isset($array[$c]) && is_array($array[$c]) ) ? element( $array[$c], $n, $default ) : $default;
+      }
+
+      return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
     }
 }
 
@@ -91,6 +98,15 @@ if( ! function_exists('pre') )
     }
 }
 
+
+if( ! function_exists('prefix') )
+{
+  function prefix( $str, $prefix = '' )
+  {
+    return ( !! strlen($prefix) && 0 === strpos($str, $prefix) ) ? $str : $prefix . $str;
+  }
+}
+
 /**
  * Get the short class name of an object without namespace
  */
@@ -165,13 +181,11 @@ if( ! function_exists('wpt_get_category_list') )
  */
 if( ! function_exists('wpt_get_excerpt') )
 {
-  function wpt_get_excerpt($post, $length = NULL)
+  function wpt_get_excerpt( $post = NULL, $length = NULL)
   {
+    $post = get_post($post);
     // Use excerpt if it exists
-    if( ! empty($post->post_excerpt) )
-    {
-      return $post->post_excerpt;
-    }
+    if( ! empty($post->post_excerpt) ) return $post->post_excerpt;
 
     // Otherwise generate it from content
     $text = strip_shortcodes( $post->post_content );
@@ -262,7 +276,7 @@ if( ! function_exists('wpt_setting') )
 {
     function wpt_setting($key, $default = FALSE)
     {
-        return WPTheme\Settings::get($key, $default);
+        return WPTheme\Setting::get($key, $default);
     }
 }
 

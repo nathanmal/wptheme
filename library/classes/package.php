@@ -69,7 +69,7 @@ class Package extends Component
   {
     $info = Package::info($name);
 
-    $packages = Settings::get('packages.installed', array());
+    $packages = Setting::get('packages.installed', array());
 
     if( isset($packages[$name]) )
     {
@@ -152,7 +152,7 @@ class Package extends Component
    */
   public static function remove( $name )
   {
-    $packages = Settings::get('packages.installed', array());
+    $packages = Setting::get('packages.installed', array());
 
     if( isset($packages[$name]) )
     {
@@ -370,7 +370,7 @@ class Package extends Component
 
   public static function get( $name )
   {
-    $packages = Settings::get('packages.imported');
+    $packages = Setting::get('packages.imported');
 
     if( ! isset($packages[$name]) )
     {

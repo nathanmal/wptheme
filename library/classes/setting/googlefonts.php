@@ -10,7 +10,7 @@ class Googlefonts extends Setting
 
   public function update( $value = NULL )
   {
-    $fonts = Settings::get('fonts.installed', array());
+    $fonts = Setting::get('fonts.installed', array());
 
     $updated = FALSE;
 
@@ -26,7 +26,7 @@ class Googlefonts extends Setting
 
     if( $updated )
     {
-      return Settings::update('fonts.installed', $fonts);
+      return Setting::set('fonts.installed', $fonts);
     }
 
     return TRUE;
@@ -52,7 +52,7 @@ class Googlefonts extends Setting
 
   public function render_fonts()
   {
-    $fonts = Settings::get('fonts.installed', array());
+    $fonts = Setting::get('fonts.installed', array());
 
     ?> 
     <div class="wpt-fonts">

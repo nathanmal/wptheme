@@ -10,8 +10,7 @@ class Boolean extends Setting
   {
     return !! $value;
   }
-
-
+  
   public function render_content()
   {
     $checked = !! $this->value ? 'checked' : '';

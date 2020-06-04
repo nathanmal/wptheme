@@ -28,7 +28,7 @@ final class Theme
 	 * Theme config array
 	 * @var null
 	 */
-	private static $config = NULL;
+	private static $config = array();
 
 	/**
 	 * Template view file being used
@@ -84,93 +84,258 @@ final class Theme
 		// Only allow init once
 		if( self::$initialized ) return;
 
-		// Load config 
-		self::$config = include(THEME_DIR . '/config/theme.config.php');
-		
-		// Add filters
-		add_filter( 'the_generator', 'WPTheme\\Theme::remove_generator' );
+		// Register Post Types
+		Theme::register_post_types();
 
-		// Hide descriptive login errors
-		add_filter( 'login_errors', 'WPTheme\\Theme::secure_failed_login' );
-
-		// remove WP version from css
-		add_filter( 'style_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
-
-		// remove Wp version from scripts
-		add_filter( 'script_loader_src', 'WPTheme\\Theme::remove_asset_version', 9999 );
-
-		// Add slug className to body
-		add_filter( 'body_class', 'WPTheme\\Theme::add_body_class' );
-
-		// Manage theme template directory
-		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
-
-		// Register Widgets
-		add_action( 'widgets_init', 'WPTheme\\Theme::register_widgets');
-
-		// Register Theme template directory
-		add_filter( 'theme_page_templates', 'WPTheme\\Theme::page_templates', 10, 4);
-
-		// Apply attributes to style/script tags
-		add_filter( 'script_loader_tag', 'WPTheme\\Enqueue::script_attributes', 10, 3 );
-
-		// add_filter( 'style_loader_tag', 'WPTheme\\Package::style_attributes', 10, 3 );
-
-		// Custom Post Types
-		self::post_types();
 		// Register nav menus
-		self::register_menus();
+		Theme::register_menus();
+
 		// Register sidebars
-		self::register_sidebars();
+		Theme::register_sidebars();
+
+		// Register widgets
+		Theme::register_widgets();
+
+		// Register actions & filters
+		Theme::register_actions();
+
+		// Load custom shortcodes
+		Theme::register_shortcodes();
+
 		// Declare support 
-		self::declare_support();
-		// Clean up wp_head();
-		self::cleanup_head();
-		// Custom shortcodes
-		self::add_shortcodes();
-		// Hide admin bar from non-admins and redirect them to homepage
-		self::restrict_admin();
+		Theme::declare_support();
+
+		// Run security routines
+		Theme::security();
 
 		// load theme custom functions
-		require_once( THEME_DIR . '/config/functions.theme.php' );
+		require_once( THEME_DIR . '/config/functions.php' );
 
 		// load admin if needed
-		if( is_admin() ) 
-		{
-			Admin::init();
-			require_once( THEME_DIR . '/config/functions.admin.php' );
-		}
-		else
-		{
-			add_action( 'wp_enqueue_scripts', '\WPTheme\\Enqueue::theme', 10, 1);
-		}
-
-		
+		if( is_admin() ) Admin::init();
 
   	// Mark initialized
 		self::$initialized = TRUE;
 	}
 
+	/**
+	 * Get theme config
+	 * @param  [type] $item    [description]
+	 * @param  [type] $default [description]
+	 * @return [type]          [description]
+	 */
+	public static function config( $item = NULL, $default = NULL )
+	{
+		return empty($item) ? Theme::$config : element(Theme::$config, $item, $default);
+	}
+
+
+	/**
+	 * Register custom post types
+	 * @return [type] [description]
+	 */
+	public static function register_post_types(){}
+
+
+	/**
+	 * Register menus defined in theme.config.php
+	 * @return [type] [description]
+	 */
+	public static function register_menus()
+	{
+		$menus =  array(
+		  'main-menu'   => __( 'Main Menu',   THEME_DOMAIN ),    
+		  'footer-menu' => __( 'Footer Menu', THEME_DOMAIN ),
+		);
+
+		foreach($menus as $menu => $label) register_nav_menu($menu, __($label, THEME_DOMAIN) );
+	}
+
+	/**
+	 * Register sidebars defined in theme.config.php
+	 * @return [type] [description]
+	 */
+	public static function register_sidebars()
+	{
+		$sidebars = array(
+			'main' => array(
+	      'id'            => 'main',
+	      'name'          => __( 'Main Sidebar', THEME_DOMAIN ),
+	      'description'   => __( 'The main sidebar.', THEME_DOMAIN ),
+	      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+	      'after_widget'  => '</div>',
+	      'before_title'  => '<h4 class="widgettitle">',
+	      'after_title'   => '</h4>'
+	    )
+    );
+
+		foreach($sidebars as $sidebar)
+		{
+			register_sidebar($sidebar);
+		}
+	}
+
+
+	/**
+	 * Register widgets defined in theme.config.php
+	 * @return [type] [description]
+	 */
+	public static function register_widgets()
+	{
+		// load widget files
+		$files  = glob(THEME_LIB.'/widgets/*.php');
+
+		if( ! empty($files) )
+		{
+			foreach($files as $file) 
+			{
+				include $file;
+
+				$name  = pathinfo($file, PATHINFO_FILENAME);
+				$class = ucfirst($name) . '_Widget';
+
+				if( class_exists($class, FALSE) )
+				{
+					register_widget($class);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Register actions & filters
+	 * @return [type] [description]
+	 */
+	public static function register_actions()
+	{
+		// Hide descriptive login errors
+		add_filter( 'login_errors', 'WPTheme\\Theme::secure_failed_login' );
+
+		// remove WP version from css
+		add_filter( 'style_loader_src', array('WPTheme\\Enqueue', 'remove_asset_version'), 9999 );
+
+		// remove Wp version from scripts
+		add_filter( 'script_loader_src', array('WPTheme\\Enqueue', 'remove_asset_version'), 9999 );
+
+		// Apply attributes to style/script tags
+		add_filter( 'script_loader_tag', array('WPTheme\\Enqueue', 'script_attributes'), 10, 3 );
+
+		// Add slug className to body
+		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
+
+		// Manage theme template directory
+		add_filter( 'theme_page_templates', array(__CLASS__, 'page_templates'), 10, 4);
+
+		// Register Widgets
+		add_action( 'widgets_init', 'WPTheme\\Theme::register_widgets');
+
+		// Enqueue scripts on front end
+		add_action( 'wp_enqueue_scripts', '\WPTheme\\Theme::enqueue', 10, 1);
+	}
+
+	/**
+	 * Add shortcodes specified in config
+	 */
+	public static function register_shortcodes()
+	{
+		$files  = glob(THEME_LIB.'/shortcodes/*.php');
+
+		if( ! empty($files) )
+		{
+			foreach($files as $file) include $file;
+		}
+	}
+
+	/**
+	 * Declare supports for this theme
+	 * @return [type] [description]
+	 */
+	public static function declare_support()
+	{		
+		// Declare thumbnail support
+		add_theme_support( 'post-thumbnails' );
+
+		// default thumb size
+		set_post_thumbnail_size( 125, 125, TRUE );
+
+		// Declare menu support
+		add_theme_support( 'menus' );
+
+		// Declare HTML5 support
+		add_theme_support( 'html5', array('comment-list','search-form','comment-form') );
+
+		// Add RSS Support
+		add_theme_support( 'automatic-feed-links' );
+
+	}
+
+
+
+	/**
+	 * Default security measures
+	 * @category optimization
+	 * @return [type] [description]
+	 */
+	public static function security()
+	{
+
+		// Remove generated by tag
+		add_filter( 'the_generator', '__return_empty_string' );
+
+
+		// Edit URI link
+		remove_action( 'wp_head', 'rsd_link' );
+		// windows live writer
+		remove_action( 'wp_head', 'wlwmanifest_link' );
+		// previous link
+		remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
+		// start link
+		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
+		// links for adjacent posts
+		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+		// WP version
+		remove_action( 'wp_head', 'wp_generator' );
+		// Remove index link
+		remove_action( 'wp_head', 'index_rel_link' );
+		// Remove feed links
+		remove_action( 'wp_head', 'feed_links', 2 );
+		// Remove extra feed links
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+		// Remove shortlink
+		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
+		// Remove rest head link
+		remove_action( 'wp_head',  'rest_output_link_wp_head');
+		// Remove oembed
+		remove_action( 'wp_head', 'wp_oembed_add_discovery_links');
+		// Remove rest output header
+		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+
+		// Disable emojis
+		remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+		remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		remove_action( 'admin_print_styles', 'print_emoji_styles' ); 
+		remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' ); 
+		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+		// Filter out emojis
+		add_filter( 'tiny_mce_plugins', array(__CLASS__, 'disable_emojis_tinymce') );
+		add_filter( 'wp_resource_hints', array(__CLASS__,'disable_emojis_remove_dns_prefetch'), 10, 2 );
+
+	}
+
+
+
+
+
+
+
+
 
 
 
 	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	/// UTILITY METHODS
-	//////////////////////////////////////////////////////////////////////////////////////////
-
-
-	/**
-	 * Get theme config item
-	 * @param  [type] $item [description]
-	 * @return [type]       [description]
-	 */
-	public static function config($item=NULL)
-	{
-		if( empty($item) ) return self::$config;
-
-		return isset(self::$config[$item]) ? self::$config[$item] : NULL;
-	}
 
 
 	/**
@@ -201,7 +366,7 @@ final class Theme
 	 */
 	public static function uri( $path = '' )
 	{
-		return empty($path) ? THEME_URI : THEME_URI . '/' . ltrim($path, '/');
+		return trailingslashit(THEME_URI) . ( ! empty($path) ? ltrim($path, '/') : '' );
 	}
 
 	/**
@@ -211,7 +376,7 @@ final class Theme
 	 */
 	public static function dir( $path = '' )
 	{
-		return empty($path) ? THEME_DIR : THEME_DIR . '/' . ltrim($path, '/');
+		return trailingslashit(THEME_DIR) . ( ! empty($path) ? ltrim($path, '/') : '' );
 	}
 
 	/**
@@ -342,6 +507,12 @@ final class Theme
 	}
 
 
+
+	public static function background()
+	{
+		return '';
+	}
+
 	/**
 	 * Render post/page content
 	 * @param  string $view          [description]
@@ -369,63 +540,23 @@ final class Theme
 
 
 
+	public static function option( $name )
+	{
+
+	}
+
+	public static function update( $name, $value )
+	{
+
+	}
+
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	/// HOOK METHODS
 	//////////////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Clean up head tags generated by WP by default
-	 * @category optimization
-	 * @return [type] [description]
-	 */
-	public static function cleanup_head()
-	{
-		// Edit URI link
-		remove_action( 'wp_head', 'rsd_link' );
-		// windows live writer
-		remove_action( 'wp_head', 'wlwmanifest_link' );
-		// previous link
-		remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
-		// start link
-		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
-		// links for adjacent posts
-		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
-		// WP version
-		remove_action( 'wp_head', 'wp_generator' );
-		// Remove index link
-		remove_action( 'wp_head', 'index_rel_link' );
-		// Remove feed links
-		remove_action( 'wp_head', 'feed_links', 2 );
-		// Remove extra feed links
-		remove_action( 'wp_head', 'feed_links_extra', 3 );
-		// Remove shortlink
-		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
-		// Remove rest head link
-		remove_action( 'wp_head',  'rest_output_link_wp_head');
-		// Remove oembed
-		remove_action( 'wp_head', 'wp_oembed_add_discovery_links');
-		// Remove rest output header
-		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
-
-		// Disable emojis
-		Theme::disable_emojis();
-
-	}
-
-
-	public static function disable_emojis() 
-	{
-		 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-		 remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-		 remove_action( 'wp_print_styles', 'print_emoji_styles' );
-		 remove_action( 'admin_print_styles', 'print_emoji_styles' ); 
-		 remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
-		 remove_filter( 'comment_text_rss', 'wp_staticize_emoji' ); 
-		 remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
-		 add_filter( 'tiny_mce_plugins', array(__CLASS__, 'disable_emojis_tinymce') );
-		 add_filter( 'wp_resource_hints', array(__CLASS__,'disable_emojis_remove_dns_prefetch'), 10, 2 );
-	}
+	
 
 	/**
 	 * Filter function used to remove the tinymce emoji plugin.
@@ -456,74 +587,9 @@ final class Theme
 	 return $urls;
 	}
 
-	/**
-	 * Declare supports for this theme
-	 * @return [type] [description]
-	 */
-	public static function declare_support()
-	{
-		// load_theme_textdomain( 'startr',  get_template_directory() . '/library/lang' );
-		
-		// wp thumbnails (sizes handled in functions.php)
-		add_theme_support( 'post-thumbnails' );
-
-		// default thumb size
-		set_post_thumbnail_size(125, 125, TRUE);
-
-		// wp menus
-		add_theme_support( 'menus' );
-
-		// Enable support for HTML5 markup.
-		$html5 = array(
-			'comment-list',
-			'search-form',
-			'comment-form'
-		);
-		
-		add_theme_support( 'html5', $html5 );
-
-		// adding post format support
-		add_theme_support( 'post-formats',
-			array(
-				'aside',             // title less blurb
-				'gallery',           // gallery of images
-				'link',              // quick link to other site
-				'image',             // an image
-				'quote',             // a quick quote
-				'status',            // a Facebook like status update
-				'video',             // video
-				'audio',             // audio
-				'chat'               // chat transcript
-			)
-		);
-
-		// Add RSS Support
-		add_theme_support('automatic-feed-links');
-
-	}
+	
 
 
-	/**
-	 * Strips version attribute from asset URLs
-	 * @category optimization
-	 * @param  string $src URL to check
-	 * @return [type]      [description]
-	 */
-	public static function remove_asset_version( $src )
-	{
-		return strpos( $src, 'ver=' ) ? remove_query_arg( 'ver', $src ) : $src;
-	}
-
-
-	/**
-	 * Remove WP generator tag from head
-	 * @category security
-	 * @return [type] [description]
-	 */
-	public static function remove_generator()
-	{
-		return '';
-	} 
 
 	/**
 	 * Show less information on failed login attempt
@@ -540,7 +606,7 @@ final class Theme
 	 * Add page slug to body class
 	 * @param [type] $classes [description]
 	 */
-	public static function add_body_class( $classes ) 
+	public static function body_class( $classes ) 
 	{
 		global $post;
 
@@ -555,230 +621,40 @@ final class Theme
 	}	
 
 
-	//////////////////////////////////////////////////////////////////////////////////////////
-	/// ENQUEUE METHODS
-	//////////////////////////////////////////////////////////////////////////////////////////
-
-
 	/**
 	 * Enqueue theme scripts and styles
 	 * @return [type] [description]
 	 */
 	public static function enqueue()
 	{
-		$data = array(
-			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
-			'ajaxnonce' => wp_create_nonce('ajax_nonce')
-		);
-
-		$action = element($_REQUEST, 'action');
+		// Don't enqueue in admin area
+		if( is_admin() ) return;
 
 		// Don't enqueue on login or register screen
-		if( $GLOBALS['pagenow'] === 'wp-login.php' OR $action === 'register' ) return;
+		if( $GLOBALS['pagenow'] === 'wp-login.php' ) return;
+		
+		$cdn = 'https://cdnjs.cloudflare.com/ajax/libs/';
 
-		// Enqueue jquery
-		Enqueue::jquery();
-		// Enqueue bootstrap
-		Enqueue::bootstrap();
+		// Enqueue jQuery
+    Enqueue::script('jquery', $cdn.'jquery/3.4.1/jquery.min.js', array(), '3.4.1');
+
+    // Enqueue Bootstrap
+    Enqueue::script('bootstrap', $cdn.'twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js', array('jquery'), '4.4.1');
+    Enqueue::style('bootstrap', $cdn.'twitter-bootstrap/4.4.1/css/bootstrap.min.css' );
+
+    // Enqueue Fontawesome
+    Enqueue::style('fontawesome',        $cdn.'font-awesome/5.12.0-2/css/fontawesome.min.css');
+    Enqueue::style('fontawesome-solid',  $cdn.'font-awesome/5.12.0-2/css/solid.min.css');
+    Enqueue::style('fontawesome-brands', $cdn.'font-awesome/5.12.0-2/css/brands.min.css');
+
+    // Enqueue theme javascript
+    Enqueue::script('wptheme', THEME_URI . '/assets/dist/theme.js',  array('bootstrap'), THEME_VERSION );
+    // Enqueue theme styles
+    Enqueue::style('wptheme', THEME_URI . '/assets/dist/theme.css', array('bootstrap'), THEME_VERSION );
 			
 	}
 
-	/**
-	 * Enqueue an array of scripts
-	 * @param  [type] $scripts [description]
-	 * @return [type]          [description]
-	 */
-	public static function scripts( $scripts )
-	{
-		foreach($scripts as $name => $script)
-		{	
-			Theme::script($name, $script);
-		}
-	}
-
-
-	/**
-	 * Enqueue a script
-	 * @param  [type] $name   [description]
-	 * @param  [type] $config [description]
-	 * @return [type]         [description]
-	 */
-	public static function script( $handle, $config = array(), $data = array(), $varname = 'data'  )
-	{	
-		// Check if already enqueued
-		if( wp_script_is($handle) ) return;
-
-		// Get the soruce. If config is a string then it's passed in that way
-		$uri = is_array($config) ? element($config, 'source', '') : $config;
-
-		$src = Theme::src($uri);
-
-		if( empty($src) ) return;
-
-		// Get enqueue params
-		$dependencies = element( $config, 'dependencies', array() );
-		$version      = element( $config, 'version', NULL );
-		$footer       = element( $config, 'footer', TRUE );
-
-		// Register the script
-		wp_register_script($handle, $src, $dependencies, $version, $footer);
-
-		// Is there localized data?
-		if( ! empty($data) )
-		{
-			wp_localize_script( $handle, $varname, $data );
-		}
-
-		// Enqueue the script
-		wp_enqueue_script($handle, $src, $dependencies, $version, $footer);
-
-	}
-
-	/**
-	 * Enqueue an array of fonts
-	 * @param  [type] $fonts [description]
-	 * @return [type]        [description]
-	 */
-	public static function fonts( $fonts )
-	{
-		foreach($fonts as $font => $uri)
-		{	
-			Theme::font($font, $uri);
-		}
-	}
-
-
-	/**
-	 * Enqueue a font
-	 * @param  [type] $name [description]
-	 * @param  [type] $uri  [description]
-	 * @return [type]       [description]
-	 */
-	public static function font( $name, $uri )
-	{
-		$name = $name . '-font';
-
-		if( wp_style_is($name) ) return;
-
-		$src  = Theme::src($uri);
-
-		if( empty($src) ) return;
-
-		// Enqueue as style
-		wp_enqueue_style( $name, $src );
-	}
-
-
-	/**
-	 * Enqueue an array of styles
-	 * @param  [type] $styles [description]
-	 * @return [type]         [description]
-	 */
-	public static function styles( $styles )
-	{
-		foreach($styles as $name => $style)
-		{	
-			Theme::style($name, $style);
-		}
-	}
-
-
-	/**
-	 * Enqueue a stylesheet
-	 * @param  [type] $name   [description]
-	 * @param  [type] $config [description]
-	 * @return [type]         [description]
-	 */
-	public static function style( $name, $config = array() )
-	{
-		if( wp_style_is($name) ) return;
-
-		// Get the soruce. If config is a string then it's passed in that way
-		$uri = is_array($config) ? element($config, 'source', '') : $config;
 	
-		// Check for asset path
-		$src  = Theme::src($uri);
-
-		// Missing
-		if( empty($src) ) return;
-
-		// Get enqueue params
-		$dependencies = element( $config, 'dependencies', array() );
-		$version      = element( $config, 'version', NULL );
-		$media        = element( $config, 'media', 'screen' );
-
-		// Enqueue the style
-		wp_enqueue_style( $name, $src, $dependencies, $version, $media );
-	}
-
-
-	/**
-	 * Register custom post types
-	 * @return [type] [description]
-	 */
-	public static function post_types()
-	{
-
-	}
-
-
-	/**
-	 * Register menus defined in theme.config.php
-	 * @return [type] [description]
-	 */
-	public static function register_menus()
-	{
-		$menus = self::config('menus');
-
-		if( empty($menus) ) return;
-
-		foreach($menus as $menu => $label)
-		{
-			register_nav_menu($menu, __($label, THEME_DOMAIN) );
-		}
-
-	}
-
-	/**
-	 * Register sidebars defined in theme.config.php
-	 * @return [type] [description]
-	 */
-	public static function register_sidebars()
-	{
-		$sidebars = self::config('sidebars');
-
-		foreach($sidebars as $sidebar)
-		{
-			register_sidebar($sidebar);
-		}
-	}
-
-	/**
-	 * Register widgets defined in theme.config.php
-	 * @return [type] [description]
-	 */
-	public static function register_widgets()
-	{
-		$widgets = self::config('widgets');
-
-		if( empty($widgets) ) return;
-
-		// If we have widgets, include the theme base widget class
-		include THEME_DIR . '/library/classes/widget.php';
-
-		foreach($widgets as $widget) 
-		{
-			$widget_file  = THEME_DIR . '/library/widgets/' . $widget . '.php';
-			$widget_class = ucfirst($widget) . '_Widget';
-
-			if( is_file($widget_file) ) 
-			{
-				include $widget_file;
-				register_widget($widget_class);
-			}
-		}
-
-	}
 
 	/**
 	 * Load theme templates
@@ -1041,19 +917,7 @@ final class Theme
 		return Theme::view_exists('templates/'.$name);
 	}
 
-	/**
-	 * Add shortcodes specified in config
-	 */
-	public static function add_shortcodes()
-	{
-		$files  = glob(THEME_LIB.'/shortcodes/*.php');
-
-		if( ! empty($files) )
-		{
-			foreach($files as $file) include $file;
-		}
-
-	}
+	
 
 	/**
 	 * Hide admin bar from logged in users

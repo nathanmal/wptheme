@@ -2,6 +2,7 @@
 
 namespace WPTheme;
 
+use WPTheme\Admin\Page;
 use WPTheme\Package;
 use WPTheme\Font;
 
@@ -51,7 +52,7 @@ class Ajax
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
 
-    $key = Settings::get('maps.snazzymaps.apikey');
+    $key = Setting::get('maps.snazzymaps.apikey');
 
     if( empty($key) )
     {
@@ -95,7 +96,7 @@ class Ajax
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
 
-    $key = Settings::get('fonts.google.apikey');
+    $key = Setting::get('fonts.google.apikey');
 
     if( empty($key) )
     {

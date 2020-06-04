@@ -21,7 +21,7 @@ class Packages extends Setting
   {
     $value = $this->sanitize($value);
 
-    $packages = Settings::get('packages.installed');
+    $packages = Setting::get('packages.installed');
 
     $updated = FALSE;
 
@@ -37,7 +37,7 @@ class Packages extends Setting
 
     if( $updated )
     {
-      return Settings::update('packages.installed', $packages);
+      return Setting::set('packages.installed', $packages);
     }
 
     return FALSE;
@@ -62,7 +62,7 @@ class Packages extends Setting
 
   public function render_packages()
   {
-    $packages = Settings::get('packages.installed');
+    $packages = Setting::get('packages.installed');
 
     echo '<ul class="wpt-packages-installed">';
 

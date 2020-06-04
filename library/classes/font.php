@@ -2,28 +2,24 @@
 
 namespace WPTheme;
 
-use WPTheme\Component;
+use WPTheme\Theme;
 
-class Font extends Component
+class Font
 {
-
-
-
-
-
+  
   public static function install( $family )
   {
-    $fonts = Settings::get('fonts.installed', array() );
+    $fonts = Setting::get('fonts.installed', array() );
 
     if( empty($fonts) ) $fonts = array();
 
     if( isset($fonts[$family]) ) {
 
-      Font::error('Font already installed: ' . $family);
+      Theme::error('Font already installed: ' . $family);
       return FALSE;
     }
 
-    $key = Settings::get('fonts.google.apikey');
+    $key = Setting::get('fonts.google.apikey');
 
     $url = 'https://www.googleapis.com/webfonts/v1/webfonts?key='.$key;
 
@@ -42,9 +38,9 @@ class Font extends Component
       }
     }
 
-    if( ! Settings::update('fonts.installed', $fonts) )
+    if( ! Setting::set('fonts.installed', $fonts) )
     {
-      Font::error('Could not update option');
+      Theme::error('Could not update option');
       return FALSE;
     }
 
@@ -54,15 +50,15 @@ class Font extends Component
 
   public static function remove( $family )
   {
-    $fonts = Settings::get('fonts.installed', array() );
+    $fonts = Setting::get('fonts.installed', array() );
 
     if( isset($fonts[$family]) )
     {
       unset($fonts[$family]);
 
-      if( ! Settings::update('fonts.installed', $fonts) )
+      if( ! Setting::set('fonts.installed', $fonts) )
       {
-        Font::error('Could not update option');
+        Theme::error('Could not update option');
         return FALSE;
       }
 
@@ -70,7 +66,7 @@ class Font extends Component
 
     }
 
-    Font::error('Font not installed: ' . $family);
+    Theme::error('Font not installed: ' . $family);
     return FALSE;
   }
 }

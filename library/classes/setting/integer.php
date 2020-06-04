@@ -11,7 +11,6 @@ class Integer extends Setting
     return intval($value);
   }
 
-
   public function render_content()
   {
     $name = $this->input_name();
