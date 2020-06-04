@@ -1,32 +1,21 @@
-.wpt-intro 
+.wpt-intro, .wpt-blog 
 {
-  height:26vh;
-  margin-bottom:4rem;
-
-
 }
 
-
-.wpt-styles 
+.wpt-blog 
 {
-
-  .col-lg-4 
+  .search-term 
   {
-    margin:0;
-    padding:0;
-    .wpt-styles-panel 
+    margin:2rem 0;
+  }
+
+  .posts 
+  {
+    margin:2rem 0;
+
+    .post 
     {
-      height:540px;
-      background:#f2f2f2;
-      padding:2rem 1rem 2rem 2rem;
-      margin-right:1rem;
-
-      > strong:first-child {
-        display:block;
-        margin-bottom:1rem;
-      }
+      margin-bottom:2rem;
     }
-
-    
   }
 }

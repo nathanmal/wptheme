@@ -2,16 +2,12 @@ html
 {
   font-size: $font-size;
 
-  @include mobile() {
-    font-size: $font-size-mobile;
-  }
-}
-
-
-html, body 
-{
+  @include mobile() { font-size: $font-size-mobile; }
+  
+  // Auto height to expand to content
   width:100%;
-  height:100vh;
+  height:auto;
+  min-height: 100vh;
 }
 
 /**
@@ -19,23 +15,57 @@ html, body
  */
 body 
 {
+  // Positioning
+  position:relative;
+
+  // Sizing
+  width:100%;
+  height:auto;
+  min-height: 100vh;
+
+  // Overflow
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-y: overlay;
+
   // Font smoothing
   font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  // Set defaulat font weight;
   font-weight: $font-weight-body;
+  
+  // No background
+  background:none;
 
+  outline:3px solid green;
+
+  // Use flexbox
+  display:flex;
+  flex-direction: column;
 }
 
-/** Bootstrap addition */
-.container, .container-fluid
+header,main,footer 
 {
-  &.no-padding {
-    padding-left:0;
-    padding-right:0;
-  }
+  position:relative;
+  z-index:0;
 }
 
+main 
+{
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+
+  display:flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/**
+ * Headers
+ */
 h1,h2,h3,h4,h5,h6 {
   font-family: $font-heading;
   font-weight: $font-weight-heading;
@@ -47,3 +77,17 @@ h3 { font-size: $font-size-h3; }
 h4 { font-size: $font-size-h4; }
 h5 { font-size: $font-size-h5; }
 h6 { font-size: $font-size-h6; }
+
+
+#background 
+{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background-position: top center;
+  background-size:cover;
+  z-index:-1;
+}
+

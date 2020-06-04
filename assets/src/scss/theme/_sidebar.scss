@@ -1,33 +1,41 @@
 #sidebar 
 {
+  float:right;
   position:relative;
-  width:100%;
-  padding:1rem;
-  
   min-height:100%;
   box-sizing:border-box;
-  background-color:$sidebar-bg-color;
-
-  @include mobile()
-  {
-    width:100%;
+  will-change: min-height;
+  
+  .sidebar-inner{
+    transform: translate(0, 0); /* For browsers don't support translate3d. */
+    transform: translate3d(0, 0, 0);
+    will-change: position, transform;
   }
+
 
   .widget 
   {
     box-sizing: border-box;
     padding:1rem;
     margin:1rem;
-    background:$sidebar-widget-bg-color;
+    background-color:$color-light;
 
     h4 {
-      font-size:1rem;
+      font-size:$font-size-3;
+      margin-bottom:1rem;
     }
 
     ul {
       list-style:none;
       padding:0;
       margin:0;
+    }
+  }
+
+  .widget_search 
+  {
+    fieldset {
+      width:100%;
     }
   }
 
