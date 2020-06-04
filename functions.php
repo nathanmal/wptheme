@@ -29,6 +29,9 @@ define('THEME_VERSION', '0.6.0');
 // Theme debugging
 define('THEME_DEBUG', TRUE);
 
+// load theme constants
+require_once('config/constants.php');
+
 // load helpers
 require_once('library/autoload.php');
 
