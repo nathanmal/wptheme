@@ -1,4 +1,7 @@
 <?php
+
+
+
 $id     = 'map';
 $key    = wpt_setting('maps.google.apikey');
 $center = wpt_setting('maps.center', array());

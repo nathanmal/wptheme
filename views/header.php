@@ -16,3 +16,8 @@
     <!-- End Generate Head -->
 </head>
 <body <?php body_class(); ?> itemscope itemtype="http://schema.org/WebPage">
+<!-- Page header / navigation -->
+<header id="header" class="header-fixed" role="navigation">
+  <?php WPTheme\Theme::partial('navbar'); ?>
+</header>
+<!-- End Page header / navigation -->

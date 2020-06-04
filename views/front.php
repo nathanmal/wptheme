@@ -1,16 +1,13 @@
-<!-- Main navigation -->
-<header id="header" class="header-fixed" role="navigation">
-  <?php WPTheme\Theme::partial('navbar', array('fixed') ); ?>
-  <?php WPTheme\Theme::partial('dropmenu'); ?>
-</header>
 <!-- Front Template Content -->
-<main id="page" role="main">
+<main id="page" role="main" class="clear-header">
   <!-- Main Article -->
   <div class="container">
-    <article>
-      <section id="content">
-        <?php wpt_partial('wptheme'); ?>
-      </section>
+    <article id="article">
+      <div id="sections">
+        <section id="content">
+          <?php wpt_partial('wptheme/intro'); ?>
+        </section>
+      </div>
     </article>
   </div>
   <!-- End Main Article -->
