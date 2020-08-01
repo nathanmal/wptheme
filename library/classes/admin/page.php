@@ -81,7 +81,7 @@ class Page
     {
       $slug = pathinfo($file, PATHINFO_FILENAME);
 
-      Page::$pages[$slug] = Page::load( $slug );
+      Page::$pages[$slug] = Page::load($slug);
     }
 
     // Sort pages by menu_order

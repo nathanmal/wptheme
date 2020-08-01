@@ -764,7 +764,8 @@ final class Theme
 		// Custom pages by slug or post_type
 		} else if( is_page() ) {
 
-			$slug = Theme::get_page_slug($id);
+			// Get the page uri including subdirectories
+			$slug = get_page_uri($id);
 
 			if( $slug && Theme::view_exists('pages/'.$slug) ){
 				$template = 'pages/'.$slug;
