@@ -7,23 +7,66 @@
  */
 
 
-/**
- * Access array elements easily, with default
- */
 if( ! function_exists('element') )
 {
-    function element( &$array, $key, $default=NULL )
+  /**
+   * Fetch an element from an array, allowing multidimentional search with . separators
+   * @param  [type] &$array  [description]
+   * @param  [type] $key     [description]
+   * @param  [type] $default [description]
+   * @return [type]          [description]
+   */
+  function element( &$array, $key, $default=NULL )
+  {
+    if( $p = strpos($key, '.') )
     {
-      if( $p = strpos($key, '.') )
-      {
-        $c = substr($key, 0, $p); $n = substr($key, $p+1);
+      $c = substr($key, 0, $p); $n = substr($key, $p+1);
 
-        return ( isset($array[$c]) && is_array($array[$c]) ) ? element( $array[$c], $n, $default ) : $default;
-      }
-
-      return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
+      return ( isset($array[$c]) && is_array($array[$c]) ) ? element( $array[$c], $n, $default ) : $default;
     }
+
+    return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
+  }
 }
+
+
+if( ! function_exists('pre') ) 
+{
+  /**
+   * Print out an variable in a <pre></pre> block
+   * @param  [type] $obj [description]
+   * @return [type]      [description]
+   */
+  function pre($obj)
+  {
+      echo '<div class="pre-debug"><pre>';
+      if( is_array($obj) ) {
+          print_r($obj);
+      } else {
+          var_dump($obj);
+      }
+      echo '</pre></div>';
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if( ! function_exists('wpt_labelize') )
@@ -81,22 +124,6 @@ if( ! function_exists('current_url') )
   }
 }
 
-/**
- * Print out an object or array in a pre element for debugging
- */
-if( ! function_exists('pre') ) 
-{
-    function pre($obj)
-    {
-        echo '<div class="pre-debug"><pre>';
-        if( is_array($obj) ) {
-            print_r($obj);
-        } else {
-            var_dump($obj);
-        }
-        echo '</pre></div>';
-    }
-}
 
 
 if( ! function_exists('prefix') )
@@ -221,6 +248,32 @@ if( ! function_exists('wpt_enqueued') )
 
     }
 }
+
+if( ! function_exists('backtrace_array') )
+{
+  function backtrace_array()
+  {
+    $trace = debug_backtrace();
+    $out   = [];
+
+    foreach($trace as $item)
+    {
+      $class = element($item,'class');
+      $func  = element($item,'function');
+      $file  = element($item,'file');
+      $line  = element($item,'line');
+      
+      $str = ( $class ? $class .'::'.$func : $func ) . '() ' . "\t";
+      $str .= $file . ' [line ' . $line;
+
+      $out[] = $str;
+
+    }
+
+    return $out;
+  }
+}
+
 
 /**
  * Output video background for WPTheme banner
