@@ -27,9 +27,9 @@ module.exports = (env, argv) => {
     // Project entry point(s)
     entry: { 
       // Main theme file
-      theme: path.resolve( __dirname, 'src/js/theme.js'),
+      theme: path.resolve( __dirname, 'src/theme/theme.js'),
       // Admin stuff
-      admin: path.resolve( __dirname, 'src/js/admin.js')
+      admin: path.resolve( __dirname, 'src/admin/admin.js')
     },
 
     // Output directory
@@ -105,8 +105,8 @@ module.exports = (env, argv) => {
             { 
               loader : 'postcss-loader',
               options: {
-                config : { 
-                  path : path.resolve( __dirname, 'postcss.config.js' )
+                postcssOptions: {
+                  config : path.resolve( __dirname, 'postcss.config.js' )
                 }
               }
             },
@@ -151,9 +151,9 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           test: /\.js(\?.*)?$/i,
-          cache: true,
+          // cache: true,
           parallel: true,
-          sourceMap: true
+          // sourceMap: true
           // extractComments: true,
         }),
         new OptimizeCSSAssetsPlugin({})

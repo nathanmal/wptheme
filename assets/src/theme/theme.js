@@ -1,10 +1,10 @@
 // Theme SASS
-import '../scss/theme.scss';
+import './theme.scss';
 
 // Import components
-import Navbar from './theme/navbar';
-import GoogleMap from './theme/googlemap.js';
-import Sidebar from './theme/sidebar.js';
+import Navbar from './js/navbar';
+import GoogleMap from './js/googlemap.js';
+import Sidebar from './js/sidebar.js';
 
 // Add/Remove autofill class based on whether or not input is auto-filled
 const onAnimationStart = ({ target, name }) => {

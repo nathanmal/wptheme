@@ -96,6 +96,9 @@ final class Theme
 		// Register widgets
 		Theme::register_widgets();
 
+		// Register theme libraries
+		Theme::register_libraries();
+
 		// Register actions & filters
 		Theme::register_actions();
 
@@ -202,6 +205,17 @@ final class Theme
 		}
 	}
 
+	/**
+	 * Register front end libraries
+	 * @return [type] [description]
+	 */
+	public static function register_libraries()
+	{
+		wp_deregister_script('jquery');
+		
+		Enqueue::register_libraries();
+	}
+
 
 	/**
 	 * Register actions & filters
@@ -232,6 +246,59 @@ final class Theme
 
 		// Enqueue scripts on front end
 		add_action( 'wp_enqueue_scripts', '\WPTheme\\Theme::enqueue', 10, 1);
+
+		/*
+		$temps = ["404_template","search_template","frontpage_template","home_template","privacypolicy_template","taxonomy_template","attachment_template","single_template","page_template","singular_template","category_template","tag_template","author_template","date_template","archive_template","index_template"];
+	
+		foreach( $temps as $t )
+		{
+			add_filter($t, [__CLASS__, 'find_template'], 10, 3);
+		}
+		*/
+
+		//add_filter( 'frontpage_template', [__CLASS__, 'frontpage_template'], 10, 3);
+		//add_filter( 'page_template', [__CLASS__, 'page_template'], 10, 3);
+	}
+
+	public static function find_template( $template, $type, $templates )
+	{
+		switch($type)
+		{
+			case 'frontpage':
+
+				return locate_template('views/front.php');
+				break;
+
+			case 'page':
+
+				return locate_template(['views/page.php']);
+				break;
+
+			case '404':
+
+				return locate_template('views/404.php');
+				break;
+
+			default:
+				break;
+		}
+
+		return $template;
+
+	}
+
+	public static function frontpage_template( $template, $type, $templates )
+	{
+		pre($template);
+		pre($type);
+		pre($templates);
+	}
+
+	public static function page_template( $template, $type, $templates )
+	{
+		pre($template);
+		pre($type);
+		pre($templates);
 	}
 
 	/**
@@ -632,27 +699,17 @@ final class Theme
 
 		// Don't enqueue on login or register screen
 		if( $GLOBALS['pagenow'] === 'wp-login.php' ) return;
-		
-		$cdn = 'https://cdnjs.cloudflare.com/ajax/libs/';
 
-		// Enqueue jQuery
-    Enqueue::script('jquery', $cdn.'jquery/3.4.1/jquery.min.js', array(), '3.4.1');
-
-    // Enqueue Bootstrap
-    Enqueue::script('bootstrap', $cdn.'twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js', array('jquery'), '4.4.1');
-    Enqueue::style('bootstrap', $cdn.'twitter-bootstrap/4.4.1/css/bootstrap.min.css' );
-
-    // Enqueue Fontawesome
-    Enqueue::style('fontawesome',        $cdn.'font-awesome/5.12.0-2/css/fontawesome.min.css');
-    Enqueue::style('fontawesome-solid',  $cdn.'font-awesome/5.12.0-2/css/solid.min.css');
-    Enqueue::style('fontawesome-brands', $cdn.'font-awesome/5.12.0-2/css/brands.min.css');
-
-    // Enqueue theme javascript
-    Enqueue::script('wptheme', THEME_URI . '/assets/dist/theme.js',  array('bootstrap'), THEME_VERSION );
-    // Enqueue theme styles
-    Enqueue::style('wptheme', THEME_URI . '/assets/dist/theme.css', array('bootstrap'), THEME_VERSION );
+		Enqueue::library('jquery');
+		Enqueue::library('bootstrap');
+		Enqueue::library('fontawesome');
+		Enqueue::library('fontawesome-solid');
+		Enqueue::library('fontawesome-brands');
+		Enqueue::library('wptheme');
 			
 	}
+
+
 
 	
 
@@ -800,14 +857,15 @@ final class Theme
 		// Set the template
 		self::$template = $template;
 
-		// Get the page content first, this allows it to load things into wp_head
+
+
+		// Render page content before header
 		$body = self::view($template, array(), 1, TRUE);
 		
-		// This is where the rubber meets the road
-		// Output header, page and footer
-		self::$header && get_header();
+		// Render to browser
+		get_header();
 		echo $body;
-		self::$footer && get_footer();
+		get_footer();
 
 	}
 

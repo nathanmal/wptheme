@@ -1,3 +1,5 @@
+<?php get_header(); ?>
+
 <!-- Front Template Content -->
 <main id="page" role="main" class="clear-header">
   <!-- Main Article -->
@@ -13,3 +15,5 @@
   <!-- End Main Article -->
 </main>
 <!-- End Main Page Content -->
+
+<?php get_footer(); ?>

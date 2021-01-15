@@ -1,6 +1,6 @@
-import '../scss/admin.scss';
-import Settings from './admin/settings.js';
-import Modal from './admin/modal.js';
+import './admin.scss';
+import Settings from './js/settings.js';
+import Modal from './js/modal.js';
 
 
 class WPAdmin

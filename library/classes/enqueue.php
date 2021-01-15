@@ -10,11 +10,65 @@ class Enqueue
 {
 
 
-  /**
-   * Global theme dependencies
-   * @var array
-   */
-  private static $dependencies = array('jquery','bootstrap');
+
+  private static $libraries = array(
+
+    // jQuery 3
+    'jquery' => array(
+      'js' => array( 
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'
+      )
+    ),
+
+    // Bootstrap 4
+    'bootstrap' => array(
+      'js' => array(
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js',
+        'dependencies' => ['jquery'],
+        'version' => '4.4.1'
+      ),
+      'css' => array(
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css',
+      )
+    ),
+
+    // Font Awesome 5
+    'fontawesome' => array(
+      'css' => array(
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/fontawesome.min.css'
+      )
+    ),
+
+    // Font Awesome 5 solid icons
+    'fontawesome-solid' => array(
+      'css' => array(
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/solid.min.css',
+        'dependencies' => 'fontawesome'
+      )
+    ),
+
+    // Font Awesome 5 brands
+    'fontawesome-brands' => array(
+      'css' => array(
+        'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/brands.min.css',
+        'dependencies' => 'fontawesome'
+      )
+    ),
+
+    // Theme files
+    'wptheme' => array(
+      'js' => array(
+        'src' => 'assets/dist/theme.js',
+        'dependencies' => 'bootstrap',
+        'version' => THEME_VERSION
+      ),
+      'css' => array(
+        'src' => 'assets/dist/theme.css',
+        'dependencies' => 'bootstrap',
+        'version' => THEME_VERSION
+      )
+    )
+  );
 
 
   /**
@@ -22,6 +76,74 @@ class Enqueue
    * @var array
    */
   private static $script_attributes = array();
+
+
+  /**
+   * Register libraries
+   * @return [type] [description]
+   */
+  public static function register_libraries()
+  {
+    foreach( Enqueue::$libraries as $handle => $lib )
+    {
+      $js  = element($lib, 'js', array());
+      $css = element($lib, 'css',array());
+
+      Enqueue::register($handle, $js, $css);
+    }
+  }
+
+  /**
+   * Register a library
+   * @param  [type] $handle [description]
+   * @param  [type] $js     [description]
+   * @param  [type] $css    [description]
+   * @return [type]         [description]
+   */
+  public static function register( $handle, $js = array(), $css = array() )
+  {
+    if( ! empty($js) ) {
+      $src = element($js,'src','');
+      $dep = element($js,'dependencies',array());
+      $ver = element($js,'version',FALSE);
+      $ftr = element($js,'footer',TRUE);
+
+      if( 0 !== strpos($src,'http') ) $src = THEME_URI .'/' . ltrim($src,'/');
+
+      wp_register_script( $handle, $src, $dep, $ver, $ftr );
+    }
+
+    if( ! empty($css) ) {
+      $src = element($css,'src','');
+      $dep = element($css,'dependencies',array());
+      $ver = element($css,'version','');
+      $med = element($css,'media','all'); 
+
+      if( 0 !== strpos($src,'http') ) $src = THEME_URI .'/' . ltrim($src,'/');
+
+      wp_register_style( $handle, $src, $dep, $ver, $med );
+    }
+  }
+
+  /**
+   * Enqueue a registered library
+   * @param  [type] $handle [description]
+   * @return [type]         [description]
+   */
+  public static function library( $handle )
+  {
+    $library = element(Enqueue::$libraries,$handle,array());
+
+    if( ! empty($library) && isset($library['js']) && wp_script_is($handle,'registered') ) 
+    {
+      wp_enqueue_script($handle);
+    }
+
+    if( ! empty($library) && isset($library['css']) && wp_style_is($handle,'registered') ) 
+    {
+      wp_enqueue_style($handle);
+    }
+  }
 
 
   /**
@@ -35,6 +157,8 @@ class Enqueue
    */
   public static function script( $handle, $src = '', $dependencies = array(), $version = NULL, $footer = TRUE, $attr = array() )
   {
+    if( wp_script_is($handle, 'registered') ) return wp_enqueue_script($handle);
+
     // if not absolute URL then assume local path
     if( strpos($src, 'http') !== 0 ) $src = THEME_URI . '/' . $src;
 
@@ -57,6 +181,9 @@ class Enqueue
    */
   public static function style( $handle, $src = '', $dependencies = array(), $version = '', $media = 'all' )
   {
+    // Check if already registered
+    if( wp_style_is($handle, 'registered') ) return wp_enqueue_style($handle);
+
     // if not absolute URL then assume local path
     if( strpos($src, 'http') !== 0 ) $src = THEME_URI . '/' . $src;
 

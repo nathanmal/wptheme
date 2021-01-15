@@ -1,4 +1,4 @@
-<?php WPTheme\Theme::$footer = FALSE; ?>
+<?php get_header(); ?>
 <!-- Main Page Content -->
 <main id="page" role="main">
   <!-- Main Article -->
@@ -15,10 +15,8 @@
   </div>
   <!-- End Main Article -->
 </main>
-<div id="background"></div>
-<!-- End Footer -->
-</body>
-</html>
+
+<?php get_footer(); ?>
 
 
 
