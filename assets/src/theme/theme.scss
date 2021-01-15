@@ -4,19 +4,19 @@
  *************************************************/
 
 @import '../global/scss/defaults';
-@import 'theme/vars';
-@import 'theme/mixins';
-@import 'theme/animation';
-@import 'theme/global';
-@import 'theme/header';
-@import 'theme/footer';
-@import 'theme/templates';
-@import 'theme/page';
-@import 'theme/pages';
-@import 'theme/content';
-@import 'theme/forms';
-@import 'theme/sidebar';
-@import 'theme/partials';
-@import 'theme/shortcodes';
-@import 'theme/widgets';
-@import 'theme/onscroll';
+@import '../global/scss/mixins';
+@import '../global/scss/animation';
+@import 'scss/vars';
+@import 'scss/global';
+@import 'scss/header';
+@import 'scss/footer';
+@import 'scss/templates';
+@import 'scss/page';
+@import 'scss/pages';
+@import 'scss/content';
+@import 'scss/forms';
+@import 'scss/sidebar';
+@import 'scss/partials';
+@import 'scss/shortcodes';
+@import 'scss/widgets';
+@import 'scss/onscroll';

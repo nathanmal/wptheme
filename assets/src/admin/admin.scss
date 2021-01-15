@@ -1,4 +1,4 @@
-@import 'theme/defaults';
-@import 'theme/mixins';
-@import 'admin/settings';
-@import 'admin/modal';
+@import '../global/scss/defaults';
+@import '../global/scss/mixins';
+@import 'scss/settings';
+@import 'scss/modal';
