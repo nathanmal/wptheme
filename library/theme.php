@@ -211,7 +211,7 @@ final class Theme
 	 */
 	public static function register_libraries()
 	{
-		wp_deregister_script('jquery');
+		if( ! is_admin() ) wp_deregister_script('jquery');
 		
 		Enqueue::register_libraries();
 	}
