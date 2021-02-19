@@ -4,7 +4,8 @@ const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin }  = require('clean-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const TerserPlugin            = require('terser-webpack-plugin');
+// const TerserPlugin            = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 // Webpack config
 module.exports = (env, argv) => {
@@ -22,7 +23,7 @@ module.exports = (env, argv) => {
   const filename = production ? '[hash].[ext]' : '[name].[ext]';
 
   // Config object
-  const config = {
+  return {
 
     // Project entry point(s)
     entry: { 
@@ -60,7 +61,6 @@ module.exports = (env, argv) => {
           loader: 'file-loader',
           options: {
             outputPath: 'images',
-            publicPath: 'images',
             name(file) {
               return filename;
             },
@@ -96,7 +96,13 @@ module.exports = (env, argv) => {
           test: /\.[s]?css$/,
           use: [
             'style-loader',
-            MiniCssExtractPlugin.loader,
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                esModule: false,
+              },
+            },
+            
             { 
               loader: 'css-loader',
                 options: { 
@@ -137,6 +143,14 @@ module.exports = (env, argv) => {
       //new UglifyJsPlugin({ cache: true, parallel: true, sourceMap: true }),
     ],
 
+    // Minimize
+    optimization: {
+      minimize: true,
+      minimizer: [
+         new CssMinimizerPlugin(),
+      ],
+    },
+
     // Prevents warnings when file sizes are too large
     performance: 
     {
@@ -144,24 +158,6 @@ module.exports = (env, argv) => {
     }
   }
 
-  // Add optimization in production
-  // Terser Webpack Plugin seems to be the only one that works
-  if( production )
-  {
-    config.optimization = {
-      minimizer: [
-        new TerserPlugin({
-          test: /\.js(\?.*)?$/i,
-          // cache: true,
-          parallel: true,
-          // sourceMap: true
-          // extractComments: true,
-        }),
-        new OptimizeCSSAssetsPlugin({})
-      ]
-    }
-  }
 
-  return config;
 
 }
