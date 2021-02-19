@@ -60,6 +60,7 @@ module.exports = (env, argv) => {
           loader: 'file-loader',
           options: {
             outputPath: 'images',
+            publicPath: 'images',
             name(file) {
               return filename;
             },
