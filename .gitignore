@@ -11,5 +11,7 @@
 !assets/dist/
 assets/dist/*
 assets/package/*
+assets/node_modules/*
 library/vendor/*
-node_modules/*
+*/node_modules/*
+*/vendor/*

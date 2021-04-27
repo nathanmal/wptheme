@@ -1,11 +1,10 @@
-// Webpack 4
+// Webpack 5
 const webpack                 = require('webpack');
 const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin }  = require('clean-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-// const TerserPlugin            = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CssMinimizerPlugin      = require('css-minimizer-webpack-plugin');
 
 // Webpack config
 module.exports = (env, argv) => {
