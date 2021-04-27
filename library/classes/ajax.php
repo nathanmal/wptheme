@@ -25,7 +25,7 @@ class Ajax
   public static function packages()
   { 
     // Check nonce
-    if( ! wp_verify_nonce( element($_POST,'nonce'), 'wpt-settings' ) )
+    if( ! wp_verify_nonce( wpt_element($_POST,'nonce'), 'wpt-settings' ) )
     {
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
@@ -34,7 +34,7 @@ class Ajax
       'post' => $_POST
     );
 
-    if( $query = element($_POST, 'query') )
+    if( $query = wpt_element($_POST, 'query') )
     {
       $data['packages'] = Package::search($query);
     }
@@ -47,7 +47,7 @@ class Ajax
   {
    
     // Check nonce
-    if( ! wp_verify_nonce( element($_POST,'nonce'), 'wpt-settings' ) )
+    if( ! wp_verify_nonce( wpt_element($_POST,'nonce'), 'wpt-settings' ) )
     {
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
@@ -63,13 +63,13 @@ class Ajax
 
 
 
-    $filters = element($_POST, 'filters', array());
+    $filters = wpt_element($_POST, 'filters', array());
 
-    $text  = element($filters, 'text', '');
-    $sort  = element($filters, 'sort', 'popular');
-    $tag   = element($filters, 'tag', '');
-    $color = element($filters, 'color', '');
-    $page  = element($filters, 'page', 1);
+    $text  = wpt_element($filters, 'text', '');
+    $sort  = wpt_element($filters, 'sort', 'popular');
+    $tag   = wpt_element($filters, 'tag', '');
+    $color = wpt_element($filters, 'color', '');
+    $page  = wpt_element($filters, 'page', 1);
 
     foreach( array('text','sort','tag','color','page') as $param )
     {
@@ -91,7 +91,7 @@ class Ajax
   public static function googlefonts()
   {
     // Check nonce
-    if( ! wp_verify_nonce( element($_POST,'nonce'), 'wpt-settings' ) )
+    if( ! wp_verify_nonce( wpt_element($_POST,'nonce'), 'wpt-settings' ) )
     {
       return Ajax::response(FALSE, array('error'=>'Nonce verification failed'));
     }
@@ -103,11 +103,11 @@ class Ajax
       return Ajax::response(FALSE, array('error'=>'API Key Missing'));
     }
 
-    $filters = element($_POST, 'filters', array() );
+    $filters = wpt_element($_POST, 'filters', array() );
 
     $limit = 25; 
 
-    $sort = element($filters, 'sort', 'trending');
+    $sort = wpt_element($filters, 'sort', 'trending');
     
     $transient = 'wpt_google_fonts-' . $sort;
 
@@ -134,7 +134,7 @@ class Ajax
 
     $results = array();
 
-    $keyword = element($filters, 'keyword', '');
+    $keyword = wpt_element($filters, 'keyword', '');
 
     $rc = 0;
 

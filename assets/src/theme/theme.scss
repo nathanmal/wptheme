@@ -3,20 +3,17 @@
  * http://ntheory.design/wp-theme
  *************************************************/
 
-@import '../global/scss/defaults';
-@import '../global/scss/mixins';
-@import '../global/scss/animation';
+@import 'scss/defaults';
+@import 'scss/mixins';
+@import 'scss/animation';
 @import 'scss/vars';
 @import 'scss/global';
-@import 'scss/header';
-@import 'scss/footer';
+@import 'scss/navbar';
+@import 'scss/hero';
 @import 'scss/templates';
-@import 'scss/page';
 @import 'scss/pages';
-@import 'scss/content';
 @import 'scss/forms';
 @import 'scss/sidebar';
-@import 'scss/partials';
 @import 'scss/shortcodes';
 @import 'scss/widgets';
 @import 'scss/onscroll';

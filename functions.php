@@ -29,23 +29,17 @@ define('THEME_VERSION', '0.6.0');
 // Theme debugging
 define('THEME_DEBUG', TRUE);
 
-// load theme constants
-require_once('config/constants.php');
-
-// load helpers
-require_once('library/autoload.php');
-
-// load helpers
-require_once('library/helpers.php');
+// Composer autoloader
+require_once('library/vendor/autoload.php');
 
 // Theme autoloader
+require_once('library/autoload.php');
+
+// Register theme autoloader
 spl_autoload_register( 'wptheme_autoload' );
 
-// Hook into WP theme activation
-add_action( 'after_switch_theme', 'WPTheme\\Theme::activate' );
-
-// Hook into WP theme deactivation
-add_action( 'switch_theme', 'WPTheme\\Theme::deactivate' );
+// Helper functions
+require_once('library/helpers.php');
 
 // Hook into WP theme init
 add_action( 'init', array('WPTheme\\Theme', 'init') );

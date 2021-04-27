@@ -35,11 +35,6 @@ body
 
   // Set defaulat font weight;
   font-weight: $font-weight-body;
-  
-  // No background
-  background:none;
-
-  outline:3px solid green;
 
   // Use flexbox
   display:flex;
@@ -52,16 +47,69 @@ header,main,footer
   z-index:0;
 }
 
+header#header 
+{
+  position:relative;
+  z-index:1020;
+  width:100%;
+  height:auto;
+  
+  &.header-fixed 
+  {
+    position:fixed;
+    top:0;
+    z-index:1040;
+  }
+}
+
+
+
 main 
 {
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: auto;
-
+  
   display:flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+
+  width:100%;
+
+  .main-article
+  {
+
+
+  }
+
+
+  .post-article
+  {
+    width:100%;
+    margin-bottom:4rem;
+
+
+    .post-header
+    {
+
+    }
+
+    .post-content
+    {
+      width:100%;
+    }
+
+    .post-footer
+    {
+
+    }
+  }
 }
+
+header.header-fixed + main
+{
+  margin-top:100px;
+}
+
 
 /**
  * Headers
@@ -79,6 +127,14 @@ h5 { font-size: $font-size-h5; }
 h6 { font-size: $font-size-h6; }
 
 
+footer#footer 
+{
+  background-color:$color-light;
+  text-align: center;
+  width:100%;
+  padding:2rem;
+}
+
 #background 
 {
   position: fixed;
@@ -90,4 +146,7 @@ h6 { font-size: $font-size-h6; }
   background-size:cover;
   z-index:-1;
 }
+
+
+
 

@@ -1,7 +1,77 @@
-
-
 #wpt-settings 
 {
+  margin:0;
+  padding:0;
+
+  .wpt-settings-header 
+  {
+    height:80px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position:relative;
+    background:white;
+    margin-left:-1.25rem;
+
+
+    h1 {
+      margin:0;
+      padding:0;
+      font-size:1.3rem;
+      padding-left:1rem;
+      span.wpt-settings-title
+      {
+
+      }
+
+      span.wpt-settings-subtitle
+      {
+        opacity:0.7;
+
+        &:before{ 
+          content: '/';
+          margin-right:0.5rem;
+          margin-left:0.25rem;
+          font-size:1.3rem;
+        }
+      }
+
+
+    }
+
+
+    ul.wpt-settings-nav
+    {
+      list-style:none;
+      margin:0;
+      padding:0;
+      padding-right:1rem;
+      display:flex;
+      flex-direction: row;
+
+      li {
+
+        a {
+          display:block;
+          text-decoration:none;
+          padding:1rem 0.5rem;
+          font-size:1rem;
+        }
+
+        &.active 
+        {
+          a {
+            font-weight:700;
+          }
+        }
+      }
+    }
+  }
+
+
+
+
 
 
   .wpt-setting 
@@ -65,63 +135,7 @@
 
 
 
-  .wpt-settings-header 
-  {
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    
-    border-bottom:1px solid #ccc;
-    position:relative;
-
-    .notice 
-    {
-      right:0;
-      left:0;
-      flex:1;
-      position:absolute;
-    }
-
-    .wpt-settings-title
-    {
-      h1 {
-        font-size:1.5rem;
-        margin:0;
-
-        .dashicons {
-          transform:translateY(5px);
-          opacity: 0.7;
-          font-size:1.3rem;
-        }
-      }
-      
-    }
-
-    ul.wpt-settings-menu
-    {
-      list-style:none;
-      margin:0;
-      padding:0;
-
-      li {
-        display:inline-block;
-
-        a {
-          display:block;
-          text-decoration:none;
-          padding:1rem;
-          font-size:1rem;
-        }
-
-        &.active 
-        {
-          a {
-            font-weight:700;
-          }
-        }
-      }
-    }
-  }
+  
 
   h1 {
     margin-bottom:2rem;

@@ -1,10 +1,12 @@
 // Theme SASS
 import './theme.scss';
 
+import './js/onscroll.js';
+import './js/lazyloader.js';
+
 // Import components
-import Navbar from './js/navbar';
-import GoogleMap from './js/googlemap.js';
-import Sidebar from './js/sidebar.js';
+import Navbar    from './js/navbar';
+import Sidebar   from './js/sidebar.js';
 
 // Add/Remove autofill class based on whether or not input is auto-filled
 const onAnimationStart = ({ target, name }) => {
@@ -23,9 +25,6 @@ class WPTheme
     // Attach components
     this.navbar = new Navbar();
 
-    // Maps
-    this.googlemap = new GoogleMap();
-
     // Sidebar 
     this.sidebar = new Sidebar();
     
@@ -43,28 +42,12 @@ class WPTheme
     // Input autofill detection
     $('input').on('animationstart', onAnimationStart, false);
 
-    // Scroll effects
-    $(window).on('scroll', this.onWindowScroll.bind(this));
-
-    // Trigger on load
-    $(window).trigger('scroll');
-
     // Mark init 
     console.log('Theme initialized');
 
   }
 
-  onWindowScroll(e)
-  {
-    const top = $(window).scrollTop();
-    const bar = top + ($(window).height() * 0.75);
-
-    $('.on-scroll').each(function(e){
-      console.log($(this));
-      const t = $(this).offset().top;
-      $(this).toggleClass('on-scroll-visible', (t && ($(this).offset().top<bar)));
-    });
-  }
+  
   
 }
 

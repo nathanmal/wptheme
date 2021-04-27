@@ -7,36 +7,162 @@
  */
 
 
-if( ! function_exists('element') )
+/**
+ * Get the theme class instance
+ * @return [type] [description]
+ */
+function wpt()
 {
-  /**
-   * Fetch an element from an array, allowing multidimentional search with . separators
-   * @param  [type] &$array  [description]
-   * @param  [type] $key     [description]
-   * @param  [type] $default [description]
-   * @return [type]          [description]
-   */
-  function element( &$array, $key, $default=NULL )
-  {
-    if( $p = strpos($key, '.') )
-    {
-      $c = substr($key, 0, $p); $n = substr($key, $p+1);
-
-      return ( isset($array[$c]) && is_array($array[$c]) ) ? element( $array[$c], $n, $default ) : $default;
-    }
-
-    return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
-  }
+  return \WPTheme\Theme::instance();
 }
 
 
+/**
+ * Load a partial view file
+ * @param  string  $path   [description]
+ * @param  array   $data   [description]
+ * @param  boolean $return [description]
+ * @return [type]          [description]
+ */
+function wpt_partial( string $slug, array $args = [], $return = FALSE )
+{
+  ob_start();
+
+  $path = 'views/partials/' . $slug;
+
+  if( FALSE === get_template_part( $path, NULL, $args ) )
+  {
+    $content = '[Partial missing: ' . $path . ']';
+  }
+  else
+  {
+    $content = ob_get_contents();
+  }
+  
+  ob_end_clean();
+
+  if( $return ) return $content;
+
+  echo $content;
+
+  // return wpt()->partial($path, $data, $return);
+}
+
+/**
+ * Render a navigation menu
+ * @param  string $name [description]
+ * @param  array  $args [description]
+ * @return [type]       [description]
+ */
+function wpt_menu( string $name, array $args = [] )
+{
+  wpt()->menu($name, $args);
+}
+
+
+/**
+ * Write the page title
+ * @return [type] [description]
+ */
+function wpt_title()
+{
+  echo '<title>'.wp_title('|', FALSE).'</title>';
+}
+
+/**
+ * Echo the page/post content
+ * @return [type] [description]
+ */
+function wpt_content()
+{
+  the_content();
+}
+
+
+
+/**
+ * Get an asset url
+ * @param  string $path [description]
+ * @return [type]       [description]
+ */
+function wpt_url( string $path )
+{
+  if( file_exists( STYLESHEETPATH . '/' . $path ) )
+  {
+    return get_stylesheet_directory_uri() . '/' . $path;
+  }
+
+  if( file_exists( TEMPLATEPATH . '/' . $path ) )
+  {
+    return get_template_directory_uri() . '/' . $path;
+  }
+
+  return '';
+}
+
+
+/**
+ * Display the branding in the main navbar
+ * @return [type] [description]
+ */
+function wpt_brand()
+{
+  echo bloginfo('title');
+}
+
+
+
+/**
+ * Display site copyright
+ * @return [type] [description]
+ */
+function wpt_copyright()
+{
+  echo '<p class="copyright">All content and media copyright &copy; '.bloginfo('name').' '.date('Y').'</p>';
+}
+
+
+
+/**
+ * Get the shortname of a namespaced class
+ * @param  [type] $object [description]
+ * @return [type]         [description]
+ */
+function wpt_shortname( $object )
+{
+  return (new \ReflectionObject($object))->getShortName();
+}
+
+
+
+
+/**
+ * Fetch an element from an array, allowing multidimentional search with . separators
+ * @param  [type] &$array  [description]
+ * @param  [type] $key     [description]
+ * @param  [type] $default [description]
+ * @return [type]          [description]
+ */
+function wpt_element( &$array, $key, $default=NULL )
+{
+  if( $p = strpos($key, '.') )
+  {
+    $c = substr($key, 0, $p); $n = substr($key, $p+1);
+
+    return ( isset($array[$c]) && is_array($array[$c]) ) ? wpt_element( $array[$c], $n, $default ) : $default;
+  }
+
+  return ( is_array($array) && isset($array[$key]) ) ? $array[$key] : $default;
+}
+
+
+/**
+* Print out an variable in a <pre></pre> block
+* @param  [type] $obj [description]
+* @return [type]      [description]
+*/
 if( ! function_exists('pre') ) 
 {
-  /**
-   * Print out an variable in a <pre></pre> block
-   * @param  [type] $obj [description]
-   * @return [type]      [description]
-   */
   function pre($obj)
   {
       echo '<div class="pre-debug"><pre>';
@@ -51,38 +177,107 @@ if( ! function_exists('pre') )
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if( ! function_exists('wpt_labelize') )
+function wpt_post_container_class( $classes = array() )
 {
-  function wpt_labelize( $str )
+  return 'container-fluid';
+}
+
+
+function wpt_navbar_class()
+{
+  return 'navbar-shy navbar-expand-md';
+}
+
+/**
+ * Enforce prefix on string
+ * @param  string $str    [description]
+ * @param  string $prefix [description]
+ * @return [type]         [description]
+ */
+function wpt_prefix( string $str, string $prefix )
+{
+  return str_starts_with( $str, $prefix ) ? $str : $prefix . $str;
+}
+
+
+
+/**
+ * Enforce suffix on a string
+ * @param  string $str    [description]
+ * @param  string $suffix [description]
+ * @return [type]         [description]
+ */
+function wpt_suffix( string $str, string $suffix )
+{
+  return str_ends_with($str,$suffix) ? $str : $str . $suffix;
+}
+
+
+
+if( ! function_exists('str_starts_with') )
+{
+  function str_starts_with($haystack, $needle) 
   {
-    return ucwords(str_replace(['_','-'],' ',$str));
+    return substr($haystack, 0, strlen($needle)) === $needle;
   }
 }
 
-if( ! function_exists('wpt_slugify') )
+if( ! function_exists('str_ends_with') )
 {
-  function wpt_slugify( $str )
+  function str_ends_with($haystack, $needle) 
   {
-    return strtolower(str_replace(' ','_',$str));
+    return substr($haystack,-strlen($needle))===$needle;
   }
+}
+
+
+
+
+
+function wpt_log( $var )
+{
+  if( is_object($var) OR is_array($var) )
+  {
+    $var = print_r($var,TRUE);
+  }
+
+  if( defined('WP_DEBUG_LOG') && is_file(WP_DEBUG_LOG) )
+  {
+    error_log($var, 3, WP_DEBUG_LOG);
+  }
+  else
+  {
+    error_log($var);
+  }
+}
+
+
+
+
+
+
+
+function wpt_labelize( $str )
+{
+  return ucwords(str_replace(['_','-'],' ',$str));
+}
+
+
+
+function wpt_slugify( $str )
+{
+  return strtolower(str_replace(' ','_',$str));
+}
+
+
+
+function wpt_section( $id, $content )
+{
+  echo '<section id="' . $id . '">';
+  echo '<div class="container">';
+  echo $content;
+  echo '</div>';
+  echo '</section>';
 }
 
 
@@ -91,14 +286,12 @@ if( ! function_exists('wpt_slugify') )
  * @param  int $post_id ID of post
  * @return string|false FALSE if post is not a page
  */
-if( ! function_exists('get_post_slug') )
+function get_post_slug($post_id)
 {
-    function get_post_slug($post_id)
-    {
-        $post = get_post($post_id);
-        return $post ? $post->post_name : FALSE;
-    }
+    $post = get_post($post_id);
+    return $post ? $post->post_name : FALSE;
 }
+
 
 /**
  * Combine array of classnames
@@ -107,7 +300,7 @@ if( ! function_exists('classes') )
 {
     function classes( $classes )
     {
-        return is_array($classes) ? implode(' ', $classes) : $classes;
+      return is_array($classes) ? implode(' ', $classes) : $classes;
     }
 }
 
@@ -134,16 +327,6 @@ if( ! function_exists('prefix') )
   }
 }
 
-/**
- * Get the short class name of an object without namespace
- */
-if( ! function_exists('get_class_shortname') )
-{
-  function get_class_shortname( $object )
-  {
-    return (new \ReflectionObject($object))->getShortName();
-  }
-}
 
 
 
@@ -258,10 +441,10 @@ if( ! function_exists('backtrace_array') )
 
     foreach($trace as $item)
     {
-      $class = element($item,'class');
-      $func  = element($item,'function');
-      $file  = element($item,'file');
-      $line  = element($item,'line');
+      $class = wpt_element($item,'class');
+      $func  = wpt_element($item,'function');
+      $file  = wpt_element($item,'file');
+      $line  = wpt_element($item,'line');
       
       $str = ( $class ? $class .'::'.$func : $func ) . '() ' . "\t";
       $str .= $file . ' [line ' . $line;
@@ -322,6 +505,8 @@ if( ! function_exists('wpt_background_video') )
 }
 
 
+
+
 /**
  * Get a theme setting
  */
@@ -334,13 +519,3 @@ if( ! function_exists('wpt_setting') )
 }
 
 
-/**
- * Load a theme partial view
- */
-if( ! function_exists('wpt_partial') )
-{
-  function wpt_partial( $path, $data = array(), $repeat = 1 )
-  {
-    WPTheme\Theme::partial( $path, $data, $repeat );
-  }
-}
