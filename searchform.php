@@ -4,7 +4,6 @@ $action = home_url('/');
 $label  = __('Search');
 $query  = get_search_query();
 
-
 ?>
 <form action="<?= $action ?>" method="get" class="form-inline">
     <fieldset>

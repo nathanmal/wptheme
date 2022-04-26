@@ -1,0 +1,65 @@
+/**
+ * Creates a z-depth absolutely positioned full width & height layer
+ * @param  {[type]} $layer: null          [description]
+ * @return {[type]}         [description]
+ */
+@mixin layer( $layer: null ) 
+{
+    // Parent must have position set
+    position:absolute;
+    // Snap to edges
+    top:0; right:0; bottom:0; left:0;
+    // Optional z-indexing
+    @if( $layer and $layer > 0 )
+    {
+      z-index:($layer);
+    }
+}
+
+/**
+ * Mixin shortcuts for specifying responsive styles
+ *
+ * .element {
+ *   background:red;
+ *
+ *   @include mobile() {
+ *      background:blue;
+ *   }
+ * }
+ * @return {[type]} [description]
+ */
+@mixin mobile() {
+  @media only screen and ( max-width: $break-mobile ) { @content; }
+}
+
+@mixin mobile_up() {
+  @media only screen and ( min-width: $break-mobile + 1 ) { @content; }
+}
+
+@mixin tablet() {
+  @media only screen and ( min-width: $break-mobile + 1) and ( max-width: $break-tablet - 1 ) { @content; }
+}
+
+@mixin tablet_up() {
+  @media only screen and ( min-width: $break-mobile + 1) { @content; }
+}
+
+@mixin tablet_down(){
+  @media only screen and ( max-width: $break-tablet - 1 ) { @content; }
+}
+
+@mixin desktop() {
+  @media only screen and ( min-width: $break-desktop + 1 ) and ( max-width: $break-large - 1 ) { @content; }
+}
+
+@mixin desktop_up() {
+  @media only screen and ( min-width: $break-desktop + 1 )  { @content; }
+}
+
+@mixin desktop_down() {
+  @media only screen and  ( max-width: $break-large - 1 )  { @content; }
+}
+
+@mixin desktop_large(){
+  @media only screen and ( min-width: $break-large ) { @content; }
+}

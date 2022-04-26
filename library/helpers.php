@@ -24,13 +24,13 @@ function wpt()
  * @param  boolean $return [description]
  * @return [type]          [description]
  */
-function wpt_partial( string $slug, array $args = [], $return = FALSE )
+function wpt_partial( string $slug, string $name = NULL, array $args = [], $return = FALSE )
 {
   ob_start();
 
-  $path = 'views/partials/' . $slug;
+  $path = 'partials/' . $slug;
 
-  if( FALSE === get_template_part( $path, NULL, $args ) )
+  if( FALSE === get_template_part( $path, $name, $args ) )
   {
     $content = '[Partial missing: ' . $path . ']';
   }
@@ -46,6 +46,19 @@ function wpt_partial( string $slug, array $args = [], $return = FALSE )
   echo $content;
 
   // return wpt()->partial($path, $data, $return);
+}
+
+
+
+function wpt_template()
+{
+  return \WPTheme\Template::instance()->path;
+}
+
+
+function wpt_template_type()
+{
+  return \WPTheme\Template::instance()->type;
 }
 
 /**
@@ -66,7 +79,18 @@ function wpt_menu( string $name, array $args = [] )
  */
 function wpt_title()
 {
-  echo '<title>'.wp_title('|', FALSE).'</title>';
+  $title = get_bloginfo('name');
+
+  if( is_front_page() )
+  {
+    $title .= ' | ' . get_bloginfo('description');
+  }
+  else
+  {
+    $title .= wp_title('|', FALSE);
+  }
+
+  echo '<title>' . $title . '</title>';
 }
 
 /**
@@ -85,8 +109,10 @@ function wpt_content()
  * @param  string $path [description]
  * @return [type]       [description]
  */
-function wpt_url( string $path )
+function wpt_asset_locate( string $path )
 {
+  $path = ltrim($path, '/');
+
   if( file_exists( STYLESHEETPATH . '/' . $path ) )
   {
     return get_stylesheet_directory_uri() . '/' . $path;
@@ -95,6 +121,30 @@ function wpt_url( string $path )
   if( file_exists( TEMPLATEPATH . '/' . $path ) )
   {
     return get_template_directory_uri() . '/' . $path;
+  }
+
+  return '';
+}
+
+
+
+function wpt_asset( string $path, string $where = '' )
+{
+  $path = '/' . wpt_prefix( ltrim($path,'/'), 'assets/' );
+
+  if( empty($where) )
+  {
+    return wpt_asset_locate( $path );
+  }
+
+  if( $where == 'template' )
+  {
+    return get_template_directory_uri() . $path;
+  }
+
+  if( $where == 'stylesheet' )
+  {
+    return get_stylesheet_directory_uri() . $path;
   }
 
   return '';
@@ -118,7 +168,7 @@ function wpt_brand()
  */
 function wpt_copyright()
 {
-  echo '<p class="copyright">All content and media copyright &copy; '.bloginfo('name').' '.date('Y').'</p>';
+  echo '<p class="copyright">All content and media copyright &copy; '.get_bloginfo('name').' '.date('Y').'</p>';
 }
 
 
@@ -130,11 +180,78 @@ function wpt_copyright()
  */
 function wpt_shortname( $object )
 {
-  return (new \ReflectionObject($object))->getShortName();
+  return is_object($object) ? (new \ReflectionObject($object))->getShortName() : '';
 }
 
 
 
+
+function wpt_sidebar( $name = 'main' )
+{
+  if( is_active_sidebar($name) )
+  {
+    dynamic_sidebar($name);
+  }
+}
+
+
+
+function wpt_dropdown( string $name, array $options = array(), $value = NULL, array $attr = array() )
+{
+
+  $class = $attr['class'] ?? '';
+
+  echo '<select class="wpt-select2 ' . $class . '">';
+
+  foreach( $options as $val => $label )
+  {
+    $selected = is_array($value) ? in_array($val, $value) : $val == $value;
+
+    echo '<option value="' . $val . '" ' . ($selected) ? 'selected' : '' . '>' . $label . '</option>';
+  }
+
+  echo '</select>'; 
+}
+
+
+function wpt_category_dropdown( string $taxonomy = 'category', string $current = '', $post_type = 'post' )
+{
+  $categories = get_categories(['taxonomy'=>$taxonomy]);
+
+  $current = ! empty($current) ? get_term_by('slug', $current, $taxonomy) : FALSE;
+
+  $labels = get_taxonomy_labels(get_taxonomy($taxonomy));
+
+  ?>
+  <div class="dropdown wpt-category-dropdown d-grid">
+
+    <button class="btn dropdown-toggle d-lg-block" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <?= $current ? $current->name : $labels->all_items ?>
+    </button>
+
+    <ul class="dropdown-menu" aria-labelledby="category-dropdown">
+
+      <li><a href="<?= get_post_type_archive_link($post_type) ?>"><?= $labels->all_items ?></a></li>
+
+      <?php
+      foreach($categories as $category)
+      {
+        $active = $current && $current->slug == $category->slug ? 'active' : '';
+        $count = '(' . $category->category_count . ')';
+        ?>
+        <li class="<?= $active ?>">
+          <a href="<?= get_term_link($category) ?>"><?= $category->name ?> <?= $count ?></a>
+        </li>
+        <?php
+      }
+      ?>
+
+
+    </ul>
+  </div>
+  <?php
+
+}
 
 /**
  * Fetch an element from an array, allowing multidimentional search with . separators
@@ -176,16 +293,69 @@ if( ! function_exists('pre') )
 }
 
 
+function wpt_attr( array $attr )
+{
+  $str = '';
+
+  foreach($attr as $name => $value)
+  {
+    if( is_int($name) )
+    {
+      $str .= ' ' . $value;
+    }
+    else
+    {
+      $str .= ' ' . $name . '="' . esc_attr($value) . '"';
+    }
+  }
+
+  return $str;
+}
+
+
+
+
+function wpt_image( string $path, array $attr = array() )
+{
+  if( $url = wpt_image_url($path) )
+  {
+    return '<img src="' . $url .'" ' . wpt_attr($attr) . ' />';
+  }
+}
+
+
+
+function wpt_image_url( string $image )
+{
+  if( file_exists( TEMPLATEPATH . '/assets/images/' . $image ) )
+  {
+    return get_template_directory_uri() . '/assets/images/' . $image;
+  }
+
+  if( file_exists( STYLESHEETPATH . '/assets/images/' . $image) )
+  {
+    return get_stylesheet_directory_uri() . '/assets/images/' . $image;
+  }
+
+  return '';
+}
+
 
 function wpt_post_container_class( $classes = array() )
 {
-  return 'container-fluid';
+  return apply_filters('wpt_post_container_class', 'container-fluid');
 }
 
 
 function wpt_navbar_class()
 {
-  return 'navbar-shy navbar-expand-md';
+  return 'navbar-expand-lg';
+}
+
+
+function wpt_navbar_menu_classes()
+{
+  return 'collapse navbar-collapse';
 }
 
 /**
@@ -254,7 +424,10 @@ function wpt_log( $var )
 
 
 
+function wpt_plugin_active( string $plugin )
+{
 
+}
 
 
 function wpt_labelize( $str )
@@ -281,6 +454,20 @@ function wpt_section( $id, $content )
 }
 
 
+function wpt_pagination()
+{
+  global $wp_query;
+
+  if( empty($wp_query) OR empty($wp_query->max_num_pages) )
+  {
+    return '';
+  }
+
+  return paginate_links();
+}
+
+
+
 /**
  * Get slug of a post
  * @param  int $post_id ID of post
@@ -291,6 +478,26 @@ function get_post_slug($post_id)
     $post = get_post($post_id);
     return $post ? $post->post_name : FALSE;
 }
+
+
+
+/**
+ * Classes for the header
+ * @return [type] [description]
+ */
+function wpt_header_classes()
+{
+  $classes = apply_filters( 'wpt_header_classes', array() );
+
+  return implode(' ', array_unique($classes) );
+}
+
+
+
+
+
+
+
 
 
 /**

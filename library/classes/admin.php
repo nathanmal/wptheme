@@ -85,9 +85,9 @@ class Admin
    */
   public function enqueue()
   {
-    wp_enqueue_script('wpt-admin', wpt_url('assets/dist/admin.js'), array('jquery'), FALSE, TRUE );
+    wp_enqueue_script('wpt-admin', wpt_asset('assets/dist/admin.js'), array('jquery'), FALSE, TRUE );
 
-    wp_enqueue_style('wpt-admin', wpt_url('assets/dist/admin.css') );
+    wp_enqueue_style('wpt-admin', wpt_asset('assets/dist/admin.css') );
   }
 
 

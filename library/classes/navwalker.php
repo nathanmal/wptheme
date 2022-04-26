@@ -61,7 +61,16 @@ class Navwalker extends Walker_Nav_Menu
                 $menuID   = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args );
 
                 $classes[] = $menuID;
+
                 $classes[] = 'nav-item';
+
+                if( $item->object == 'page' && $item->object_id )
+                {
+                  $slug = wp_basename(get_permalink($item->object_id));
+                  
+                  $classes[] = 'menu-item-page-' . $slug; 
+                  //$classes[] = 'menu-item-title-' . strtolower(str_replace(['_',' '],'-',$item->title));
+                }
 
                 if( $dropdown ) $classes[] = 'dropdown';
                 if( $current ) $classes[] = 'current';
@@ -91,6 +100,8 @@ class Navwalker extends Walker_Nav_Menu
                         $atts['href']  = ! empty( $item->url ) ? $item->url : '';
                         $atts['class'] = $depth > 0 ? 'dropdown-item' : 'nav-link';
                 }
+
+
 
                 $atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args );
 
@@ -136,13 +147,18 @@ class Navwalker extends Walker_Nav_Menu
          * @return null Null on failure with no changes to parameters.
          */
         public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
-                if ( ! $element ) {
-                                return; }
-                        $id_field = $this->db_fields['id'];
-                        // Display this element.
-                        if ( is_object( $args[0] ) ) {
-                                $args[0]->has_children = ! empty( $children_elements[ $element->$id_field ] ); }
-                        parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+          
+          if ( ! $element ) return; 
+
+          $id_field = $this->db_fields['id'];
+
+          // Display this element.
+          if ( is_object( $args[0] ) ) 
+          {
+            $args[0]->has_children = ! empty( $children_elements[ $element->$id_field ] ); 
+          }
+
+          parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
         }
 
 

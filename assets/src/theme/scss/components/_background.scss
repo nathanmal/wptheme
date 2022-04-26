@@ -1,0 +1,17 @@
+#background 
+{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100vw;
+  min-height:100vh;
+  max-height:100%;
+  background-position: top center;
+  background-size:cover;
+  z-index:-1;
+
+  &.background-fixed
+  {
+    position:fixed;
+  }
+}

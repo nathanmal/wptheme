@@ -47,106 +47,14 @@ header,main,footer
   z-index:0;
 }
 
-header#header 
-{
-  position:relative;
-  z-index:1020;
-  width:100%;
-  height:auto;
-  
-  &.header-fixed 
-  {
-    position:fixed;
-    top:0;
-    z-index:1040;
-  }
-}
-
-
-
 main 
 {
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: auto;
-  
   display:flex;
   flex-direction: column;
-
   width:100%;
-
-  .main-article
-  {
-
-
-  }
-
-
-  .post-article
-  {
-    width:100%;
-    margin-bottom:4rem;
-
-
-    .post-header
-    {
-
-    }
-
-    .post-content
-    {
-      width:100%;
-    }
-
-    .post-footer
-    {
-
-    }
-  }
 }
-
-header.header-fixed + main
-{
-  margin-top:100px;
-}
-
-
-/**
- * Headers
- */
-h1,h2,h3,h4,h5,h6 {
-  font-family: $font-heading;
-  font-weight: $font-weight-heading;
-}
-
-h1 { font-size: $font-size-h1; }
-h2 { font-size: $font-size-h2; }
-h3 { font-size: $font-size-h3; }
-h4 { font-size: $font-size-h4; }
-h5 { font-size: $font-size-h5; }
-h6 { font-size: $font-size-h6; }
-
-
-footer#footer 
-{
-  background-color:$color-light;
-  text-align: center;
-  width:100%;
-  padding:2rem;
-}
-
-#background 
-{
-  position: fixed;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  background-position: top center;
-  background-size:cover;
-  z-index:-1;
-}
-
-
 
 

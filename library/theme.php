@@ -20,13 +20,6 @@ final class Theme
 
 
 	/**
-	 * Registered shortcodes
-	 * @var array
-	 */
-	private static $shortcodes = array();
-
-
-	/**
 	 * Get the theme instance 
 	 * @return [type] [description]
 	 */
@@ -36,34 +29,15 @@ final class Theme
 
 		return self::$instance;
 	}
-	
 
-	/**
-	 * Initialization
-	 * @return [type] [description]
-	 */
-	public static function init()
-	{
-		// Only allow init once
-		if( self::$instance ) return;
-
-		// Instantiate singleton
-		$wptheme = self::instance();
-
-		// Hook into WP theme activation
-		add_action( 'after_switch_theme', array($wptheme, 'activate') );
-
-		// Hook into WP theme deactivation
-		add_action( 'switch_theme', array($wptheme, 'deactivate') );
-
-	}
 
 
 	/**
-	 * If the theme has a child theme
-	 * @var boolean
+	 * Shortcode instances
+	 * @var array
 	 */
-	public $has_child = FALSE;
+	private $shortcodes = array();
+
 
 
 	/**
@@ -71,41 +45,17 @@ final class Theme
 	 */
 	public function __construct()
 	{	
-		// Load template class
-		$this->template = new Template();
+		// Load theme classes
+		$this->includes();
 
-		// Load enqueue class
-		$this->enqueue = new Enqueue();
+		// Hook into WP theme activation
+		add_action( 'after_switch_theme', array( $this, 'activate') );
 
-		// Load option class
-		$this->option = new Option();
+		// Hook into WP theme deactivation
+		add_action( 'switch_theme', array( $this, 'deactivate') );
 
-		// Declare support 
-		$this->register_supports();
-
-		// Register Post Types
-		$this->register_post_types();
-
-		// Register nav menus
-		$this->register_menus();
-
-		// Register sidebars
-		$this->register_sidebars();
-
-		// Register widgets
-		$this->register_widgets();
-
-		// Register actions & filters
-		$this->register_actions();
-
-		// Load custom shortcodes
-		$this->register_shortcodes();
-
-		// Run security routines
-		$this->clean_up();
-
-		// Mark if this has a child theme
-		$this->has_child = ! (STYLESHEETPATH === TEMPLATEPATH);
+		// Setup the theme options & supports
+		add_action( 'after_setup_theme', array( $this, 'init') );
 
 		// load admin if needed
 		if( is_admin() )
@@ -115,13 +65,62 @@ final class Theme
 
 	}
 
-
 	/**
-	 * Declare supported features
+	 * Include classes and functions
 	 * @return [type] [description]
 	 */
-	public function register_supports()
-	{		
+	private function includes()
+	{
+		include_once THEME_LIB . '/classes/template.php';
+		include_once THEME_LIB . '/classes/enqueue.php';
+		include_once THEME_LIB . '/classes/option.php';
+		include_once THEME_LIB . '/classes/menu.php';
+	}
+
+	/**
+	 * Returns TRUE if we are using a child theme
+	 * @return boolean [description]
+	 */
+	public function has_child()
+	{
+		return ! (STYLESHEETPATH === TEMPLATEPATH);
+	}
+
+
+	/**
+	 * Run theme setup
+	 * @return [type] [description]
+	 */
+	public function init()
+	{
+		// Add slug className to body
+		add_filter( 'body_class', array( $this, 'body_class' ) );
+
+		// Customizer controls
+		add_action( 'customize_register', array( '\WPTheme\Customize', 'init' ), 10, 1 );
+
+    // Add theme support
+    $this->add_supports();
+
+    // Register custom menus
+		$this->register_menus();
+
+		// Register custom sidebars
+		$this->register_sidebars();
+
+		// Register custom shortcodes
+		$this->register_shortcodes();
+
+		// Remove unwanted hooks
+		$this->cleanup_hooks();
+	}
+
+
+	/**
+	 * Add theme supports
+	 */
+	public function add_supports()
+	{
 		// Declare thumbnail support
 		add_theme_support( 'post-thumbnails' );
 
@@ -137,33 +136,38 @@ final class Theme
 		// Add RSS Support
 		add_theme_support( 'automatic-feed-links' );
 
+		// Woocommerce support
+		add_theme_support( 'woocommerce' );
+
+		// Add zoom gallery support
+		add_theme_support( 'wc-product-gallery-zoom' );
+		
+		// Product galleries
+		add_theme_support( 'wc-product-gallery-lightbox' );
+		
+		// Product gallery sliders
+		add_theme_support( 'wc-product-gallery-slider' );
 	}
 
-
 	/**
-	 * Register custom post types
-	 * @return [type] [description]
-	 */
-	public function register_post_types(){}
-
-
-
-
-	/**
-	 * Register menus defined in theme.config.php
+	 * Register custom menus
 	 * @return [type] [description]
 	 */
 	public function register_menus()
 	{
-		$menus =  array(
-		  'main'   => __( 'Main Menu',   THEME_DOMAIN ), 
-		  'members'=> __( 'Members Menu', THEME_DOMAIN ),   
-		  'footer' => __( 'Footer Menu', THEME_DOMAIN ),
-		  'links'  => __( 'Links Menu', THEME_DOMAIN ),
-		  'social' => __( 'Social Menu', THEME_DOMAIN )
-		);
+		$menus = apply_filters( 'wpt_register_menus',array(
+		  'main'    => __( 'Main Menu',    THEME_DOMAIN ), 
+		  'mobile'  => __( 'Mobile Menu',  THEME_DOMAIN ), 
+		  'members' => __( 'Members Menu', THEME_DOMAIN ),   
+		  'footer'  => __( 'Footer Menu',  THEME_DOMAIN ),
+		  'links'   => __( 'Links Menu',   THEME_DOMAIN ),
+		  'social'  => __( 'Social Menu',  THEME_DOMAIN )
+		));
 
-		foreach($menus as $menu => $label) register_nav_menu($menu, __($label, THEME_DOMAIN) );
+		foreach($menus as $menu => $description)
+		{
+			register_nav_menu($menu, __($description, THEME_DOMAIN));
+		}
 	}
 
 	/**
@@ -172,79 +176,33 @@ final class Theme
 	 */
 	public function register_sidebars()
 	{
-		// Main sidebar
-		register_sidebar(array(
-      'id'            => 'main',
-      'name'          => __( 'Main Sidebar', THEME_DOMAIN ),
-      'description'   => __( 'The main sidebar.', THEME_DOMAIN ),
-      'before_widget' => '<div id="%1$s" class="widget %2$s">',
-      'after_widget'  => '</div>',
-      'before_title'  => '<h4 class="widgettitle">',
-      'after_title'   => '</h4>'
-    ));
+		$sidebars = apply_filters( 'wpt_register_sidebars', array(
+			array(
+	      'id'            => 'main',
+	      'name'          => __( 'Primary Sidebar', THEME_DOMAIN ),
+	      'description'   => __( 'The primary sidebar.', THEME_DOMAIN ),
+	      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+	      'after_widget'  => '</div>',
+	      'before_title'  => '<h4 class="widgettitle">',
+	      'after_title'   => '</h4>'
+	    ),
 
-		// Footer sidebar
-    register_sidebar(array(
-      'id'            => 'footer',
-      'name'          => __( 'Footer Sidebar', THEME_DOMAIN ),
-      'description'   => __( 'The footer sidebar.', THEME_DOMAIN ),
-      'before_widget' => '<div id="%1$s" class="widget %2$s">',
-      'after_widget'  => '</div>',
-      'before_title'  => '<h4 class="widgettitle">',
-      'after_title'   => '</h4>'
-    ));
-	}
+	    array(
+	      'id'            => 'footer',
+	      'name'          => __( 'Footer Sidebar', THEME_DOMAIN ),
+	      'description'   => __( 'The footer sidebar.', THEME_DOMAIN ),
+	      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+	      'after_widget'  => '</div>',
+	      'before_title'  => '<h4 class="widgettitle">',
+	      'after_title'   => '</h4>'
+	    )
+		));
 
-
-	/**
-	 * Register widgets defined in theme.config.php
-	 * @return [type] [description]
-	 */
-	public function register_widgets()
-	{
-		// load widget files
-		$files  = glob(THEME_LIB.'/widgets/*.php');
-
-		if( ! empty($files) )
+		foreach($sidebars as $sidebar)
 		{
-			foreach($files as $file) 
-			{
-				include $file;
-
-				$name  = pathinfo($file, PATHINFO_FILENAME);
-				$class = ucfirst($name) . '_Widget';
-
-				if( class_exists($class, FALSE) )
-				{
-					register_widget($class);
-				}
-			}
+			register_sidebar( $sidebar );
 		}
 	}
-
-
-	/**
-	 * Register actions & filters
-	 * @return [type] [description]
-	 */
-	public function register_actions()
-	{
-		// Hide descriptive login errors
-		// add_filter( 'login_errors', 'WPTheme\\Theme::secure_failed_login' );
-
-		// Add slug className to body
-		add_filter( 'body_class', array( $this, 'body_class' ) );
-
-		
-		add_action( 'customize_register', array( '\WPTheme\Customize', 'init' ), 10, 1 );
-
-		// Register Widgets
-		// add_action( 'widgets_init', 'WPTheme\\Theme::register_widgets');
-
-		// Enqueue scripts on front end
-		// add_action( 'wp_enqueue_scripts', array( $this, 'enquque_scripts') , 10, 1);
-	}
-
 
 
 	/**
@@ -252,24 +210,32 @@ final class Theme
 	 */
 	public function register_shortcodes()
 	{
-		$files  = glob( THEME_LIB.'/classes/shortcode/*.php');
+		$shortcodes = apply_filters( 'wpt_register_shortcodes', array(
+			'lipsum'  => '\\WPTheme\\Shortcode\\Lipsum',
+			'partial' => '\\WPTheme\\Shortcode\\Partial'
+		));
 
-		foreach($files as $file)
-		{ 
-			$class = '\\WPTheme\\Shortcode\\' . ucfirst(pathinfo($file, PATHINFO_FILENAME));
-
-			if( class_exists($class) )
+		foreach($shortcodes as $id => $class)
+		{
+			if( isset($this->shortcodes[$id]) )
 			{
-				$shortcode = new $class();
+				wp_die('Shortcode already loaded: ' . $id);
+			}
 
-				$shortcode->register();
-			}
-			else
+			if( empty($class) )
 			{
-				wp_die('Shortcode class not found: ' . $class);
+				$class = '\\WPTheme\\Shortcode\\' . ucfirst($tag);
 			}
+
+			if( ! class_exists($class) )
+			{
+				wp_die('Could not load shortcode class: ' . esc_html($class) );
+			}
+
+			$this->shortcodes[$id] = new $class;
 		}
 	}
+
 
 	
 	/**
@@ -277,40 +243,52 @@ final class Theme
 	 * @category optimization
 	 * @return [type] [description]
 	 */
-	public function clean_up()
+	public function cleanup_hooks()
 	{
-
 		// Remove generated by tag
 		add_filter( 'the_generator', '__return_empty_string' );
+
 		// Edit URI link
 		remove_action( 'wp_head', 'rsd_link' );
+
 		// windows live writer
 		remove_action( 'wp_head', 'wlwmanifest_link' );
+
 		// previous link
 		remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
+
 		// start link
 		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
+
 		// links for adjacent posts
 		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+
 		// WP version
 		remove_action( 'wp_head', 'wp_generator' );
+
 		// Remove index link
 		remove_action( 'wp_head', 'index_rel_link' );
+
 		// Remove feed links
 		remove_action( 'wp_head', 'feed_links', 2 );
+
 		// Remove extra feed links
 		remove_action( 'wp_head', 'feed_links_extra', 3 );
+
 		// Remove shortlink
 		remove_action( 'wp_head', 'wp_shortlink_wp_head', 10, 0 );
+
 		// Remove rest head link
 		remove_action( 'wp_head',  'rest_output_link_wp_head');
+
 		// Remove oembed
 		remove_action( 'wp_head', 'wp_oembed_add_discovery_links');
+
 		// Remove rest output header
 		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
 
+		// Disable emoji stylesheets
 		$this->disable_emojis();
-
 	}
 
 	/**
@@ -327,12 +305,14 @@ final class Theme
     remove_action( 'wp_print_styles', 'print_emoji_styles' );
     // Remove admin emoji styles
     remove_action( 'admin_print_styles', 'print_emoji_styles' );
+
     // Remove feed emojis
     remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
     // Remove comment emjois
     remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
     // Remove email emojis
     remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+
     // Remove emojis from tinymce
     add_filter( 'tiny_mce_plugins', [$this,'disable_emojis_tinymce'] );
     // Remove emoji prefetching
@@ -368,9 +348,6 @@ final class Theme
 
     return $urls;
  }
-
-
-
 
 
 	/**
@@ -424,8 +401,8 @@ final class Theme
 			'container'       => '',                           		
 			'container_class' => 'nav-container',  								 
 			'menu_class'      => 'nav-wrapper',               					
-			'fallback_cb'     => array('WPTheme\\Navwalker','fallback'),
-    	'walker'          => new Navwalker()
+			// 'fallback_cb'     => array('WPTheme\\Navwalker','fallback'),
+    	// 'walker'          => new Navwalker()
 		);
 
 		$menu = wp_parse_args($config, $menu);
@@ -451,13 +428,20 @@ final class Theme
 	 */
 	public function body_class( $classes ) 
 	{
-		global $post;
-
-		$classes[] = str_replace('/', '-', $this->template->type);
-
-		if ( isset( $post ) ) 
+		if( $type = wpt_template_type() )
 		{
+			$classes[] = 'template-' . $type;
+		}
+		
+		if( $post = get_post() ) 
+		{
+			$classes[] = 'post-type-' . $post->post_type;
+
+			$classes[] = 'post-slug-' . $post->post_name;
+
 			$classes[] = $post->post_type . '-' . $post->post_name;
+
+
 		}
 
 		return $classes;

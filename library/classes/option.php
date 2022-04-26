@@ -4,12 +4,13 @@ namespace WPTheme;
 
 class Option
 {
+  use \WPTheme\Traits\Singleton;
+
   /**
    * Holds loaded options
    * @var array
    */
   private static $options = array();
-
 
   /**
    * Get an options group
@@ -164,3 +165,6 @@ class Option
   }
 
 }
+
+
+Option::instance();

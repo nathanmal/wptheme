@@ -2,12 +2,15 @@
 
 namespace WPTheme;
 
-class Template
+final class Template
 {
 
+  use \WPTheme\Traits\Singleton;
 
-
-
+  /**
+   * Built in wordpress templates
+   * @var [type]
+   */
   public $templates = [
     '404',
     'search',
@@ -24,6 +27,7 @@ class Template
     'author',
     'date',
     'archive',
+    'search',
     'index'
   ];
 
@@ -46,22 +50,73 @@ class Template
    */
   public function __construct()
   {
-    foreach( $this->templates as $template )
-    {
-      // add_filter($template .'_template', [$this,'locate'],10,3);
-    }
+
+    $priority = 1;
+
+
+    // 404 Template
+    add_filter( '404_template', array($this, 'notfound'), $priority, 3);
+
+    // Frontpage template
+    add_filter( 'frontpage_template', array($this, 'frontpage'), $priority, 3);
  
     // Pages
-    add_filter( 'page_template', array($this, 'page'), 10, 3 );
+    add_filter( 'page_template', array($this, 'page'), $priority, 3 );
+
+    // Search results page
+    add_filter( 'search_template', array($this, 'search'), $priority, 3);
 
     // Archive pages
-    add_filter( 'archive_template', array($this, 'archive'), 10, 3);
+    add_filter( 'archive_template', array($this, 'archive'), $priority, 3);
+
+    // Category template
+    add_filter( 'category_template', array($this, 'category'), $priority, 3);
+
+    // Generic taxonomy template
+    add_filter( 'taxonomy_template', array($this, 'taxonomy'), $priority, 3);
 
     // Single post templates
-    add_filter( 'single_template', array($this, 'single'), 10, 3);
+    add_filter( 'single_template', array($this, 'single'), $priority, 3);
+
+
+    add_filter( 'template_include', array($this, 'include'), 10, 1);
 
     // Manage theme template directory
-    add_filter( 'theme_page_templates', array( $this, 'page_templates'), 10, 4);
+    add_filter( 'theme_page_templates', array( $this, 'page_templates'), $priority, 4);
+  }
+
+
+  public function include( $template )
+  {
+    $this->path = $template;
+    $this->type = pathinfo($template, PATHINFO_FILENAME);
+    return $template;
+  }
+
+  /**
+   * 404 Template
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
+  public function notfound( $template )
+  { 
+    return $template;
+  }
+
+
+  /**
+   * Front page template
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
+  public function frontpage( $template )
+  {
+    if( $found = locate_template( 'templates/front.php' ) )
+    {
+      return $found;
+    }
+
+    return $template;
   }
 
   /**
@@ -78,15 +133,36 @@ class Template
     $slug = get_page_uri($post_id);
 
     // Check pages directory for page
-    if( $found = locate_template( 'views/pages/' . $slug . '.php' ) )
+    if( $found = locate_template('templates/page/' . $slug . '.php') )
+    {
+      return $found;
+    }
+
+    // Check for generic page template
+    if( $found = locate_template('templates/page.php') )
+    {
+      return $found;
+    }
+
+    // Use wp default location
+    return $template;
+
+  }
+
+  /**
+   * Search results page
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
+  public function search( $template )
+  {
+    if( $found = locate_template('templates/search.php') )
     {
       return $found;
     }
 
     return $template;
-
   }
-
 
   /**
    * Load custom archive template
@@ -95,22 +171,53 @@ class Template
    */
   public function archive( $template )
   {
-    // Get the current post ID
-    $post_id = get_the_ID();
-
     // Get the post type
-    $type = get_post_type($post_id);
-
+    $type = $this->get_post_type();
 
     if( $type && is_post_type_archive($type) )
     {
-      if( $found = locate_template( 'views/archive/' . $type . '.php') )
+      if( $found = locate_template( 'templates/archive/' . $type . '.php') )
+      {
+        return $found;
+      }
+    }
+
+    // Check for archive template
+    if( $found = locate_template( 'templates/archive.php') )
+    {
+      return $found;
+    }
+
+    return $template;
+  }
+
+
+  public function category( $template )
+  {
+    $category = get_the_category();
+
+    exit();
+
+    return $template;
+  }
+
+
+  public function taxonomy( $template )
+  {
+    $taxonomy = get_query_var( 'taxonomy' );
+
+    $term = get_query_var( 'term' );
+
+    if( $taxonomy )
+    {
+      if( $found = locate_template( 'templates/taxonomy/' . $taxonomy .'.php') )
       {
         return $found;
       }
     }
 
     return $template;
+
   }
 
   /**
@@ -126,7 +233,14 @@ class Template
     // Get the post type
     $type = get_post_type($post_id);
 
-    if( $type && $found = locate_template( 'views/single/' . $type . '.php' ) )
+    // Check for template that matches post type
+    if( $type && $found = locate_template( 'templates/single/' . $type . '.php' ) )
+    {
+      return $found;
+    }
+
+    // Check for single post template
+    if( $found = locate_template('templates/single.php') )
     {
       return $found;
     }
@@ -166,7 +280,7 @@ class Template
       case 'page':
 
         // Search for page slug template
-        if( $found = $this->find('pages/'.$post_slug) ) break;
+        if( $found = $this->find('page/'.$post_slug) ) break;
 
         // Search for page template
         $found = $this->find('page');
@@ -210,7 +324,7 @@ class Template
     $path = wpt_suffix($path, '.php');
 
     // Add views directory if needed
-    $path = wpt_prefix($path, 'views/');
+    $path = wpt_prefix($path, 'templates/');
 
     // Use built in locate_template function
     return locate_template( array($path) );
@@ -234,7 +348,7 @@ class Template
    */
   public function page_templates( $templates, $theme, $post, $post_type )
   {
-    $files = glob(THEME_DIR.'/views/templates/*.php');
+    $files = glob( get_template_directory() . '/templates/*.php' );
 
     foreach($files as $file)
     { 
@@ -243,7 +357,7 @@ class Template
       // Skip if file doesn't have 
       if ( ! preg_match( '|Template Name:(.*)$|mi', $content, $header ) ) continue;
 
-      $template = 'views/templates/' . $file;
+      $template = 'templates/' . $file;
 
       $templates[$template] = _cleanup_header_comment( $header[1] );
 
@@ -252,4 +366,30 @@ class Template
     return $templates;
   }
 
+
+  private function get_post_type()
+  {
+    // Get the current post ID
+    $post_id = get_the_ID();
+
+    // Check post for post type
+    if( $post_id )
+    {
+      return get_post_type($post_id);
+    }
+
+    // Check query vars for post type
+    if( $post_type = get_query_var('post_type') )
+    {
+      return $post_type;
+    }
+
+    // No post type found
+    return '';
+
+  }
+
 }
+
+
+Template::instance();

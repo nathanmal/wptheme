@@ -41,5 +41,5 @@ spl_autoload_register( 'wptheme_autoload' );
 // Helper functions
 require_once('library/helpers.php');
 
-// Hook into WP theme init
-add_action( 'init', array('WPTheme\\Theme', 'init') );
+// Initialize theme
+wpt();

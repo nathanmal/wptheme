@@ -8,7 +8,7 @@ use joshtronic\LoremIpsum;
 class Lipsum extends Shortcode
 {
 
-  public function run( array $attributes, string $content, string $tag )
+  public function run( $attributes, $content, $tag )
   {
     $generator = new LoremIpsum();
 

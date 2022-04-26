@@ -1,9 +1,7 @@
-// Webpack 5
 const webpack                 = require('webpack');
 const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin }  = require('clean-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CssMinimizerPlugin      = require('css-minimizer-webpack-plugin');
 
 // Webpack config
@@ -29,7 +27,11 @@ module.exports = (env, argv) => {
       // Main theme file
       theme: path.resolve( __dirname, 'src/theme/theme.js'),
       // Admin stuff
-      admin: path.resolve( __dirname, 'src/admin/admin.js')
+      admin: path.resolve( __dirname, 'src/admin/admin.js'),
+      // Customizer
+      customize: path.resolve( __dirname, 'src/customize/customize.js'),
+      // Customizer controls
+      controls: path.resolve( __dirname, 'src/controls/controls.js'),
     },
 
     // Output directory
