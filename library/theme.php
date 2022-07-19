@@ -61,9 +61,11 @@ final class Theme
 	protected function includes()
 	{
 		// Load functions
-		include_once THEME_LIB . '/inc/core.php';
-		include_once THEME_LIB . '/inc/content.php';
+		include_once THEME_LIB . '/inc/strings.php';
+		include_once THEME_LIB . '/inc/arrays.php';
+		include_once THEME_LIB . '/inc/assets.php';
 		include_once THEME_LIB . '/inc/templates.php';
+		include_once THEME_LIB . '/inc/content.php';
 		include_once THEME_LIB . '/inc/debug.php';
 
 		// Load core classes
@@ -368,34 +370,6 @@ final class Theme
 	}
 
 
-	/**
-	 * Get class names for an element
-	 * @param  [type] $element [description]
-	 * @return [type]          [description]
-	 */
-	public function classes( $element = NULL )
-	{
-		// Get from array
-		$classes = (string) wpt_element( Theme::$classes, $element, '' );
-
-		// Remove duplicate classes
-		$classes = implode(' ',array_unique(explode(' ', $classes)));
-
-		return $classes;
-	}
-
-
-
-	/**
-	 * Show less information on failed login attempt
-	 * @category security
-	 * @return [type] [description]
-	 */
-	public function secure_failed_login() 
-	{
-		return '<strong>ERROR</strong>: Invalid Login!';
-	}
-
 
 	/**
 	 * Add page slug to body class
@@ -421,98 +395,6 @@ final class Theme
 
 		return $classes;
 	}	
-
-	
-
-	/**
-	 * Load the template using similar WP style heirarchy
-	 * 
-	 * @return [type] [description]
-	 */
-	public function render()
-	{
-		$id 		= get_the_ID();
-		$type   = get_post_type($id);
-		$arch   = ! empty($type) ? 'archive-' . $type : FALSE;
-		$sing   = ! empty($type) ? 'single-' . $type : FALSE;
-
-		// Default
-		$template = 'index';
-
-		// Check for missing
-		if( is_404() ) {
-			$template = '404';
-		// Front page
-		} else if( is_front_page() && Theme::view_exists('front') ) {
-			$template = 'front';
-		// Home page
-		} else if( is_home() && Theme::view_exists('home') ) {
-			$template = 'home';
-		// Search Page
-		} else if( is_search() && Theme::view_exists('search') ) {
-			$template = 'search';
-		// Custom pages by slug or post_type
-		} else if( is_page() ) {
-
-			// Get the page uri including subdirectories
-			$slug = get_page_uri($id);
-
-			if( $slug && Theme::view_exists('pages/'.$slug) ){
-				$template = 'pages/'.$slug;
-			} 
-			else if( ! empty($type) && Theme::view_exists('pages/'.$type) ) {
-				$template = 'pages/'.$type;
-			}
-			else if( Theme::view_exists('page') ) {
-				$template = 'page';
-			}
-			
-		// Single Posts	by type or template				
-		} else if( is_single() ) {
-			if( ! empty($type) && Theme::view_exists('single/'.$type) ) {
-				$template = 'single/'.$type;
-			} else if( Theme::view_exists('single') ) {
-				$template = 'single';
-			}
-
-		// Archives
-		} else if( is_archive() ) {
-
-			if( ! empty($type) && is_post_type_archive($type) 
-				&& Theme::view_exists('archive/'.$type) ){
-				$template = 'archive/'.$type; 
-			} else if ( Theme::view_exists('archive') ){
-				$template = 'archive';
-			}
-		}
-
-
-		// Set the template
-		self::$template = $template;
-
-
-
-		// Render page content before header
-		$body = self::view($template, array(), 1, TRUE);
-		
-		// Render to browser
-		get_header();
-		echo $body;
-		get_footer();
-
-	}
-
-	/**
-	 * Get slug of a page
-	 * @param  int $post_id ID of post
-	 * @return string|false FALSE if post is not a page
-	 */
-	public function get_page_slug( $post_id )
-	{
-		$post = get_post($post_id);
-
-		return $post->post_type === 'page' ? $post->post_name : FALSE;
-	}
 
 
 

@@ -1,92 +1,50 @@
-<?php
-
+<?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal'); 
 
 
 
 /**
- * Enforce prefix on string
- * @param  string $str    [description]
- * @param  string $prefix [description]
- * @return [type]         [description]
+ * PSR-4 Plugin autoloader
+ * Used with spl_autoload_register
+ * @see    http://php.net/manual/en/function.spl-autoload-register.php
+ * @param  string $class Class name
  */
-function wpt_prefix( string $str, string $prefix )
-{
-  return str_starts_with( $str, $prefix ) ? $str : $prefix . $str;
-}
+function wpt_autoload($class)
+{ 
+  //if( strpos($class, 'WPtheme\\') !== 0 ) return;
+  if( 0 !== strpos($class, 'WPTheme\\') OR strlen($class) <= 8 ) return;
 
+  $class = substr($class, 8);
+  
+  $library = THEME_DIR . '/library';
 
-/**
- * Enforce suffix on a string
- * @param  string $str    [description]
- * @param  string $suffix [description]
- * @return [type]         [description]
- */
-function wpt_suffix( string $str, string $suffix )
-{
-  return str_ends_with($str,$suffix) ? $str : $str . $suffix;
-}
-
-
-/**
- * String starts with
- */
-if( ! function_exists('str_starts_with') )
-{
-  function str_starts_with($haystack, $needle) 
+  if( $class === 'Theme' )
   {
-    return substr($haystack, 0, strlen($needle)) === $needle;
+    require $library . '/theme.php';
+    return;
   }
-}
 
-/**
- * String ends with
- */
-if( ! function_exists('str_ends_with') )
-{
-  function str_ends_with($haystack, $needle) 
-  {
-    return substr($haystack,-strlen($needle))===$needle;
+  $path =  $library . '/classes/' . str_replace('\\','/',strtolower($class)) . '.php';
+
+  if( is_file($path) ) 
+  { 
+    require $path;
   }
+
 }
+
+
+// Register theme autoloader
+spl_autoload_register( 'wpt_autoload' );
 
 /**
- * Get theme asset URI
- * @param  string $path [description]
- * @return [type]       [description]
+ * Get the theme singleton
+ * @return [type] [description]
  */
-function wpt_asset( string $path, $subdir = '' )
+function wpt()
 {
-	$prefix = 'assets/';
-
-	if( ! empty($subdir) )
-	{
-		$prefix .= rtrim($subdir,'/') . '/';
-	}
-
-  $path = '/' . wpt_prefix( ltrim($path,'/'), $prefix );
-
-  return get_template_directory_uri() . $path;
-
+  return \WPTheme\Theme::instance();
 }
 
-/**
- * Get theme image
- * @param  string  $path [description]
- * @param  boolean $tag  [description]
- * @param  array   $attr [description]
- * @return [type]        [description]
- */
-function wpt_image( string $path, $tag = TRUE, array $attr = array() )
-{
-	$url = wpt_asset( $path, 'images' );
-
-	if( $tag )
-	{
-		return '<img src="' . $url .'" ' . wpt_attr($attr) . ' />';
-	}
-
-  return $url;
-}
 
 
 /**
@@ -101,14 +59,47 @@ function wpt_class_shortname( $object )
 
 
 
-function wpt_labelize( $str )
+/**
+ * Get the current page URL
+ */
+function wpt_current_url()
 {
-  return ucwords(str_replace(['_','-'],' ',$str));
+  global $wp;
+  return home_url($wp->request);
 }
 
 
 
-function wpt_slugify( $str )
+/**
+ * Get array of enqueued assets
+ * @return [type] [description]
+ */
+function wpt_enqueued()
 {
-  return strtolower(str_replace(' ','_',$str));
+    global $wp_scripts, $wp_styles;
+
+    $list = array('scripts'=>[],'styles'=>[]);
+
+    foreach( $wp_scripts->queue as $script )
+        $list['scripts'][] = $wp_scripts->registered[$script];
+
+    foreach( $wp_styles->queue as $style)
+        $list['styles'][] = $wp_styles->registered[$style];
+
+    return $list;
+
 }
+
+
+
+/**
+ * Get core setting
+ * @param  [type]  $key     [description]
+ * @param  boolean $default [description]
+ * @return [type]           [description]
+ */
+function wpt_setting($key, $default = FALSE)
+{
+    return WPTheme\Setting::get($key, $default);
+}
+

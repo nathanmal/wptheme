@@ -1,11 +1,10 @@
-<?php
-
+<?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal'); 
 
 /**
  * Get template instance class
  * @return [type] [description]
  */
-function wpt_template()
+function wpt_template_path()
 {
   return wpt()->template->getPath();
 }

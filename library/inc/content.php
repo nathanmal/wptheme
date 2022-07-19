@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal'); 
 
 
 /**
@@ -11,26 +11,13 @@ function wpt_content()
 }
 
 
-
+/**
+ * Output the page header
+ * @return [type] [description]
+ */
 function wpt_header()
 {
 	wpt_partial('header');
-}
-
-
-function wpt_header_class()
-{
-	return apply_filters('wpt_header_class', 'wpt-header');
-}
-
-function wpt_header_menu_class()
-{
-	return apply_filters('wpt_header_menu_class', 'wpt-header-menu');
-}
-
-function wpt_header_menu_location()
-{
-	return apply_filters('wpt_header_menu_location', 'main');
 }
 
 /**
@@ -102,6 +89,18 @@ function wpt_content_footer()
 }
 
 
+
+/**
+ * Get slug of a post
+ * @param  int $post_id ID of post
+ * @return string|false FALSE if post is not a page
+ */
+function wpt_post_slug( $post_id = NULL )
+{
+    $post = get_post($post_id);
+
+    return $post ? $post->post_name : FALSE;
+}
 
 
 
@@ -262,4 +261,153 @@ function wpt_category_dropdown( string $taxonomy = 'category', string $current =
   </div>
   <?php
 
+}
+
+
+/**
+ * Get post excerpt
+ *
+ * if the excerpt field isn't used, use a trimmed content field
+ * @param  [type] $post   [description]
+ * @param  [type] $length [description]
+ * @return [type]         [description]
+ */
+function wpt_excerpt( $post = NULL, $length = NULL)
+{
+  $post = get_post($post);
+  // Use excerpt if it exists
+  if( ! empty($post->post_excerpt) ) return $post->post_excerpt;
+
+  // Otherwise generate it from content
+  $text = strip_shortcodes( $post->post_content );
+  $text = apply_filters( 'the_content', $text );
+  $text = str_replace(']]>', ']]&gt;', $text);
+  $excerpt_length = intval($length) ?: apply_filters( 'excerpt_length', 55 );
+  $excerpt_more = apply_filters( 'excerpt_more', '&nbsp;[&hellip;]' );
+  $text = wp_trim_words( $text, $excerpt_length, $excerpt_more );
+  return $text;
+}
+
+
+/**
+ * Output a background video
+ * @param  [type] $video  [description]
+ * @param  string $poster [description]
+ * @return [type]         [description]
+ */
+function wpt_background_video($video, $poster = '')
+{
+    echo '<video class="video-background" playsinline loop muted autoplay ';
+
+    if( ! empty($poster) ) 
+    {
+        echo 'poster="' . $poster .'"';
+    }
+
+    echo '>';
+
+    if( is_string($video) )
+    {
+        $video = array( $video => mime_content_type($video) );
+    }
+
+    foreach($video as $src => $type)
+    {
+        echo '<source src="' . $src . '" type="' . $type .'" />';
+    }
+
+    if( ! empty($poster) )
+    {
+        echo '<img class="video-background-poster" src="' . $poster . '"/>';
+    }
+
+    echo '</video>';
+}
+
+
+
+function wpt_filed_under( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank' )
+{
+  $terms = get_the_terms( $post, $taxonomy );
+
+  echo '<div class="filed-under">Filed under';
+  wpt_category_list($post,$taxonomy,$limit,$link,$target);
+  echo '</div>';
+
+}
+
+
+function wpt_category_list( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank', $return = FALSE )
+  {
+    $terms = get_the_terms( $post, $taxonomy );
+    $c = 0;
+    $out = '';
+
+    if( ! empty($terms) )
+    {
+      $out = '<ul class="terms terms-'.$taxonomy.'">';
+      foreach($terms as $term)
+      {
+        if( $c >= $limit ) break;
+        $out .= '<li class="term">';
+        if( $link ) $out .= '<a href="' . get_term_link($term->term_id) .'" target="' . $target .'">';
+        $out .= '<span class="term-name">' . $term->name . '</span>';
+        if( $link ) $out .= '</a>';
+        $out .= '</li>';
+        $c++; 
+      }
+      $out .= '</ul>';
+    }
+    
+
+    if( $return ) return $out;
+
+    echo $out;
+  }
+
+
+function wpt_get_category_list( $post, $taxonomy = 'category', $limit = 1, $link = TRUE, $target = '_blank' )
+{
+  return wpt_category_list( $post, $taxonomy, $limit, $link, $target, TRUE );
+}
+
+function wpt_header_class()
+{
+  return apply_filters('wpt_header_class', 'wpt-header');
+}
+
+function wpt_header_menu_class()
+{
+  return apply_filters('wpt_header_menu_class', 'wpt-header-menu');
+}
+
+function wpt_header_menu_location()
+{
+  return apply_filters('wpt_header_menu_location', 'main');
+}
+
+function wpt_post_container_class( $classes = array() )
+{
+  return apply_filters('wpt_post_container_class', 'container-fluid');
+}
+
+function wpt_navbar_class()
+{
+  return 'navbar-expand-lg';
+}
+
+function wpt_navbar_menu_classes()
+{
+  return 'collapse navbar-collapse';
+}
+
+/**
+ * Classes for the header
+ * @return [type] [description]
+ */
+function wpt_header_classes()
+{
+  $classes = apply_filters( 'wpt_header_classes', array() );
+
+  return implode(' ', array_unique($classes) );
 }

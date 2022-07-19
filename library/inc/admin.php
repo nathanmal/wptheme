@@ -1,5 +1,4 @@
-<?php
-
+<?php if ( ! defined( 'ABSPATH' ) ) exit('Foolish Mortal'); 
 
 function wpt_settings_pages()
 {
