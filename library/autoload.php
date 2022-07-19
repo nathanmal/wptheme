@@ -7,7 +7,7 @@
  * @see    http://php.net/manual/en/function.spl-autoload-register.php
  * @param  string $class Class name
  */
-function wptheme_autoload($class)
+function wpt_autoload($class)
 { 
   //if( strpos($class, 'WPtheme\\') !== 0 ) return;
   if( 0 !== strpos($class, 'WPTheme\\') OR strlen($class) <= 8 ) return;
@@ -30,3 +30,7 @@ function wptheme_autoload($class)
   }
 
 }
+
+
+// Register theme autoloader
+spl_autoload_register( 'wpt_autoload' );

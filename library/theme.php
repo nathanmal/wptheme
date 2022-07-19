@@ -4,7 +4,6 @@ namespace WPTheme;
 
 use WPTheme\Navwalker;
 
-
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -20,7 +19,7 @@ final class Theme
 
 
 	/**
-	 * Get the theme instance 
+	 * Get the theme singleton 
 	 * @return [type] [description]
 	 */
 	public static function instance()
@@ -31,23 +30,81 @@ final class Theme
 	}
 
 
-
-	/**
-	 * Shortcode instances
-	 * @var array
-	 */
-	private $shortcodes = array();
-
-
-
 	/**
 	 * Theme constructor
 	 */
 	public function __construct()
-	{	
-		// Load theme classes
+	{		
+		// Check compatibility
+		$this->compat();
+
+		// Load theme files
 		$this->includes();
 
+		// Load theme actions
+		$this->actions();
+	}
+
+	/**
+	 * Check theme compatibility
+	 * @return [type] [description]
+	 */
+	protected function compat()
+	{
+
+	}
+
+	/**
+	 * Include classes and functions
+	 * @return [type] [description]
+	 */
+	protected function includes()
+	{
+		// Load functions
+		include_once THEME_LIB . '/inc/core.php';
+		include_once THEME_LIB . '/inc/content.php';
+		include_once THEME_LIB . '/inc/templates.php';
+		include_once THEME_LIB . '/inc/debug.php';
+
+		// Load core classes
+		$this->load_class('template');
+		$this->load_class('enqueue');
+		$this->load_class('option');
+		$this->load_class('menu');
+
+		// load admin
+		if( is_admin() )
+		{
+			include_once THEME_LIB . '/inc/admin.php';
+			$this->load_class('admin');
+		}
+	}
+
+
+	/**
+	 * Load a class and attach instance to theme singleton
+	 * @param  string $name [description]
+	 * @return [type]       [description]
+	 */
+	protected function load_class( $name = '' )
+	{
+		$path = THEME_LIB . '/classes/' . $name . '.php';
+
+		include_once $path;
+
+		$class = '\\WPTheme\\' . ucfirst($name);
+
+		$this->{$name} = new $class;
+	}
+
+
+
+	/**
+	 * Load primary actions
+	 * @return [type] [description]
+	 */
+	protected function actions()
+	{
 		// Hook into WP theme activation
 		add_action( 'after_switch_theme', array( $this, 'activate') );
 
@@ -56,34 +113,6 @@ final class Theme
 
 		// Setup the theme options & supports
 		add_action( 'after_setup_theme', array( $this, 'init') );
-
-		// load admin if needed
-		if( is_admin() )
-		{
-			$this->admin = new Admin();
-		}
-
-	}
-
-	/**
-	 * Include classes and functions
-	 * @return [type] [description]
-	 */
-	private function includes()
-	{
-		include_once THEME_LIB . '/classes/template.php';
-		include_once THEME_LIB . '/classes/enqueue.php';
-		include_once THEME_LIB . '/classes/option.php';
-		include_once THEME_LIB . '/classes/menu.php';
-	}
-
-	/**
-	 * Returns TRUE if we are using a child theme
-	 * @return boolean [description]
-	 */
-	public function has_child()
-	{
-		return ! (STYLESHEETPATH === TEMPLATEPATH);
 	}
 
 
@@ -100,10 +129,7 @@ final class Theme
 		add_action( 'customize_register', array( '\WPTheme\Customize', 'init' ), 10, 1 );
 
     // Add theme support
-    $this->add_supports();
-
-    // Register custom menus
-		$this->register_menus();
+    $this->supports();
 
 		// Register custom sidebars
 		$this->register_sidebars();
@@ -119,7 +145,7 @@ final class Theme
 	/**
 	 * Add theme supports
 	 */
-	public function add_supports()
+	public function supports()
 	{
 		// Declare thumbnail support
 		add_theme_support( 'post-thumbnails' );
@@ -147,27 +173,6 @@ final class Theme
 		
 		// Product gallery sliders
 		add_theme_support( 'wc-product-gallery-slider' );
-	}
-
-	/**
-	 * Register custom menus
-	 * @return [type] [description]
-	 */
-	public function register_menus()
-	{
-		$menus = apply_filters( 'wpt_register_menus',array(
-		  'main'    => __( 'Main Menu',    THEME_DOMAIN ), 
-		  'mobile'  => __( 'Mobile Menu',  THEME_DOMAIN ), 
-		  'members' => __( 'Members Menu', THEME_DOMAIN ),   
-		  'footer'  => __( 'Footer Menu',  THEME_DOMAIN ),
-		  'links'   => __( 'Links Menu',   THEME_DOMAIN ),
-		  'social'  => __( 'Social Menu',  THEME_DOMAIN )
-		));
-
-		foreach($menus as $menu => $description)
-		{
-			register_nav_menu($menu, __($description, THEME_DOMAIN));
-		}
 	}
 
 	/**
@@ -379,37 +384,7 @@ final class Theme
 		return $classes;
 	}
 
-	/**
-	 * Output menu by name
-	 * @see 	 https://developer.wordpress.org/reference/functions/wp_nav_menu/ 
-	 * @param  string $name   [description]
-	 * @param  array  $config Allow function to override default menu array
-	 * @return [type]         [description]
-	 */
-	public function menu( string $name, array $config = array() )
-	{
 
-		if( ! has_nav_menu($name) ) 
-		{
-			echo '[Could not locate menu ' . $name .']';
-			return;
-		}
-
-
-		$menu = array(
-			'theme_location'  => $name,              
-			'container'       => '',                           		
-			'container_class' => 'nav-container',  								 
-			'menu_class'      => 'nav-wrapper',               					
-			// 'fallback_cb'     => array('WPTheme\\Navwalker','fallback'),
-    	// 'walker'          => new Navwalker()
-		);
-
-		$menu = wp_parse_args($config, $menu);
-
-		wp_nav_menu($menu);
-
-	}
 
 	/**
 	 * Show less information on failed login attempt

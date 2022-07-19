@@ -36,10 +36,16 @@ require_once('library/vendor/autoload.php');
 require_once('library/autoload.php');
 
 // Register theme autoloader
-spl_autoload_register( 'wptheme_autoload' );
+spl_autoload_register( 'wpt_autoload' );
 
-// Helper functions
-require_once('library/helpers.php');
+/**
+ * Get the theme singleton
+ * @return [type] [description]
+ */
+function wpt()
+{
+  return \WPTheme\Theme::instance();
+}
 
-// Initialize theme
+// Load the theme class
 wpt();

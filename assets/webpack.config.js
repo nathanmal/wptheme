@@ -1,45 +1,31 @@
 const webpack                 = require('webpack');
 const path                    = require('path');
 const MiniCssExtractPlugin    = require("mini-css-extract-plugin");
-const { CleanWebpackPlugin }  = require('clean-webpack-plugin');
 const CssMinimizerPlugin      = require('css-minimizer-webpack-plugin');
 
 // Webpack config
 module.exports = (env, argv) => {
-
-  // Test for production environment
-  const production = argv.mode === 'production';
-
-  // Absolute path to distro
-  const dist = path.resolve( __dirname, 'dist' );
-
-  // Absolute path to source
-  const src  = path.resolve( __dirname, 'src' );
-
-  // Hash filenames on production
-  const filename = production ? '[hash].[ext]' : '[name].[ext]';
 
   // Config object
   return {
 
     // Project entry point(s)
     entry: { 
-      // Main theme file
-      theme: path.resolve( __dirname, 'src/theme/theme.js'),
-      // Admin stuff
-      admin: path.resolve( __dirname, 'src/admin/admin.js'),
-      // Customizer
-      customize: path.resolve( __dirname, 'src/customize/customize.js'),
-      // Customizer controls
-      controls: path.resolve( __dirname, 'src/controls/controls.js'),
+      // Base theme assets
+      wptheme: path.resolve( __dirname, 'src/wptheme.js'),
+      // Customized theme assets
+      theme: path.resolve( __dirname, 'theme/theme.js')
     },
 
     // Output directory
     output: {
+      // Path to distro
       path: path.resolve(  __dirname, 'dist' ),
+      // Set filename
       filename: '[name].js'
     },
 
+    // Add jQuery as external library
     externals: {
       jquery: 'jQuery'
     },
@@ -63,33 +49,9 @@ module.exports = (env, argv) => {
           options: {
             outputPath: 'images',
             name(file) {
-              return filename;
+              return '[name].[ext]';
             },
           },
-        },
-
-        // Web fonts
-        {
-           test: /fonts\/.*\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-           use: [{
-             loader: 'file-loader',
-             options: {
-               name: 'fonts/[name].[ext]',
-             }
-           }]
-        },
-
-        // Application Icons & Images
-        {
-          test: /app\/.*\.(png|jpg|ico|xml|webmanifest|xml)$/,
-          loader: 'file-loader',
-          options: {
-            name(file) {
-              //const filename = production ? '[hash].[ext]' : '[name].[ext]';
-              // const filename = production ? '[hash].[ext]' : ;
-              return 'app/[name].[ext]';
-            },
-          }
         },
 
         // SASS
@@ -127,21 +89,12 @@ module.exports = (env, argv) => {
 
     // Plugins
     plugins: [
+      // Show progress
       new webpack.ProgressPlugin(),
-
-      // Clean distro, except for images directory
-      new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['!**/images/*'],
-        cleanAfterEveryBuildPatterns: ['!**/images/*']
-      }),
-
       // Set CSS file name
       new MiniCssExtractPlugin({ filename: '[name].css' }),
-
       // Provide external jQuery
       new webpack.ProvidePlugin({  $: 'jquery', jQuery: 'jquery' }), 
-
-      //new UglifyJsPlugin({ cache: true, parallel: true, sourceMap: true }),
     ],
 
     // Minimize

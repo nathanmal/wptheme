@@ -20,6 +20,28 @@ class Shortcode
   public $tag = '';
 
 
+  public static function register()
+  {
+    $shortcodes = apply_filters( 'wpt_shortcodes', [
+      '\\WPTheme\\Lipsum' => THEME_LIB . '/classes/shortcode/lipsum.php',
+      '\\WPTheme\\Partial' => THEME_LIB . '/classes/shortcode/partial.php'
+    ]);
+
+    foreach($shortcodes as $class => $file)
+    {
+      include_once $file;
+
+      $shortcode = new $class;
+
+      $tag = $shortcode->getTag();
+
+      if( ! shortcode_exists($tag) )
+      {
+        add_shortcode( $tag, [$shortcode, 'run'] );
+      }
+    }
+  }
+
   /**
    * Shortcode constructor
    */
@@ -28,27 +50,13 @@ class Shortcode
     // Create slug if it is empty
     if( empty($this->tag) )
     {
-      $this->tag = strtolower(wpt_shortname($this));
+      $this->tag = strtolower(wpt_class_shortname($this));
     }
 
     // Set shortcode tag
     $this->tag = wpt_prefix($this->tag, 'wpt_');
-
-    // Register the shortcode
-    $this->register();
   }
 
-  /**
-   * Register shortcode
-   * @return [type] [description]
-   */
-  public function register()
-  {
-    if( ! shortcode_exists($this->tag) )
-    {
-      add_shortcode( $this->tag , array($this, 'run') );
-    }
-  }
 
   /**
    * Run the shortcode

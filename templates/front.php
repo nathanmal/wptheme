@@ -1,13 +1,25 @@
-<?php get_header(); ?>
+<?php
+/**
+ * The template for a front page
+ *
+ * This is the template for displaying a front page, if a static front page is selected in settings
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package WPTheme
+ */
 
+get_header();
+?>
 
-<?php wpt_partial('hero'); ?>
+  <div id="page" class="<?= wpt_page_container_class() ?>">
+    
+    <?php 
 
-<!-- Main Article -->
-<article class="main-article front-article <?= wpt_post_container_class() ?>">
-  <?php wpt_partial('page/header'); ?>
-  <?php wpt_partial('page/content'); ?>
-  <?php wpt_partial('page/footer'); ?>
-</article>
-<!-- End Main Article -->
+    wpt_partial('global/content'); 
+
+    ?>
+
+  </div>
+
 <?php get_footer(); ?>

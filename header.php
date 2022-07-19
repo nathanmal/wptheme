@@ -7,10 +7,10 @@ namespace WPTheme;
 <!-- Begin head tag -->
 
     <!-- Meta tags -->
-    <?php wpt_partial('head/meta'); ?>
+    <?php wpt_partial('global/meta'); ?>
 
     <!-- Fonts -->
-    <?php wpt_partial('head/fonts'); ?>
+    <?php wpt_partial('global/fonts'); ?>
 
     <!-- Head -->
     <?php wp_head() ?>
@@ -22,11 +22,15 @@ namespace WPTheme;
 <body <?php body_class(); ?> itemscope itemtype="http://schema.org/WebPage">
 <!-- Begin body tag -->  
 
-    <?php do_action( 'wpt_body_open' ); ?>
+    <?php 
+        /** Hook action - wpt_body_open */
+        do_action( 'wpt_body_open' ); 
+    ?>
 
-    <!-- Begin body header -->
-    <?php wpt_partial('header'); ?>
-    <!-- End body header -->
-
+    <?php
+        /** Outputs the site header */
+        wpt_partial('global/header');
+    ?>
+    
     <!-- Begin main page element -->
     <main id="main" role="main">

@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Text extends Setting
 {
@@ -12,7 +12,7 @@ class Text extends Setting
   }
 
 
-  public function render_content()
+  public function render()
   {
     $ph   = element($this->config, 'placeholder', '');
     $id   = $this->input_id();

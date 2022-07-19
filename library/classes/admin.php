@@ -29,18 +29,55 @@ class Admin
    */
   public function __construct()
   {
-    // Load admin settings
-    $this->load_pages();
 
     // Get the current settings page
     $this->slug = $_GET['page'] ?? NULL;
 
+    // Load admin settings
+    $this->settings();
+
+    $this->actions();
+  }
+
+  
+
+  /**
+   * Load settings pages
+   * @return [type] [description]
+   */
+  protected function settings()
+  {
+    $pages = wpt_settings_pages();
+
+    foreach($pages as $id => $page)
+    {
+      $file = THEME_LIB . '/classes/admin/page/' . $page . '.php';
+
+      include_once $file;
+
+      $class = '\\WPTheme\\Admin\\Page\\' . ucfirst($page);
+
+      $this->pages[$page] = new $class;
+    }
+
+  }
+
+  /**
+   * Admin actions
+   * @return [type] [description]
+   */
+  protected function actions()
+  {
     // Add menu
     add_action( 'admin_menu', array( $this, 'menu'), 10 );
 
     // Enqueue plugin admin scripts
-    add_action( 'admin_enqueue_scripts', array( $this , 'enqueue'), 10 );
+    // add_action( 'admin_enqueue_scripts', array( $this , 'enqueue'), 10 );
+
+    
   }
+
+
 
 
   /**
@@ -85,9 +122,6 @@ class Admin
    */
   public function enqueue()
   {
-    wp_enqueue_script('wpt-admin', wpt_asset('assets/dist/admin.js'), array('jquery'), FALSE, TRUE );
-
-    wp_enqueue_style('wpt-admin', wpt_asset('assets/dist/admin.css') );
   }
 
 
@@ -103,7 +137,7 @@ class Admin
       'WPTheme',
       'WPTheme',
       'manage_options',
-      'wptheme',
+      'wptheme_settings',
       array( $this, 'process' ), 
       NULL, // Icon
       '79'
@@ -114,12 +148,12 @@ class Admin
       if( ! $page->enabled ) continue;
 
       add_submenu_page(
-        'wptheme',
+        'wptheme_settings',
         $page->title,
         $page->menu_title,
         $page->capability,
         $page->slug,
-        array($this, 'process')
+        array($page, 'render_page')
       );
     }
   }

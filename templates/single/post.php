@@ -1,11 +1,26 @@
-<?php the_post(); ?>
+<?php
+/**
+ * The single post template
+ *
+ * This is the base template for a single post
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package WPTheme
+ */
 
-<!-- Main Article -->
-<div class="container">
-  <article id="article">
-    <section id="content">
-      <?php the_content(); ?>
-    </section>
-  </article>
-</div>
-<!-- End Main Article -->
+get_header();
+
+?>
+
+  <div id="page" class="<?= wpt_page_container_class() ?>">
+
+    <?php 
+
+    wpt_partial('global/content'); 
+
+    ?>
+
+  </div>
+
+<?php get_footer(); ?>

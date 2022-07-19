@@ -1,0 +1,58 @@
+/**
+ *
+ * HTML Element Styles
+ *
+ * Used for base styles for HTML elements
+ *
+ * @package WPTheme
+ * 
+ */
+
+/**
+ * Heading Elements
+ */
+h1,h2,h3,h4,h5,h6 {
+  font-family: $font-heading;
+  font-weight: $font-weight-heading;
+}
+
+h1 { 
+  font-size: $font-size-8; 
+}
+
+h2 { 
+  font-size: $font-size-7;
+}
+
+h3 { 
+  font-size: $font-size-6;
+}
+
+h4 { 
+  font-size: $font-size-5;
+}
+
+h5 { 
+  font-size: $font-size-4;
+}
+
+h6 { 
+  font-size: $font-size-3;
+}
+
+
+
+/**
+ * Anchors
+ */
+
+a {
+
+  color:$color-link;
+
+  &:hover
+  {
+    color:$color-link-hover;
+  }
+
+}

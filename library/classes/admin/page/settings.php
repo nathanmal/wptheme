@@ -11,8 +11,6 @@ use WPTheme\Admin\Page;
 
 class Settings extends Page
 {
-
-
   /**
    * Settings page title
    * @var string
@@ -29,7 +27,7 @@ class Settings extends Page
    * Settings page slug
    * @var string
    */
-  public $slug = 'wptheme';
+  public $slug = 'settings';
 
   
   public $group = 'options';

@@ -1,36 +1,69 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Select extends Setting
 {
-  public function render_content()
+
+  /**
+   * Check for valid option
+   * @param  [type] $value [description]
+   * @return [type]        [description]
+   */
+  public function validate($value)
   {
-    if( empty($this->config['choices']) )
+    if( ! isset($this->options[$value]) )
+    {
+      $this->setError('Selection must be a valid option');
+
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+
+  /**
+   * Dont need to sanitize as validation enforces a valid option
+   * @param  [type] $value [description]
+   * @return [type]        [description]
+   */
+  public function sanitize($value)
+  {
+    return $value;
+  }
+
+
+  /**
+   * Render the select element
+   * @return [type] [description]
+   */
+  public function render()
+  {
+    if( empty($this->options) )
     {
       echo '[Choices not specified]';
       return;
     }
 
-    $id = $this->input_id();
-    $name = $this->input_name();
-    $allow_null = element($this->config, 'allow_null', TRUE);
+    echo '<select id="'.$this->getInputId().'" name="'.$this->getInputName().'">';
 
-    echo '<select id="'.$id.'" name="'.$name.'">';
 
-    if( $allow_null )
+    $value = $this->value();
+
+
+    if( ! $this->required() )
     {
-
-      echo '<option value="" '.(empty($this->value) ? 'selected' : '').'>Select...</option>';
+      echo '<option value="" '.(empty($value) ? 'selected' : '').'>Select...</option>';
     }
 
-    foreach($this->choices as $value => $label )
+    foreach($this->options as $key => $label )
     {
-      $selected = $value === $this->value ? 'selected' : '';
+      $selected = $key === $value ? 'selected' : '';
 
-      echo '<option value="'.$value.'" '.$selected.'>' . $label .'</option>';
+      echo '<option value="'.$key.'" '.$selected.'>' . $label .'</option>';
     }
 
     echo '</select>';

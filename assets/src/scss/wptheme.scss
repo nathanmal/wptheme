@@ -1,0 +1,22 @@
+/*************************************************!
+ * Main wp-theme and customized SASS files
+ * http://ntheory.design/wp-theme
+ *************************************************/
+
+/** Global variables */
+@import 'vars/base';
+
+/** Global Styles */
+@import 'global/body';
+@import 'global/background';
+@import 'global/header';
+@import 'global/footer';
+@import 'global/sidebar';
+@import 'global/onscroll';
+
+/** Theme Templates */
+@import 'templates/page';
+@import 'templates/404';
+@import 'templates/archive';
+@import 'templates/search';
+@import 'templates/front';

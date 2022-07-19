@@ -7,14 +7,7 @@
 *.DS_store
 .DS_store?
 .Trashes
-## Theme files
-!assets/dist/
-assets/dist/*
-assets/package/*
-assets/node_modules/*
-library/vendor/*
-*/node_modules/*
-*/vendor/*
-node_modules/*
-vendor/*
-assets/vendor/*
+
+## Vendor files
+library/vendor
+node_modules

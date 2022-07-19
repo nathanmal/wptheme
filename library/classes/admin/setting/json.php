@@ -1,12 +1,12 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Json extends Setting
 {
-  public function render_content()
+  public function render()
   {
     $value = stripslashes( $this->value );
     $id = $this->input_id();

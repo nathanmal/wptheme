@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 use WPTheme\Settings;
 
 class Googlefonts extends Setting
@@ -39,7 +39,7 @@ class Googlefonts extends Setting
   }
 
 
-  public function render_content()
+  public function render()
   {
     
     $this->render_fonts();

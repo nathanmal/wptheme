@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Textarea extends Setting
 {
@@ -12,7 +12,7 @@ class Textarea extends Setting
     return sanitize_textarea_field($value);
   }
 
-  public function render_content()
+  public function render()
   {
     $name = $this->input_name();
     $id   = $this->input_id();

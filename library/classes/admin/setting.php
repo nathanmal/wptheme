@@ -1,12 +1,12 @@
 <?php 
 
-namespace WPTheme;
+namespace WPTheme\Admin;
 
 use WPTheme\Theme;
 use WPTheme\Admin\Page;
 
 
-class Setting
+abstract class Setting
 {
 
   /**
@@ -17,16 +17,16 @@ class Setting
    * @param  array  $config Configuration array
    * @return object         
    */
-  public static function factory( string $name, string $type, mixed $value, array $config )
+  public static function factory( string $group, string $name, string $type, array $config = [] )
   {
-    $class = '\\WPTheme\\Setting\\' . ucfirst($type);
+    $class = '\\WPTheme\\Admin\\Setting\\' . ucfirst($type);
 
     if( ! class_exists( $class ) )
     {
       wp_die('Setting class not found: ' . $class );
     }
 
-    return new $class( $name, $config );
+    return new $class( $group, $name, $config );
 
   }
  
@@ -52,19 +52,21 @@ class Setting
    * Choices for select/radio etc
    * @var array
    */
-  public $options = array();
+  public $options = [];
+
 
   /**
-   * Setting value
+   * Holds error object when error triggered
    * @var [type]
    */
-  public $value;  
+  public $error = FALSE;
+
 
   /**
-   * Holds last error message
-   * @var [type]
+   * Default value
+   * @var null
    */
-  public $error = '';
+  public $default = NULL;
 
 
   /**
@@ -72,31 +74,29 @@ class Setting
    * @param [type] $name   [description]
    * @param array  $config [description]
    */
-  public function __construct( string $name, mixed $value = NULL, array $config = array() )
+  public function __construct( string $group, string $name, array $config = array() )
   { 
     // Set type if not specified
-    if( empty($this->type) ) $this->type = strtolower(wpt_shortname($this));
+    if( empty($this->type) ) $this->type = strtolower(wpt_class_shortname($this));
 
-    // Auto register this setting
-    Setting::register($name, $this);
-
-    // Set config
-    $this->config = $config;
+    // Set settings group
+    $this->group = $group;
 
     // Set the setting name
     $this->name = $name;
 
+     // Set config
+    $this->config = $config;
+
     // Allow set default value
-    $this->default = element($config, 'default');
+    $this->default = $config['default'] ?? NULL;
 
     // Set setting label
-    $this->label = element( $config, 'label', wpt_labelize($this->name) );
+    $this->label = $config['label'] ?? wpt_labelize($this->name);
 
     // Set choices
-    $this->options = element( $config, 'options', $this->options );
+    $this->options = $config['options'] ?? $this->options;
 
-    // Load value from settings
-    $this->value = $value;
   }
 
 
@@ -104,29 +104,7 @@ class Setting
    * Render the setting
    * @return [type] [description]
    */
-  public function render()
-  {
-    echo '<div class="wpt-setting wpt-setting-type-' . $this->type .'">';
-    
-    echo '<div class="wpt-setting-label">';
-
-    // Render the label
-    $this->render_label();
-
-    echo '</div>';
-
-    echo '<div class="wpt-setting-content">';
-
-    // Render the input
-    $this->render_input();
-
-    // Render the footer
-    $this->render_footer();
-
-    echo '</div>';
-
-    echo '</div>';
-  }
+  abstract public function render();
 
 
   /**
@@ -134,66 +112,41 @@ class Setting
    * @param  [type] $value [description]
    * @return [type]        [description]
    */
-  public function sanitize( $value )
-  {
-    return $value;
-  }
+  abstract public function sanitize( $value );
 
   /**
    * Validate setting value
    * @return [type] [description]
    */
-  public function validate( $value )
-  {
-    return TRUE;
-  }
+  abstract public function validate( $value );
+
 
   /**
-   * Render the setting label
+   * Get the setting value
    * @return [type] [description]
    */
-  public function render_label()
+  public function value()
   {
-    echo '<label>' . $this->label .'</label>';
+    $values = get_option($this->group);
 
-    echo '<small>' . $this->name . '</small>';
+    return $values[$this->name] ?? $this->default;
   }
 
-  /**
-   * Render the setting content
-   * @return [type] [description]
-   */
-  public function render_content()
-  {
-    $this->render_input();
-
-    $this->render_footer();
-  }
 
   /**
-   * Render note
+   * Is the field required
    * @return [type] [description]
    */
-  public function render_footer()
+  public function required()
   {
-    if( ! empty($this->error) )
-    {
-      echo '<p class="wpt-setting-error">' . $this->error .'</p>';
-
-      return;
-    }
-
-    if( $description = element($this->config, 'description') )
-    {
-      echo '<p class="wpt-setting-description">' . $description .'</p>';
-    }
+    return in_array('required', $this->config, TRUE);
   }
 
   /**
    * Get input ID
    * @return [type] [description]
    */
-  public function input_id()
+  public function getInputId()
   {
     return 'wpt-settings-' . str_replace('.','-',$this->name);
   }
@@ -202,30 +155,47 @@ class Setting
    * Get input name
    * @return [type] [description]
    */
-  public function input_name()
-  {
-    return 'settings[' . str_replace('.','][',$this->name) . ']';
+  public function getInputName()
+  { 
+    return $this->group . '[' . str_replace('.','][',$this->name) . ']';
   }
 
   /**
    * Set an error
-   * @param  string $msg [description]
-   * @return [type]      [description]
+   * @param string $message [description]
+   * @param string $code    [description]
    */
-  public function error( string $msg )
+  public function setError( string $message, string $code = 'setting' )
   {
-    $this->error = $msg;
+    $this->error = new \WP_Error( $code, $message );
   }
 
   /**
-   * Get last error
-   * @return [type] [description]
+   * Get the error
+   * @return mixed WP_Error|FALSE
    */
   public function getError()
   {
     return $this->error;
   }
-  
+
+  /**
+   * Get error code
+   * @return [type] [description]
+   */
+  public function getErrorCode()
+  {
+    return $this->error ? $this->error->get_error_code() : FALSE;
+  }
+
+  /**
+   * Get error message
+   * @return [type] [description]
+   */
+  public function getErrorMessage()
+  {
+    return $this->error ? $this->error->get_error_message() : FALSE;
+  }
 
  
 

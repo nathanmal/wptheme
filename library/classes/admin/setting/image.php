@@ -1,13 +1,13 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Image extends Setting
 {
   
-  public function render_content()
+  public function render()
   {
     wp_enqueue_media();
     $id = $this->input_id();

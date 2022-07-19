@@ -165,6 +165,3 @@ class Option
   }
 
 }
-
-
-Option::instance();

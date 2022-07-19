@@ -1,14 +1,14 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Radio extends Setting
 {
   
 
-  public function render_content()
+  public function render()
   {
     if( empty($this->choices) )
     {

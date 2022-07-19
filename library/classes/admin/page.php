@@ -1,4 +1,9 @@
 <?php
+/**
+ * Settings page class
+ *
+ * 
+ */
 
 namespace WPTheme\Admin;
 
@@ -36,31 +41,25 @@ class Page
    */
   public $capability = 'manage_options';
 
-  /**
-   * Settings post input array
-   * @var array
-   */
-  public $input = array();
 
   /**
-   * Array of registered settings
+   * Setting sections
    * @var array
    */
-  public $settings = array();
+  protected $sections = array();
 
+  /**
+   * Settings
+   * @var array
+   */
+  protected $settings = array();
 
   /**
    * Loaded settings values
    * @var array
    */
-  public $values = array();
+  protected $values = array();
 
-
-  /**
-   * The options group
-   * @var string
-   */
-  public $group = '';
 
   /**
    * Settings page constructor
@@ -69,8 +68,85 @@ class Page
    * 
    */
   public function __construct()
+  { 
+    if( empty($this->slug) ) $this->slug = strtolower(wpt_class_shortname($this));
+
+    $this->slug = wpt_prefix( $this->slug, 'wptheme_' );
+
+    add_action( 'admin_init', [$this, 'init']);
+  }
+
+
+  /**
+   * Settings page init
+   * @return [type] [description]
+   */
+  public function init()
   {
-    if( empty($this->slug) ) $this->slug = strtolower(wpt_shortname($this));
+    register_setting( $this->slug, $this->slug, [$this, 'sanitize']);
+
+    $this->values = get_option($this->slug);
+
+    $this->register_settings();
+
+  }
+
+
+  /**
+   * Get the settings page slug
+   * @return [type] [description]
+   */
+  public function getSlug()
+  {
+    return $this->slug;
+  }
+
+
+  
+
+  /**
+   * Sanitize field
+   * @param  [type] $input [description]
+   * @return [type]        [description]
+   */
+  public function sanitize( $input )
+  {
+
+    $new_input = array();
+
+    foreach($input as $id => $value)
+    {
+      $setting = $this->getSetting($id);
+
+      $value = $setting->sanitize($value);
+
+      if( $setting->validate($value) )
+      {
+        $new_input[$id] = $value;
+      }
+      else
+      {
+        add_settings_error( $id, $setting->getErrorCode(), $setting->getErrorMessage(), $type = 'error' );
+        return FALSE;
+      }
+    }
+
+    return $new_input;
+  }
+
+
+  /**
+   * Get setting object
+   * @param  string $id [description]
+   * @return [type]     [description]
+   */
+  public function getSetting( string $id )
+  {
+    $title  = $this->settings[$id]['title'];
+    $type   = $this->settings[$id]['type'];
+    $config = $this->settings[$id]['config'] ?? [];
+
+    return Setting::factory( $this->slug, $id, $type, $config );
   }
 
 
@@ -100,6 +176,28 @@ class Page
   }
 
   /**
+   * Render the settings page
+   * @return [type] [description]
+   */
+  public function render_page()
+  {
+    ?>
+    <div id="wpt-settings" class="wrap">
+      <h1>My Settings</h1>
+      <form method="post" action="options.php">
+      <?php
+        // This prints out all hidden setting fields
+        settings_fields( $this->slug );
+        do_settings_sections( $this->slug );
+        submit_button();
+      ?>
+      </form>
+    </div>
+    <?php
+  }
+
+
+  /**
    * Register page settings
    * @return [type] [description]
    */
@@ -108,6 +206,87 @@ class Page
 
   }
 
+
+
+  /**
+   * Register settings section
+   * @param  string $id    [description]
+   * @param  string $title [description]
+   * @param  string $info  [description]
+   * @return [type]        [description]
+   */
+  public function register_section( string $id, string $title, string $info = '' )
+  { 
+    $this->sections[$id] = array(
+      'title' => $title,
+      'info' => $info
+    );
+
+
+    add_settings_section( $id, $title, [$this, 'settings_info'], $this->slug);
+  }
+
+  /**
+   * Register a setting
+   * @param  string $id      [description]
+   * @param  string $title   [description]
+   * @param  string $type    [description]
+   * @param  string $section [description]
+   * @return [type]          [description]
+   */
+  public function register_setting( string $id, string $title, string $type, string $section_id, array $config = [] )
+  {
+    $this->settings[$id] = array(
+      'title' => $title,
+      'type' => $type,
+      'section' => $section_id,
+      'config' => $config
+    );
+
+    add_settings_field( 
+      $id, 
+      $title, 
+      [$this, 'render_setting'], 
+      $this->slug, $section_id, 
+      ['id'=>$id, 'config'=>$config]
+    );
+  }
+
+  /**
+   * Render settings section info
+   * @param  array  $args [description]
+   * @return [type]       [description]
+   */
+  public function settings_info( array $args )
+  {
+    echo $this->sections[$args['id']]['info'];
+  }
+
+  /**
+   * Render setting
+   * @param  array  $args [description]
+   * @return [type]       [description]
+   */
+  public function render_setting( array $args )
+  {
+    $id = $args['id'];
+    
+    $setting = $this->getSetting($id);
+
+    $setting->render();
+
+  }
+
+
+
+
+
+
+
+
+
+
+
   /**
    * Register a setting for this page
    * @param  string $name   [description]
@@ -115,7 +294,7 @@ class Page
    * @param  array  $config [description]
    * @return [type]         [description]
    */
-  public function register_setting( string $name, string $type, array $config = array() )
+  public function register_setting_old( string $name, string $type, array $config = array() )
   {
     if( isset( $this->settings[$name]) )
     {

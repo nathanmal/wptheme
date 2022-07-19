@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 use WPTheme\Setting\Boolean;
 
 class Checkbox extends Boolean

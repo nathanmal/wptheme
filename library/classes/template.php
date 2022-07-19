@@ -78,7 +78,7 @@ final class Template
     // Single post templates
     add_filter( 'single_template', array($this, 'single'), $priority, 3);
 
-
+    // Override template include
     add_filter( 'template_include', array($this, 'include'), 10, 1);
 
     // Manage theme template directory
@@ -389,7 +389,23 @@ final class Template
 
   }
 
+
+  /**
+   * Get the template path
+   * @return [type] [description]
+   */
+  public function getPath()
+  {
+    return $this->path;
+  }
+
+  /**
+   * Get the template type
+   * @return [type] [description]
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
 }
-
-
-Template::instance();

@@ -1,12 +1,12 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Latlong extends Setting
 {
-  public function render_content()
+  public function render()
   {
     $value = $this->value ?: array();
     $lat = element($value, 'lat', '');

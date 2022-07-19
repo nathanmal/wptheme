@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 use WPTheme\Settings;
 
 class Snazzymaps extends Setting
@@ -16,7 +16,7 @@ class Snazzymaps extends Setting
   }
 
 
-  public function render_content()
+  public function render()
   {
 
     $this->render_map();

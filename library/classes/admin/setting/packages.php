@@ -1,9 +1,9 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
 use WPTheme\Settings;
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 use WPTheme\Package;
 
 class Packages extends Setting
@@ -49,7 +49,7 @@ class Packages extends Setting
   }
 
 
-  public function render_content()
+  public function render()
   {
     $this->render_packages();
 

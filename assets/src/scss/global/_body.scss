@@ -1,0 +1,88 @@
+/**
+ * Global body styles
+ *
+ * First global stylesheet for top level elements
+ *
+ * @package WPTheme
+ */
+
+html 
+{
+  font-size: $font-size;
+
+  @include mobile() { font-size: $font-size-mobile; }
+  
+  // Auto height to expand to content
+  width:100%;
+  height:auto;
+  min-height: 100vh;
+}
+
+/**
+ * #frame overtakes page viewport
+ */
+body 
+{
+  // Positioning
+  position:relative;
+
+  // Sizing
+  width:100%;
+  height:auto;
+  min-height: 100vh;
+
+  // Overflow
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-y: overlay;
+
+  // Font smoothing
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  // Set defaulat font weight;
+  font-weight: $font-weight-body;
+
+  // Use flexbox
+  display:flex;
+  flex-direction: column;
+}
+
+/**
+ * The main page element
+ */
+main#main
+{
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  display:flex;
+  flex-direction: column;
+  width:100%;
+}
+
+
+
+// Allows Detecting Autofill for styling
+// @see https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
+@keyframes onAutoFillStart  { from {/**/} to {/**/} }
+@keyframes onAutoFillCancel { from {/**/} to {/**/} }
+
+// Detect Autofill Hooks
+// @see https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
+
+input:-webkit-autofill {
+    // Expose a hook for JavaScript when autofill is shown
+    // JavaScript can capture 'animationstart' events
+    animation-name: onAutoFillStart;
+    // Make the background color become yellow really slowly
+    // transition: background-color 50000s ease-in-out 0s;
+}
+input:not(:-webkit-autofill) {
+    // Expose a hook for JS onAutoFillCancel
+    // JavaScript can capture 'animationstart' events
+    animation-name: onAutoFillCancel;
+}
+
+

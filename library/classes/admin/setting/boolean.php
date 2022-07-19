@@ -1,8 +1,8 @@
 <?php 
 
-namespace WPTheme\Setting;
+namespace WPTheme\Admin\Setting;
 
-use WPTheme\Setting;
+use WPTheme\Admin\Setting;
 
 class Boolean extends Setting
 {
@@ -11,7 +11,7 @@ class Boolean extends Setting
     return !! $value;
   }
   
-  public function render_content()
+  public function render()
   {
     $checked = !! $this->value ? 'checked' : '';
     $name = $this->input_name();

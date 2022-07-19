@@ -38,6 +38,81 @@ class Enqueue
     
   }
 
+  /**
+   * Get scripts to enqueue
+   * @return [type] [description]
+   */
+  public function getScripts()
+  {
+
+    return apply_filters( 'wpt_scripts', [
+
+      // Jquery
+      'jquery' => [
+        'src' => '//code.jquery.com/jquery-3.5.1.min.js',
+        'version' => '3.5.1'
+      ],
+
+      // Bootstrap 5.1 javascript
+      'bootstrap' => [
+        'src' => '//cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js',
+        'dependency' => ['jquery'],
+        'version' => '5.1.0'
+      ],
+
+      // Base theme javascript
+      'wptheme' => [
+        'src' => wpt_asset('dist/wptheme.js'),
+        'dependency' => ['bootstrap'],
+        'version' => '1.0.0'
+      ],
+
+      // Overriding theme javascript
+      'theme' => [
+        'src' => wpt_asset('dist/theme.js'),
+        'dependency' => ['wptheme']
+      ]
+
+    ]);
+
+  }
+
+
+  /**
+   * Get styles to enqueue
+   * @return [type] [description]
+   */
+  public function getStyles()
+  {
+    return apply_filters( 'wpt_styles', [
+
+      // Bootstrap 5.1 styles
+      'bootstrap' => [
+        'src' => '//cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css',
+        'version' => '5.1.0'
+      ],
+
+      // Font awesome
+      'fontawesome' => [
+        'src' => '//pro.fontawesome.com/releases/v5.10.0/css/all.css',
+        'version' => '5.10.0'
+      ],
+
+      // Base theme styles
+      'wptheme' => [
+        'src' => wpt_asset('dist/wptheme.css'),
+        'dependency' => ['bootstrap'],
+        'version' => '1.0.0'
+      ],
+
+      // Theme override styles
+      'theme' => [
+        'src' => wpt_asset('dist/theme.css'),
+        'dependency' => 'wptheme'
+      ]
+    ]);
+  }
+
 
   /**
    * Enqueue theme assets
@@ -45,46 +120,36 @@ class Enqueue
    */
   public function enqueue()
   {
-    // Replace jQuery
-    wp_deregister_script( 'jquery' );
+    
 
-    // Enqueue jQuery v3.5.1
-    wp_enqueue_script( 'jquery', '//code.jquery.com/jquery-3.5.1.min.js', '', '3.5.1', TRUE );
+    // Get theme scripts
+    $scripts = $this->getScripts();
 
-    // Bootstrap
-    $bootstrap = '//cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js';
-    wp_enqueue_script( 'bootstrap', $bootstrap, array('jquery'), '5.1.0', TRUE);
-
-    $bootstrap = '//cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css';
-    wp_enqueue_style( 'bootstrap', $bootstrap, '', '5.1.0');
-
-    // Fontawesome
-    $fontawesome = '//pro.fontawesome.com/releases/v5.10.0/css/all.css';
-    wp_enqueue_style( 'fontawesome', $fontawesome,'','5.10.0');
-
-    // Theme javascript
-    wp_enqueue_script('wptheme', wpt_asset('dist/theme.js','template'), array('bootstrap'),'1.0.0',TRUE);
-
-    // Theme stylesheet
-    wp_enqueue_style('wptheme', wpt_asset('dist/theme.css','template'), array('bootstrap'));
-
-
-    // Select 2
-    wp_register_style( 'wpt-select2', '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', '', '4.1.0');
-    wp_register_script( 'wpt-select2', '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', '', '4.1.0', TRUE);
-    wp_register_style( 'wpt-select2-bs', '//cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.1.1/dist/select2-bootstrap-5-theme.min.css', array('wpt-select2'));
-
-    // Make sure this function is included
-    if ( ! function_exists('is_plugin_active') ) 
+    // Check if we should replace jquery
+    if( isset($scripts['jquery']) )
     {
-      include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+      wp_deregister_script( 'jquery' );
     }
 
-    // If using classic editor, disable block library
-    if( is_plugin_active('classic-editor/classic-editor.php') )
+    // Enqueue scripts
+    foreach($scripts as $handle => $script)
     {
-      wp_dequeue_style( 'wp-block-library' );
+      $script = wp_parse_args( $script, ['dependency'=>[],'version'=>FALSE,'footer'=>TRUE]);
+
+      wp_enqueue_script( $handle, $script['src'], $script['dependency'], $script['version'], $script['footer'] );
     }
+
+    // Get styles
+    $styles = $this->getStyles();
+
+    // Enqueue styles
+    foreach( $styles as $handle => $style )
+    {
+      $style = wp_parse_args( $style, ['dependency'=>[],'version'=>FALSE,'media'=>'all']);
+
+      wp_enqueue_style( $handle, $style['src'], $style['dependency'], $style['version'], $style['media']);
+    }
+
   }
 
 
@@ -295,5 +360,3 @@ class Enqueue
 
   
 }
-
-Enqueue::instance();
