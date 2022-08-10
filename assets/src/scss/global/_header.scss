@@ -1,10 +1,14 @@
+$header-height: 100px;
+
+
+
 header#header
 {
   // Transition hide/show
   transition: transform 500ms $ease-out-quint;
 
   // minimum height
-  min-height:32px;
+  min-height:$header-height;
 
   // header width
   width:100%;
@@ -80,7 +84,7 @@ header#header
     .navbar-toggler
     {
       margin-right:1rem;
-      color:$color-white;
+      color:$color-black;
       outline:none;
       border:none;
       justify-content: center;
@@ -126,7 +130,7 @@ header#header
 
     &.navbar-toggled
     {
-      color:$color-white;
+      color:$color-black;
 
       .navbar-icon-close 
       {
@@ -144,15 +148,47 @@ header#header
 
     #navbar-menu
     {
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       z-index:100;
+
+      ul.nav 
+      {
+        
+
+        li.nav-item
+        {          
+          a.nav-link
+          {
+           
+          }
+        }
+      }
 
       @include tablet_down()
       {
+        position:fixed;
+        top:-100%;
+        left:0%;
+        width:100%;
+        height:calc(100vh - $header-height);
+        background:$color-white;
+        transition: all 200ms $ease-out-quint;
+        z-index:-1;
+        font-size:$font-size-5;
+
         &.show, &.collapsing
         {
-          position:absolute;
-          left:0; right:0;
-          top:100%;
+          top:$header-height;
+          left:0;
+          transition:all 500ms $ease-out-quint;
+        }
+
+        ul.nav
+        {
+          margin:auto;
         }
       }
     }

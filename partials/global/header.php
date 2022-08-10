@@ -15,7 +15,7 @@
             </div>
                     
             <!-- Main Navigation Menu -->
-            <div id="navbar-menu" class="<?= wpt_header_menu_class() ?>">
+            <div id="navbar-menu">
               <?php 
               wpt_menu(wpt_header_menu_location(), array('menu_class'=>'nav navbar-nav ms-auto')); 
               ?>
