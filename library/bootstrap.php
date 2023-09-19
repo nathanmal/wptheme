@@ -10,28 +10,28 @@ sidebars, comments, etc.
 */
 
 // Path to theme dir
-define('THEME_DIR', get_template_directory());
+define('WPT_DIR', get_template_directory());
 
 // URI to theme 
-define('THEME_URI', get_template_directory_uri());
+define('WPT_URI', get_template_directory_uri());
 
 // Path to theme library folder
-define('THEME_LIB', THEME_DIR . '/library');
+define('WPT_LIB', WPT_DIR . '/library');
 
 // Environment we're using development|staging|production
-define('THEME_ENV', 'development');
+define('WPT_ENV', 'development');
 
 // Theme text domain name
-define('THEME_DOMAIN', 'wptheme');
+define('WPT_DOMAIN', 'wptheme');
 
 // Theme version
-define('THEME_VERSION', '0.6.0');
+define('WPT_VERSION', '0.6.0');
 
 // Composer autoloader
 require_once('vendor/autoload.php');
 
 // Core functions
-require_once('inc/core.php');
+require_once('functions.php');
 
 // Load the theme class
 wpt();

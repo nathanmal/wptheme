@@ -27,7 +27,7 @@ trait Singleton
   /**
    * Prevent cloning of the singleton
    */
-  protected function __clone()
+  public function __clone()
   {
     _doing_it_wrong( __FUNCTION__, esc_html__( 'Something went wrong.', 'kinkpress' ), '1.0.0' );
   }
@@ -35,7 +35,7 @@ trait Singleton
   /**
    * Prevent serialization of the singleton
    */
-  protected function __sleep()
+  public function __sleep()
   {
     _doing_it_wrong( __FUNCTION__, esc_html__( 'Something went wrong.', 'kinkpress' ), '1.0.0' );
   }
@@ -43,7 +43,7 @@ trait Singleton
   /**
    * Prevent deserialization of the singleton
    */
-  protected function __wakeup()
+  public function __wakeup()
   {
     _doing_it_wrong( __FUNCTION__, esc_html__( 'Something went wrong.', 'kinkpress' ), '1.0.0' );
   }

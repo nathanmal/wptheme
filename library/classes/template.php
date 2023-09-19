@@ -85,7 +85,11 @@ final class Template
     add_filter( 'theme_page_templates', array( $this, 'page_templates'), $priority, 4);
   }
 
-
+  /**
+   * Set template to include
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
   public function include( $template )
   {
     $this->path = $template;
@@ -192,28 +196,37 @@ final class Template
   }
 
 
+  /**
+   * Category template
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
   public function category( $template )
   {
     $category = get_the_category();
 
-    exit();
+    if( $category && $found = locate_template( 'templates/category/' . $category .'.php') )
+    {
+        return $found;
+    }
 
     return $template;
   }
 
-
+  /**
+   * Taxonomy template
+   * @param  [type] $template [description]
+   * @return [type]           [description]
+   */
   public function taxonomy( $template )
   {
     $taxonomy = get_query_var( 'taxonomy' );
 
     $term = get_query_var( 'term' );
 
-    if( $taxonomy )
+    if( $taxonomy && $found = locate_template( 'templates/taxonomy/' . $taxonomy .'.php') )
     {
-      if( $found = locate_template( 'templates/taxonomy/' . $taxonomy .'.php') )
-      {
         return $found;
-      }
     }
 
     return $template;
@@ -248,88 +261,7 @@ final class Template
     return $template;
   }
 
-
-
-  /**
-   * Locate template based on type
-   * @param  [type] $template  [description]
-   * @param  [type] $type      [description]
-   * @param  [type] $templates [description]
-   * @return [type]            [description]
-   */
-  public function locate( $template, $type, $templates )
-  {
-    // Set template path
-    $this->path = $template;
-
-    // Set template type
-    $this->type = $type;
-
-    // Get the current post ID
-    $post_id = get_the_ID();
-
-    // Get the current post type
-    $post_type = get_post_type($post_id);
-
-    // Get the current post slug
-    $post_slug = get_page_uri($post_id);
-
-
-    switch($type)
-    {
-      case 'page':
-
-        // Search for page slug template
-        if( $found = $this->find('page/'.$post_slug) ) break;
-
-        // Search for page template
-        $found = $this->find('page');
-
-        break;
-
-      case 'frontpage':
-
-        // Search for front template
-        $found = $this->find('front');
-
-        break;
-
-      default:
-        // Search for template by type
-        $found = $this->find($type);
-        break;
-    }
-
-    // Check if we found a template file
-    if( ! empty($found) )
-    {
-      // Update template path
-      $this->path = $found;
-
-      return $found;
-    }
-
-
-    return $template;
-  }
-
-  /**
-   * Find template file
-   * @param  string $path [description]
-   * @return [type]       [description]
-   */
-  public function find( string $path )
-  {
-    // Add php extension if needed
-    $path = wpt_suffix($path, '.php');
-
-    // Add views directory if needed
-    $path = wpt_prefix($path, 'templates/');
-
-    // Use built in locate_template function
-    return locate_template( array($path) );
-  }
-
+ 
 
   /**
    * Load theme templates

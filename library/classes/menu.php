@@ -26,17 +26,17 @@ class Menu extends Walker_Nav_Menu
   protected function register()
   {
     $menus = apply_filters( 'wpt_menus',array(
-      'main'    => __( 'Main Menu',    THEME_DOMAIN ), 
-      'mobile'  => __( 'Mobile Menu',  THEME_DOMAIN ), 
-      'members' => __( 'Members Menu', THEME_DOMAIN ),   
-      'footer'  => __( 'Footer Menu',  THEME_DOMAIN ),
-      'links'   => __( 'Links Menu',   THEME_DOMAIN ),
-      'social'  => __( 'Social Menu',  THEME_DOMAIN )
+      'header'  => __( 'Header Menu',  WPT_DOMAIN ), 
+      'mobile'  => __( 'Mobile Menu',  WPT_DOMAIN ), 
+      'members' => __( 'Members Menu', WPT_DOMAIN ),   
+      'footer'  => __( 'Footer Menu',  WPT_DOMAIN ),
+      'links'   => __( 'Links Menu',   WPT_DOMAIN ),
+      'social'  => __( 'Social Menu',  WPT_DOMAIN )
     ));
 
     foreach($menus as $menu => $description)
     {
-      register_nav_menu($menu, __($description, THEME_DOMAIN));
+      register_nav_menu($menu, __($description, WPT_DOMAIN));
     }
   }
 

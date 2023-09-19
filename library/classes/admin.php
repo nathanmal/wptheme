@@ -33,97 +33,32 @@ class Admin
     // Get the current settings page
     $this->slug = $_GET['page'] ?? NULL;
 
-    // Load admin settings
-    $this->settings();
+    // Load settings pages
+    $this->page('settings');
 
-    $this->actions();
-  }
-
-  
-
-  /**
-   * Load settings pages
-   * @return [type] [description]
-   */
-  protected function settings()
-  {
-    $pages = wpt_settings_pages();
-
-    foreach($pages as $id => $page)
-    {
-      $file = THEME_LIB . '/classes/admin/page/' . $page . '.php';
-
-      include_once $file;
-
-      $class = '\\WPTheme\\Admin\\Page\\' . ucfirst($page);
-
-      $this->pages[$page] = new $class;
-    }
-
-  }
-
-  /**
-   * Admin actions
-   * @return [type] [description]
-   */
-  protected function actions()
-  {
     // Add menu
     add_action( 'admin_menu', array( $this, 'menu'), 10 );
 
-    // Enqueue plugin admin scripts
-    // add_action( 'admin_enqueue_scripts', array( $this , 'enqueue'), 10 );
-
-    
   }
 
 
 
-
   /**
-   * Load theme settings pages
-   * @return [type] [description]
+   * Get / Load a settings page
+   * @param  [type] $name [description]
+   * @return [type]       [description]
    */
-  public function load_pages()
-  { 
-    $dir = THEME_LIB . '/classes/admin/page';
-
-    if( ! function_exists('list_files') ) require_once( ABSPATH . 'wp-admin/includes/file.php' );
-  
-    $files = list_files($dir, 2);
-
-    foreach($files as $file)
-    {
-      // Ignore non-php files
-      if( pathinfo($file, PATHINFO_EXTENSION) !== 'php' ) continue;
-
-      $path = substr(substr($file, strlen($dir)), 0, -4);
-
-      $parts = explode('/', $path);
-
-      $class = '\\WPTheme\\Admin\\Page' . implode('\\', array_map('ucfirst',$parts));
-
-      if( class_exists($class) )
-      {
-        $page = new $class();
-
-        $this->pages[$page->slug] = $page;
-      }
-      else
-      {
-        wp_die('Class does not exist: '  . $class);
-      }
-    }
-  }
-
-  /**
-   * Enqueue admin scripts
-   * @return [type] [description]
-   */
-  public function enqueue()
+  public function page( $name )
   {
-  }
+    if( ! isset($this->pages[$name]) )
+    {
+      $class = '\\WPTheme\\Admin\\Page\\' . ucfirst($name);
 
+      $this->pages[$name] = new $class();
+    }
+
+    return $this->pages[$name];
+  }
 
 
   /**
@@ -157,13 +92,6 @@ class Admin
       );
     }
   }
-
-
-  public function page()
-  {
-    return $this->pages[$this->slug] ?? FALSE;
-  }
-
 
   /**
    * Process page saving and rendering

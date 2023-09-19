@@ -23,8 +23,8 @@ class Shortcode
   public static function register()
   {
     $shortcodes = apply_filters( 'wpt_shortcodes', [
-      '\\WPTheme\\Lipsum' => THEME_LIB . '/classes/shortcode/lipsum.php',
-      '\\WPTheme\\Partial' => THEME_LIB . '/classes/shortcode/partial.php'
+      '\\WPTheme\\Lipsum' => WPT_LIB . '/classes/shortcode/lipsum.php',
+      '\\WPTheme\\Partial' => WPT_LIB . '/classes/shortcode/partial.php'
     ]);
 
     foreach($shortcodes as $class => $file)

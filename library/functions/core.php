@@ -2,39 +2,7 @@
 
 
 
-/**
- * PSR-4 Plugin autoloader
- * Used with spl_autoload_register
- * @see    http://php.net/manual/en/function.spl-autoload-register.php
- * @param  string $class Class name
- */
-function wpt_autoload($class)
-{ 
-  //if( strpos($class, 'WPtheme\\') !== 0 ) return;
-  if( 0 !== strpos($class, 'WPTheme\\') OR strlen($class) <= 8 ) return;
 
-  $class = substr($class, 8);
-  
-  $library = THEME_DIR . '/library';
-
-  if( $class === 'Theme' )
-  {
-    require $library . '/theme.php';
-    return;
-  }
-
-  $path =  $library . '/classes/' . str_replace('\\','/',strtolower($class)) . '.php';
-
-  if( is_file($path) ) 
-  { 
-    require $path;
-  }
-
-}
-
-
-// Register theme autoloader
-spl_autoload_register( 'wpt_autoload' );
 
 /**
  * Get the theme singleton
@@ -101,5 +69,50 @@ function wpt_enqueued()
 function wpt_setting($key, $default = FALSE)
 {
     return WPTheme\Setting::get($key, $default);
+}
+
+
+
+/**
+ * Log a variable
+ * @param  [type] $var [description]
+ * @return [type]      [description]
+ */
+function wpt_log( $var )
+{
+  if( is_object($var) OR is_array($var) ) $var = print_r($var,TRUE);
+
+  return defined('WP_DEBUG_LOG') && is_file(WP_DEBUG_LOG) ? error_log($var, 3, WP_DEBUG_LOG) : error_log($var);
+  
+}
+
+
+/**
+ * Get backtrace array
+ * @return [type] [description]
+ */
+function wpt_backtrace()
+{
+  $trace = debug_backtrace();
+  $out   = [];
+
+  foreach($trace as $item)
+  {
+    $class = $item['class'] ?? '';
+    $func  = $item['function'] ?? '';
+    $file  = $item['file'] ?? '';
+    $line  = $item['line'] ?? '';
+
+    $str = $file . ':' . $line . ' ';
+
+    if( ! empty($class) ) $str .= $class . '::';
+ 
+    if( ! empty($function) ) $str .= $function . '()';
+
+    $out[] = $str;
+
+  }
+
+  return $out;
 }
 

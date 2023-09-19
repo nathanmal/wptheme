@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for a front page
+ * The front page template
  *
  * This is the template for displaying a front page, if a static front page is selected in settings
  *

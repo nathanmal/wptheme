@@ -35,78 +35,15 @@ final class Theme
 	 */
 	public function __construct()
 	{		
-		// Check compatibility
-		$this->compat();
-
-		// Load theme files
-		$this->includes();
-
-		// Load theme actions
-		$this->actions();
-	}
-
-	/**
-	 * Check theme compatibility
-	 * @return [type] [description]
-	 */
-	protected function compat()
-	{
-
-	}
-
-	/**
-	 * Include classes and functions
-	 * @return [type] [description]
-	 */
-	protected function includes()
-	{
-		// Load functions
-		include_once THEME_LIB . '/inc/strings.php';
-		include_once THEME_LIB . '/inc/arrays.php';
-		include_once THEME_LIB . '/inc/assets.php';
-		include_once THEME_LIB . '/inc/templates.php';
-		include_once THEME_LIB . '/inc/content.php';
-		include_once THEME_LIB . '/inc/debug.php';
-
-		// Load core classes
-		$this->load_class('template');
-		$this->load_class('enqueue');
-		$this->load_class('option');
-		$this->load_class('menu');
+		// Load classes
+		$this->template = new Template;
+		$this->enqueue  = new Enqueue;
+		$this->settings = new Settings;
+		$this->menu     = new Menu;
 
 		// load admin
-		if( is_admin() )
-		{
-			include_once THEME_LIB . '/inc/admin.php';
-			$this->load_class('admin');
-		}
-	}
+		if( is_admin() ) $this->admin = new Admin;
 
-
-	/**
-	 * Load a class and attach instance to theme singleton
-	 * @param  string $name [description]
-	 * @return [type]       [description]
-	 */
-	protected function load_class( $name = '' )
-	{
-		$path = THEME_LIB . '/classes/' . $name . '.php';
-
-		include_once $path;
-
-		$class = '\\WPTheme\\' . ucfirst($name);
-
-		$this->{$name} = new $class;
-	}
-
-
-
-	/**
-	 * Load primary actions
-	 * @return [type] [description]
-	 */
-	protected function actions()
-	{
 		// Hook into WP theme activation
 		add_action( 'after_switch_theme', array( $this, 'activate') );
 
@@ -117,7 +54,6 @@ final class Theme
 		add_action( 'after_setup_theme', array( $this, 'init') );
 	}
 
-
 	/**
 	 * Run theme setup
 	 * @return [type] [description]
@@ -127,8 +63,10 @@ final class Theme
 		// Add slug className to body
 		add_filter( 'body_class', array( $this, 'body_class' ) );
 
+		// \WPTheme\Admin\Customize::init();
+
 		// Customizer controls
-		add_action( 'customize_register', array( '\WPTheme\Customize', 'init' ), 10, 1 );
+    // add_action( 'customize_register', array( '\WPTheme\Admin\Customize', 'init' ), 10, 1 );
 
     // Add theme support
     $this->supports();
@@ -186,8 +124,8 @@ final class Theme
 		$sidebars = apply_filters( 'wpt_register_sidebars', array(
 			array(
 	      'id'            => 'main',
-	      'name'          => __( 'Primary Sidebar', THEME_DOMAIN ),
-	      'description'   => __( 'The primary sidebar.', THEME_DOMAIN ),
+	      'name'          => __( 'Primary Sidebar', WPT_DOMAIN ),
+	      'description'   => __( 'The primary sidebar.', WPT_DOMAIN ),
 	      'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	      'after_widget'  => '</div>',
 	      'before_title'  => '<h4 class="widgettitle">',
@@ -196,8 +134,8 @@ final class Theme
 
 	    array(
 	      'id'            => 'footer',
-	      'name'          => __( 'Footer Sidebar', THEME_DOMAIN ),
-	      'description'   => __( 'The footer sidebar.', THEME_DOMAIN ),
+	      'name'          => __( 'Footer Sidebar', WPT_DOMAIN ),
+	      'description'   => __( 'The footer sidebar.', WPT_DOMAIN ),
 	      'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	      'after_widget'  => '</div>',
 	      'before_title'  => '<h4 class="widgettitle">',

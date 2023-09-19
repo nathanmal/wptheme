@@ -1,159 +1,310 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./assets/src/js/lazyloader.js":
-/*!*************************************!*\
-  !*** ./assets/src/js/lazyloader.js ***!
-  \*************************************/
+/***/ 486:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"jquery\");\n/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ \"jquery\");\nclass Lazyloader {\n  constructor() {\n    console.log('Lazy Loader'); // Images with lazy loader\n\n    this.images = $('img[data-src]'); // Elements with lazy load background\n\n    this.backgrounds = $('[data-bg]'); // Check if intersection observer is supported\n\n    if (\"IntersectionObserver\" in window) {\n      this.lazyloadObserver();\n    } else {\n      this.lazyloadDetector();\n    }\n  }\n\n  lazyloadObserver() {\n    this.imageObserver = new IntersectionObserver(this.observerCallback);\n  }\n\n  observerCallback(entries, observer) {}\n\n  lazyload() {\n    this.images.each(this.lazyloadImage);\n    this.backgrounds.each(this.lazyloadBackground);\n  }\n\n  lazyloadImage(i, element) {}\n\n  lazyloadBackground(i, element) {}\n\n  isVisible(element) {}\n\n  isLoaded(element) {}\n\n}\n\nif (jQuery) jQuery(function ($) {\n  new Lazyloader();\n});\n\n//# sourceURL=webpack://wptheme/./assets/src/js/lazyloader.js?");
+/* provided dependency */ var $ = __webpack_require__(311);
+/* provided dependency */ var jQuery = __webpack_require__(311);
+class Lazyloader {
+  constructor() {
+    console.log('Lazy Loader');
+
+    // Images with lazy loader
+    this.images = $('img[data-src]');
+
+    // Elements with lazy load background
+    this.backgrounds = $('[data-bg]');
+
+    // Check if intersection observer is supported
+    if ("IntersectionObserver" in window) {
+      this.lazyloadObserver();
+    } else {
+      this.lazyloadDetector();
+    }
+  }
+  lazyloadObserver() {
+    this.imageObserver = new IntersectionObserver(this.observerCallback);
+  }
+  observerCallback(entries, observer) {}
+  lazyload() {
+    this.images.each(this.lazyloadImage);
+    this.backgrounds.each(this.lazyloadBackground);
+  }
+  lazyloadImage(i, element) {}
+  lazyloadBackground(i, element) {}
+  isVisible(element) {}
+  isLoaded(element) {}
+}
+if (jQuery) jQuery(function ($) {
+  new Lazyloader();
+});
 
 /***/ }),
 
-/***/ "./assets/src/js/navbar.js":
-/*!*********************************!*\
-  !*** ./assets/src/js/navbar.js ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"jquery\");\nclass Navbar {\n  constructor() {\n    this.element = $('nav.navbar');\n    this.header = this.element.parent('header');\n    this.last = $(window).scrollTop(); // Listen for scroll\n\n    $(window).scroll(this.onScroll.bind(this)); // Show if hidden mouse hovers\n\n    $(document).mousemove(this.onMouseMove.bind(this));\n    this.header.hover(this.onHeaderHover.bind(this), this.onHeaderLeave.bind(this)); // $(document).on('click', 'nav.navbar .navbar-toggler', this.onToggleClick.bind(this) );\n    // Click on toggler (mobile)\n\n    this.toggler.on('click', this.onToggleClick.bind(this));\n  }\n\n  onHeaderHover(e) {\n    if (this.shy) this.element.addClass('navbar-show');\n  }\n\n  onHeaderLeave(e) {\n    if (this.shy) this.element.removeClass('navbar-show');\n  }\n\n  onElementClick(e) {\n    console.log('Navbar click', e.target);\n  }\n  /**\n   * Toggler click\n   */\n\n\n  onToggleClick(e) {\n    console.log('CLICK');\n    this.element.toggleClass('navbar-toggled');\n  }\n  /**\n   * Window scroll\n   */\n\n\n  onScroll(e) {\n    if (this.fixed && this.shy && !this.toggled) {\n      const top = $(window).scrollTop();\n      const dir = top > this.last ? 'down' : 'up';\n      this.last = top;\n      this.element.toggleClass('navbar-hidden', dir == 'down' && top > this.element.outerHeight());\n    }\n  }\n\n  get fixed() {\n    return this.header.hasClass('header-fixed');\n  }\n\n  get shy() {\n    return this.element.hasClass('navbar-shy');\n  }\n\n  get toggled() {\n    return this.element.hasClass('navbar-toggled');\n  }\n\n  get toggler() {\n    return this.element.find('.navbar-toggler');\n  }\n\n  get menu() {\n    return this.element.find('.navbar-menu');\n  }\n  /**\n   * Show nav if hovered near it\n   */\n\n\n  onMouseMove(e) {\n    if (this.fixed && this.shy && this.element.hasClass('navbar-hidden')) {\n      const y = Math.abs(e.pageY - $(window).scrollTop());\n      if (y < this.height) this.element.removeClass('navbar-hidden');\n    }\n  }\n\n  get height() {\n    return this.element.outerHeight();\n  }\n\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Navbar);\n\n//# sourceURL=webpack://wptheme/./assets/src/js/navbar.js?");
-
-/***/ }),
-
-/***/ "./assets/src/js/onscroll.js":
-/*!***********************************!*\
-  !*** ./assets/src/js/onscroll.js ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"jquery\");\n/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ \"jquery\");\nclass Onscroll {\n  /**\n   * Class constructor\n   */\n  constructor() {\n    // Scroll effects\n    $(window).on('scroll', this.onWindowScroll.bind(this)); // Trigger on load\n\n    $(window).trigger('scroll');\n  }\n  /**\n   * Listen for window scroll\n   */\n\n\n  onWindowScroll(e) {\n    const top = $(window).scrollTop();\n    const threshold = top + $(window).height() * 0.75;\n    $('.on-scroll').each(function (e) {\n      const t = $(this).offset().top;\n      const visible = t && $(this).offset().top < threshold;\n      $(this).toggleClass('on-scroll-visible');\n    });\n  }\n\n}\n\nif (jQuery) jQuery(function ($) {\n  new Onscroll();\n});\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Onscroll);\n\n//# sourceURL=webpack://wptheme/./assets/src/js/onscroll.js?");
-
-/***/ }),
-
-/***/ "./assets/src/js/sidebar.js":
-/*!**********************************!*\
-  !*** ./assets/src/js/sidebar.js ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var $ = __webpack_require__(/*! jquery */ \"jquery\");\nclass Sidebar {\n  constructor() {\n    this.element = $('#sidebar');\n    this.inner = this.element.children('.sidebar-inner');\n    if (!this.element.length) return;\n\n    if (this.element.hasClass('sidebar-sticky')) {\n      $(window).on('scroll', this.onWindowScroll.bind(this));\n      $(window).on('resize', this.onWindowResize.bind(this));\n    }\n  }\n\n  onWindowScroll(e) {\n    const top = $(window).scrollTop();\n    const wh = $(window).height();\n    const st = this.element.position().top;\n    const p = top - st; // this.inner.css({'transform':'translate3d(0,'+top+'px,0)'});\n  }\n\n  onWindowResize(e) {}\n\n}\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Sidebar);\n\n//# sourceURL=webpack://wptheme/./assets/src/js/sidebar.js?");
-
-/***/ }),
-
-/***/ "./assets/src/wptheme.js":
-/*!*******************************!*\
-  !*** ./assets/src/wptheme.js ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _scss_wptheme_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scss/wptheme.scss */ \"./assets/src/scss/wptheme.scss\");\n/* harmony import */ var _js_onscroll_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/onscroll.js */ \"./assets/src/js/onscroll.js\");\n/* harmony import */ var _js_lazyloader_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/lazyloader.js */ \"./assets/src/js/lazyloader.js\");\n/* harmony import */ var _js_lazyloader_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_js_lazyloader_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _js_navbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/navbar */ \"./assets/src/js/navbar.js\");\n/* harmony import */ var _js_sidebar_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/sidebar.js */ \"./assets/src/js/sidebar.js\");\n/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ \"jquery\");\n// Theme files\n\n\n // Import components\n\n\n\n\nclass WPTheme {\n  /**\n   * Theme constructor\n   * @type {Object}\n   */\n  constructor() {\n    // init on DOM load\n    jQuery(this.init.bind(this));\n  }\n  /**\n   * Called when DOM is loaded\n   */\n\n\n  init() {\n    console.log('Theme initialized');\n  }\n\n} // Instantiate in global context\n\n\nwindow.wptheme = new WPTheme();\n\n//# sourceURL=webpack://wptheme/./assets/src/wptheme.js?");
-
-/***/ }),
-
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/sass-loader/dist/cjs.js!./assets/src/scss/wptheme.scss":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/sass-loader/dist/cjs.js!./assets/src/scss/wptheme.scss ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ 34:
 /***/ (() => {
 
-eval("// extracted by mini-css-extract-plugin\n\n//# sourceURL=webpack://wptheme/./assets/src/scss/wptheme.scss?./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet%5B1%5D.rules%5B2%5D.use%5B1%5D!./node_modules/css-loader/dist/cjs.js??ruleSet%5B1%5D.rules%5B2%5D.use%5B2%5D!./node_modules/postcss-loader/dist/cjs.js??ruleSet%5B1%5D.rules%5B2%5D.use%5B3%5D!./node_modules/sass-loader/dist/cjs.js");
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
-/***/ "./assets/src/scss/wptheme.scss":
-/*!**************************************!*\
-  !*** ./assets/src/scss/wptheme.scss ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ \"./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ \"./node_modules/style-loader/dist/runtime/styleDomAPI.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/insertBySelector.js */ \"./node_modules/style-loader/dist/runtime/insertBySelector.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ \"./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ \"./node_modules/style-loader/dist/runtime/insertStyleElement.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ \"./node_modules/style-loader/dist/runtime/styleTagTransform.js\");\n/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!../../../node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!../../../node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!../../../node_modules/sass-loader/dist/cjs.js!./wptheme.scss */ \"./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/sass-loader/dist/cjs.js!./assets/src/scss/wptheme.scss\");\n/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};\n/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in _node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6__) if(__WEBPACK_IMPORT_KEY__ !== \"default\") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => _node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6__[__WEBPACK_IMPORT_KEY__]\n/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);\n\n      \n      \n      \n      \n      \n      \n      \n      \n      \n\nvar options = {};\n\noptions.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());\noptions.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());\n\n      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, \"head\");\n    \noptions.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());\noptions.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());\n\nvar update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()((_node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6___default()), options);\n\n\n\n\n       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((_node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6___default()) && (_node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6___default().locals) ? (_node_modules_mini_css_extract_plugin_dist_loader_js_ruleSet_1_rules_2_use_1_node_modules_css_loader_dist_cjs_js_ruleSet_1_rules_2_use_2_node_modules_postcss_loader_dist_cjs_js_ruleSet_1_rules_2_use_3_node_modules_sass_loader_dist_cjs_js_wptheme_scss__WEBPACK_IMPORTED_MODULE_6___default().locals) : undefined);\n\n\n//# sourceURL=webpack://wptheme/./assets/src/scss/wptheme.scss?");
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
-  \****************************************************************************/
+/***/ 379:
 /***/ ((module) => {
 
 "use strict";
-eval("\n\nvar stylesInDOM = [];\n\nfunction getIndexByIdentifier(identifier) {\n  var result = -1;\n\n  for (var i = 0; i < stylesInDOM.length; i++) {\n    if (stylesInDOM[i].identifier === identifier) {\n      result = i;\n      break;\n    }\n  }\n\n  return result;\n}\n\nfunction modulesToDom(list, options) {\n  var idCountMap = {};\n  var identifiers = [];\n\n  for (var i = 0; i < list.length; i++) {\n    var item = list[i];\n    var id = options.base ? item[0] + options.base : item[0];\n    var count = idCountMap[id] || 0;\n    var identifier = \"\".concat(id, \" \").concat(count);\n    idCountMap[id] = count + 1;\n    var indexByIdentifier = getIndexByIdentifier(identifier);\n    var obj = {\n      css: item[1],\n      media: item[2],\n      sourceMap: item[3],\n      supports: item[4],\n      layer: item[5]\n    };\n\n    if (indexByIdentifier !== -1) {\n      stylesInDOM[indexByIdentifier].references++;\n      stylesInDOM[indexByIdentifier].updater(obj);\n    } else {\n      var updater = addElementStyle(obj, options);\n      options.byIndex = i;\n      stylesInDOM.splice(i, 0, {\n        identifier: identifier,\n        updater: updater,\n        references: 1\n      });\n    }\n\n    identifiers.push(identifier);\n  }\n\n  return identifiers;\n}\n\nfunction addElementStyle(obj, options) {\n  var api = options.domAPI(options);\n  api.update(obj);\n\n  var updater = function updater(newObj) {\n    if (newObj) {\n      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap && newObj.supports === obj.supports && newObj.layer === obj.layer) {\n        return;\n      }\n\n      api.update(obj = newObj);\n    } else {\n      api.remove();\n    }\n  };\n\n  return updater;\n}\n\nmodule.exports = function (list, options) {\n  options = options || {};\n  list = list || [];\n  var lastIdentifiers = modulesToDom(list, options);\n  return function update(newList) {\n    newList = newList || [];\n\n    for (var i = 0; i < lastIdentifiers.length; i++) {\n      var identifier = lastIdentifiers[i];\n      var index = getIndexByIdentifier(identifier);\n      stylesInDOM[index].references--;\n    }\n\n    var newLastIdentifiers = modulesToDom(newList, options);\n\n    for (var _i = 0; _i < lastIdentifiers.length; _i++) {\n      var _identifier = lastIdentifiers[_i];\n\n      var _index = getIndexByIdentifier(_identifier);\n\n      if (stylesInDOM[_index].references === 0) {\n        stylesInDOM[_index].updater();\n\n        stylesInDOM.splice(_index, 1);\n      }\n    }\n\n    lastIdentifiers = newLastIdentifiers;\n  };\n};\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js?");
+
+
+var stylesInDOM = [];
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+  for (var i = 0; i < stylesInDOM.length; i++) {
+    if (stylesInDOM[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+  return result;
+}
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var indexByIdentifier = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3],
+      supports: item[4],
+      layer: item[5]
+    };
+    if (indexByIdentifier !== -1) {
+      stylesInDOM[indexByIdentifier].references++;
+      stylesInDOM[indexByIdentifier].updater(obj);
+    } else {
+      var updater = addElementStyle(obj, options);
+      options.byIndex = i;
+      stylesInDOM.splice(i, 0, {
+        identifier: identifier,
+        updater: updater,
+        references: 1
+      });
+    }
+    identifiers.push(identifier);
+  }
+  return identifiers;
+}
+function addElementStyle(obj, options) {
+  var api = options.domAPI(options);
+  api.update(obj);
+  var updater = function updater(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap && newObj.supports === obj.supports && newObj.layer === obj.layer) {
+        return;
+      }
+      api.update(obj = newObj);
+    } else {
+      api.remove();
+    }
+  };
+  return updater;
+}
+module.exports = function (list, options) {
+  options = options || {};
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDOM[index].references--;
+    }
+    var newLastIdentifiers = modulesToDom(newList, options);
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+      var _index = getIndexByIdentifier(_identifier);
+      if (stylesInDOM[_index].references === 0) {
+        stylesInDOM[_index].updater();
+        stylesInDOM.splice(_index, 1);
+      }
+    }
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/runtime/insertBySelector.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/insertBySelector.js ***!
-  \********************************************************************/
+/***/ 569:
 /***/ ((module) => {
 
 "use strict";
-eval("\n\nvar memo = {};\n/* istanbul ignore next  */\n\nfunction getTarget(target) {\n  if (typeof memo[target] === \"undefined\") {\n    var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself\n\n    if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {\n      try {\n        // This will throw an exception if access to iframe is blocked\n        // due to cross-origin restrictions\n        styleTarget = styleTarget.contentDocument.head;\n      } catch (e) {\n        // istanbul ignore next\n        styleTarget = null;\n      }\n    }\n\n    memo[target] = styleTarget;\n  }\n\n  return memo[target];\n}\n/* istanbul ignore next  */\n\n\nfunction insertBySelector(insert, style) {\n  var target = getTarget(insert);\n\n  if (!target) {\n    throw new Error(\"Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.\");\n  }\n\n  target.appendChild(style);\n}\n\nmodule.exports = insertBySelector;\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/insertBySelector.js?");
+
+
+var memo = {};
+
+/* istanbul ignore next  */
+function getTarget(target) {
+  if (typeof memo[target] === "undefined") {
+    var styleTarget = document.querySelector(target);
+
+    // Special case to return head of iframe instead of iframe itself
+    if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+      try {
+        // This will throw an exception if access to iframe is blocked
+        // due to cross-origin restrictions
+        styleTarget = styleTarget.contentDocument.head;
+      } catch (e) {
+        // istanbul ignore next
+        styleTarget = null;
+      }
+    }
+    memo[target] = styleTarget;
+  }
+  return memo[target];
+}
+
+/* istanbul ignore next  */
+function insertBySelector(insert, style) {
+  var target = getTarget(insert);
+  if (!target) {
+    throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+  }
+  target.appendChild(style);
+}
+module.exports = insertBySelector;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/runtime/insertStyleElement.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/insertStyleElement.js ***!
-  \**********************************************************************/
+/***/ 216:
 /***/ ((module) => {
 
 "use strict";
-eval("\n\n/* istanbul ignore next  */\nfunction insertStyleElement(options) {\n  var element = document.createElement(\"style\");\n  options.setAttributes(element, options.attributes);\n  options.insert(element, options.options);\n  return element;\n}\n\nmodule.exports = insertStyleElement;\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/insertStyleElement.js?");
+
+
+/* istanbul ignore next  */
+function insertStyleElement(options) {
+  var element = document.createElement("style");
+  options.setAttributes(element, options.attributes);
+  options.insert(element, options.options);
+  return element;
+}
+module.exports = insertStyleElement;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js ***!
-  \**********************************************************************************/
+/***/ 565:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-eval("\n\n/* istanbul ignore next  */\nfunction setAttributesWithoutAttributes(styleElement) {\n  var nonce =  true ? __webpack_require__.nc : 0;\n\n  if (nonce) {\n    styleElement.setAttribute(\"nonce\", nonce);\n  }\n}\n\nmodule.exports = setAttributesWithoutAttributes;\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js?");
+
+
+/* istanbul ignore next  */
+function setAttributesWithoutAttributes(styleElement) {
+  var nonce =  true ? __webpack_require__.nc : 0;
+  if (nonce) {
+    styleElement.setAttribute("nonce", nonce);
+  }
+}
+module.exports = setAttributesWithoutAttributes;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/runtime/styleDomAPI.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/styleDomAPI.js ***!
-  \***************************************************************/
+/***/ 795:
 /***/ ((module) => {
 
 "use strict";
-eval("\n\n/* istanbul ignore next  */\nfunction apply(styleElement, options, obj) {\n  var css = \"\";\n\n  if (obj.supports) {\n    css += \"@supports (\".concat(obj.supports, \") {\");\n  }\n\n  if (obj.media) {\n    css += \"@media \".concat(obj.media, \" {\");\n  }\n\n  var needLayer = typeof obj.layer !== \"undefined\";\n\n  if (needLayer) {\n    css += \"@layer\".concat(obj.layer.length > 0 ? \" \".concat(obj.layer) : \"\", \" {\");\n  }\n\n  css += obj.css;\n\n  if (needLayer) {\n    css += \"}\";\n  }\n\n  if (obj.media) {\n    css += \"}\";\n  }\n\n  if (obj.supports) {\n    css += \"}\";\n  }\n\n  var sourceMap = obj.sourceMap;\n\n  if (sourceMap && typeof btoa !== \"undefined\") {\n    css += \"\\n/*# sourceMappingURL=data:application/json;base64,\".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), \" */\");\n  } // For old IE\n\n  /* istanbul ignore if  */\n\n\n  options.styleTagTransform(css, styleElement, options.options);\n}\n\nfunction removeStyleElement(styleElement) {\n  // istanbul ignore if\n  if (styleElement.parentNode === null) {\n    return false;\n  }\n\n  styleElement.parentNode.removeChild(styleElement);\n}\n/* istanbul ignore next  */\n\n\nfunction domAPI(options) {\n  var styleElement = options.insertStyleElement(options);\n  return {\n    update: function update(obj) {\n      apply(styleElement, options, obj);\n    },\n    remove: function remove() {\n      removeStyleElement(styleElement);\n    }\n  };\n}\n\nmodule.exports = domAPI;\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/styleDomAPI.js?");
+
+
+/* istanbul ignore next  */
+function apply(styleElement, options, obj) {
+  var css = "";
+  if (obj.supports) {
+    css += "@supports (".concat(obj.supports, ") {");
+  }
+  if (obj.media) {
+    css += "@media ".concat(obj.media, " {");
+  }
+  var needLayer = typeof obj.layer !== "undefined";
+  if (needLayer) {
+    css += "@layer".concat(obj.layer.length > 0 ? " ".concat(obj.layer) : "", " {");
+  }
+  css += obj.css;
+  if (needLayer) {
+    css += "}";
+  }
+  if (obj.media) {
+    css += "}";
+  }
+  if (obj.supports) {
+    css += "}";
+  }
+  var sourceMap = obj.sourceMap;
+  if (sourceMap && typeof btoa !== "undefined") {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  }
+
+  // For old IE
+  /* istanbul ignore if  */
+  options.styleTagTransform(css, styleElement, options.options);
+}
+function removeStyleElement(styleElement) {
+  // istanbul ignore if
+  if (styleElement.parentNode === null) {
+    return false;
+  }
+  styleElement.parentNode.removeChild(styleElement);
+}
+
+/* istanbul ignore next  */
+function domAPI(options) {
+  if (typeof document === "undefined") {
+    return {
+      update: function update() {},
+      remove: function remove() {}
+    };
+  }
+  var styleElement = options.insertStyleElement(options);
+  return {
+    update: function update(obj) {
+      apply(styleElement, options, obj);
+    },
+    remove: function remove() {
+      removeStyleElement(styleElement);
+    }
+  };
+}
+module.exports = domAPI;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/runtime/styleTagTransform.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/style-loader/dist/runtime/styleTagTransform.js ***!
-  \*********************************************************************/
+/***/ 589:
 /***/ ((module) => {
 
 "use strict";
-eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElement) {\n  if (styleElement.styleSheet) {\n    styleElement.styleSheet.cssText = css;\n  } else {\n    while (styleElement.firstChild) {\n      styleElement.removeChild(styleElement.firstChild);\n    }\n\n    styleElement.appendChild(document.createTextNode(css));\n  }\n}\n\nmodule.exports = styleTagTransform;\n\n//# sourceURL=webpack://wptheme/./node_modules/style-loader/dist/runtime/styleTagTransform.js?");
+
+
+/* istanbul ignore next  */
+function styleTagTransform(css, styleElement) {
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css;
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild);
+    }
+    styleElement.appendChild(document.createTextNode(css));
+  }
+}
+module.exports = styleTagTransform;
 
 /***/ }),
 
-/***/ "jquery":
-/*!*************************!*\
-  !*** external "jQuery" ***!
-  \*************************/
+/***/ 311:
 /***/ ((module) => {
 
 "use strict";
@@ -217,28 +368,234 @@ module.exports = jQuery;
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/nonce */
 /******/ 	(() => {
 /******/ 		__webpack_require__.nc = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./assets/src/wptheme.js");
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
+var injectStylesIntoStyleTag = __webpack_require__(379);
+var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleDomAPI.js
+var styleDomAPI = __webpack_require__(795);
+var styleDomAPI_default = /*#__PURE__*/__webpack_require__.n(styleDomAPI);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertBySelector.js
+var insertBySelector = __webpack_require__(569);
+var insertBySelector_default = /*#__PURE__*/__webpack_require__.n(insertBySelector);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js
+var setAttributesWithoutAttributes = __webpack_require__(565);
+var setAttributesWithoutAttributes_default = /*#__PURE__*/__webpack_require__.n(setAttributesWithoutAttributes);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/insertStyleElement.js
+var insertStyleElement = __webpack_require__(216);
+var insertStyleElement_default = /*#__PURE__*/__webpack_require__.n(insertStyleElement);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/styleTagTransform.js
+var styleTagTransform = __webpack_require__(589);
+var styleTagTransform_default = /*#__PURE__*/__webpack_require__.n(styleTagTransform);
+// EXTERNAL MODULE: ./node_modules/mini-css-extract-plugin/dist/loader.js??ruleSet[1].rules[2].use[1]!./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[3]!./node_modules/sass-loader/dist/cjs.js!./assets/src/scss/wptheme.scss
+var wptheme = __webpack_require__(34);
+var wptheme_default = /*#__PURE__*/__webpack_require__.n(wptheme);
+;// CONCATENATED MODULE: ./assets/src/scss/wptheme.scss
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (styleTagTransform_default());
+options.setAttributes = (setAttributesWithoutAttributes_default());
+
+      options.insert = insertBySelector_default().bind(null, "head");
+    
+options.domAPI = (styleDomAPI_default());
+options.insertStyleElement = (insertStyleElement_default());
+
+var update = injectStylesIntoStyleTag_default()((wptheme_default()), options);
+
+
+
+
+       /* harmony default export */ const scss_wptheme = ((wptheme_default()) && (wptheme_default()).locals ? (wptheme_default()).locals : undefined);
+
+;// CONCATENATED MODULE: ./assets/src/js/onscroll.js
+/* provided dependency */ var $ = __webpack_require__(311);
+/* provided dependency */ var jQuery = __webpack_require__(311);
+class Onscroll {
+  /**
+   * Class constructor
+   */
+  constructor() {
+    // Scroll effects
+    $(window).on('scroll', this.onWindowScroll.bind(this));
+
+    // Trigger on load
+    $(window).trigger('scroll');
+  }
+
+  /**
+   * Listen for window scroll
+   */
+  onWindowScroll(e) {
+    const top = $(window).scrollTop();
+    const threshold = top + $(window).height() * 0.75;
+    $('.on-scroll').each(function (e) {
+      const t = $(this).offset().top;
+      const visible = t && $(this).offset().top < threshold;
+      $(this).toggleClass('on-scroll-visible');
+    });
+  }
+}
+if (jQuery) jQuery(function ($) {
+  new Onscroll();
+});
+/* harmony default export */ const onscroll = ((/* unused pure expression or super */ null && (Onscroll)));
+// EXTERNAL MODULE: ./assets/src/js/lazyloader.js
+var lazyloader = __webpack_require__(486);
+;// CONCATENATED MODULE: ./assets/src/js/navbar.js
+/* provided dependency */ var navbar_$ = __webpack_require__(311);
+class Navbar {
+  constructor() {
+    this.element = navbar_$('nav.navbar');
+    this.header = this.element.parent('header');
+    this.last = navbar_$(window).scrollTop();
+
+    // Listen for scroll
+    navbar_$(window).scroll(this.onScroll.bind(this));
+
+    // Show if hidden mouse hovers
+    navbar_$(document).mousemove(this.onMouseMove.bind(this));
+    this.header.hover(this.onHeaderHover.bind(this), this.onHeaderLeave.bind(this));
+
+    // $(document).on('click', 'nav.navbar .navbar-toggler', this.onToggleClick.bind(this) );
+    // Click on toggler (mobile)
+    this.toggler.on('click', this.onToggleClick.bind(this));
+  }
+  onHeaderHover(e) {
+    if (this.shy) this.element.addClass('navbar-show');
+  }
+  onHeaderLeave(e) {
+    if (this.shy) this.element.removeClass('navbar-show');
+  }
+  onElementClick(e) {
+    console.log('Navbar click', e.target);
+  }
+
+  /**
+   * Toggler click
+   */
+  onToggleClick(e) {
+    console.log('CLICK');
+    this.element.toggleClass('navbar-toggled');
+  }
+
+  /**
+   * Window scroll
+   */
+  onScroll(e) {
+    if (this.fixed && this.shy && !this.toggled) {
+      const top = navbar_$(window).scrollTop();
+      const dir = top > this.last ? 'down' : 'up';
+      this.last = top;
+      this.element.toggleClass('navbar-hidden', dir == 'down' && top > this.element.outerHeight());
+    }
+  }
+  get fixed() {
+    return this.header.hasClass('header-fixed');
+  }
+  get shy() {
+    return this.element.hasClass('navbar-shy');
+  }
+  get toggled() {
+    return this.element.hasClass('navbar-toggled');
+  }
+  get toggler() {
+    return this.element.find('.navbar-toggler');
+  }
+  get menu() {
+    return this.element.find('.navbar-menu');
+  }
+
+  /**
+   * Show nav if hovered near it
+   */
+  onMouseMove(e) {
+    if (this.fixed && this.shy && this.element.hasClass('navbar-hidden')) {
+      const y = Math.abs(e.pageY - navbar_$(window).scrollTop());
+      if (y < this.height) this.element.removeClass('navbar-hidden');
+    }
+  }
+  get height() {
+    return this.element.outerHeight();
+  }
+}
+/* harmony default export */ const navbar = ((/* unused pure expression or super */ null && (Navbar)));
+;// CONCATENATED MODULE: ./assets/src/js/sidebar.js
+/* provided dependency */ var sidebar_$ = __webpack_require__(311);
+class Sidebar {
+  constructor() {
+    this.element = sidebar_$('#sidebar');
+    this.inner = this.element.children('.sidebar-inner');
+    if (!this.element.length) return;
+    if (this.element.hasClass('sidebar-sticky')) {
+      sidebar_$(window).on('scroll', this.onWindowScroll.bind(this));
+      sidebar_$(window).on('resize', this.onWindowResize.bind(this));
+    }
+  }
+  onWindowScroll(e) {
+    const top = sidebar_$(window).scrollTop();
+    const wh = sidebar_$(window).height();
+    const st = this.element.position().top;
+    const p = top - st;
+
+    // this.inner.css({'transform':'translate3d(0,'+top+'px,0)'});
+  }
+
+  onWindowResize(e) {}
+}
+/* harmony default export */ const sidebar = ((/* unused pure expression or super */ null && (Sidebar)));
+;// CONCATENATED MODULE: ./assets/src/wptheme.js
+/* provided dependency */ var wptheme_jQuery = __webpack_require__(311);
+// Theme files
+
+
+
+
+// Import components
+
+
+class WPTheme {
+  /**
+   * Theme constructor
+   * @type {Object}
+   */
+  constructor() {
+    // init on DOM load
+    wptheme_jQuery(this.init.bind(this));
+  }
+
+  /**
+   * Called when DOM is loaded
+   */
+  init() {
+    console.log('Theme initialized');
+  }
+}
+
+// Instantiate in global context
+window.wptheme = new WPTheme();
+})();
+
 /******/ })()
 ;

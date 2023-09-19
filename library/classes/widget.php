@@ -12,9 +12,9 @@ class Widget extends WP_Widget
     public function __construct(){
 
         $id = $this->id;
-        $name = __($this->name, THEME_DOMAIN);
+        $name = __($this->name, WPT_DOMAIN);
         $description = array(
-            'description' => __($this->description, THEME_DOMAIN)
+            'description' => __($this->description, WPT_DOMAIN)
         );
 
         parent::__construct($id,$name,$description);

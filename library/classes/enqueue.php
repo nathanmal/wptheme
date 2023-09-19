@@ -250,7 +250,7 @@ class Enqueue
 
     $src = $this->src( $src, 'fonts' );
     // if not absolute URL then assume local path
-    if( strpos($src, 'http') !== 0 ) $src = THEME_URI . '/assets/fonts/' . $src;
+    if( strpos($src, 'http') !== 0 ) $src = WPT_URI . '/assets/fonts/' . $src;
 
     // enqueue font
     Enqueue::style( 'font-' . strtolower($family), $src );

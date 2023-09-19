@@ -1,6 +1,6 @@
 <?php
 
-namespace WPTheme;
+namespace WPTheme\Admin;
 
 
 class Customize
@@ -17,6 +17,10 @@ class Customize
    * Registered sections
    * @var array
    */
+  public $panels = array();
+
+
+
   public $sections = array();
 
 
@@ -25,39 +29,65 @@ class Customize
    * @param  [type] $wp_customize [description]
    * @return [type]               [description]
    */
-  public static function init( $wp_customize )
+  public static function init()
   {
-    new Customize($wp_customize);
+    new Customize();
   }
-
-
- 
-
 
   /**
    * Customize constructor
    * @param [type] $wp_customize [description]
    */
-  public function __construct( $wp_customize )
+  public function __construct()
   {
     // Wordpress customizer object
-    $this->wp = $wp_customize;
+    // $this->customize = $wp_customize;
+
+
+    add_filter('kirki_path_url', [$this, 'kirki_url'], 10, 2);
+    define('KIRKI_PLUGIN_URL', 'https://creatricity.localhost/wp-content/themes/wptheme/library/vendor/kirki-framework/kirki/');
+
+    include WPT_LIB . '/vendor/kirki-framework/kirki/kirki.php';
+
+
+    $this->panel('main');
+
 
     // Register custom panels
-    $this->register_panels();
+    //$this->register_panels();
 
     // Register custom sections
-    $this->register_sections();
+    //$this->register_sections();
 
     // Hook when mod option is updated
-    add_action( 'updated_option', array( $this, 'update_option' ), 10, 1 );
+    // add_action( 'updated_option', array( $this, 'update_option' ), 10, 1 );
 
     // Hook when preview pane is refreshed
-    add_action( 'customize_preview_init', array( $this, 'preview_init'), 10, 1);
+    // add_action( 'customize_preview_init', array( $this, 'preview_init'), 10, 1);
 
     // Enqueue custom control scripts
     // add_action( 'customize_controls_enqueue_scripts', array( $this, 'enqueue_controls') );
 
+  }
+
+
+  public function kirki_url( $url, $path )
+  {
+    return str_replace('Users/nathan/Development/','wp-content/themes/', $url);
+  }
+
+
+  /**
+   * Initialize a panel
+   * @param  [type] $name [description]
+   * @return [type]       [description]
+   */
+  public function panel( $name )
+  {
+      $class = '\\WPTheme\\Admin\\Customize\\Panel\\' . ucfirst($name);
+      $this->panels[$name] = new $class();
+
+      return $this->panels[$name];
   }
 
 
@@ -75,8 +105,8 @@ class Customize
   public function register_sections()
   { 
 
-    $this->register_section('background');
-    $this->register_section('header');
+    // $this->register_section('background');
+    // $this->register_section('header');
 
     /*
     $this->wp->add_section( 'background', array(

@@ -25,29 +25,6 @@ function wpt_suffix( string $str, string $suffix )
 
 
 /**
- * String starts with - polyfill for PHP 8.0 function
- */
-if( ! function_exists('str_starts_with') )
-{
-  function str_starts_with($haystack, $needle) 
-  {
-    return substr($haystack, 0, strlen($needle)) === $needle;
-  }
-}
-
-/**
- * String ends with - polyfill for PHP 8.0 function
- */
-if( ! function_exists('str_ends_with') )
-{
-  function str_ends_with($haystack, $needle) 
-  {
-    return substr($haystack,-strlen($needle))===$needle;
-  }
-}
-
-
-/**
  * Turn a slug into a label
  * @param  [type] $str [description]
  * @return [type]      [description]

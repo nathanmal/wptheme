@@ -16,9 +16,7 @@
                     
             <!-- Main Navigation Menu -->
             <div id="navbar-menu">
-              <?php 
-              wpt_menu(wpt_header_menu_location(), array('menu_class'=>'nav navbar-nav ms-auto')); 
-              ?>
+              <?php wpt_menu('header', array('menu_class'=>'nav navbar-nav ms-auto')); ?>
             </div>
             <!-- End navbar menu -->
         
