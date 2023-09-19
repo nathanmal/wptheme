@@ -29,7 +29,7 @@ function wpt_template_type()
  * @param  boolean $return [description]
  * @return [type]          [description]
  */
-function wpt_partial( string $slug, string $name = NULL, array $args = [], $return = FALSE )
+function wpt_partial( string $slug, array $args = [], $return = FALSE )
 {
   // Start output buffering
   ob_start();
@@ -38,7 +38,7 @@ function wpt_partial( string $slug, string $name = NULL, array $args = [], $retu
   $path = wpt_prefix( $slug, 'partials/' );
 
   // If template does not exist, then output a warning
-  if( FALSE === get_template_part( $path, $name, $args ) )
+  if( FALSE === get_template_part( $path, '', $args ) )
   {
     $content = '[Partial missing: ' . $path . ']';
   }
